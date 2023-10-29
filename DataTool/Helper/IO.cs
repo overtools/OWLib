@@ -372,25 +372,5 @@ namespace DataTool.Helper {
                 }
             }
         }
-
-        private static readonly string[] _sizeSuffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
-        private const string _sizeFormatTemplate = "{0}{1:0.##} {2}";
-
-        public static string FormatByteSize(long size) {
-            if (size == 0) {
-                return string.Format(_sizeFormatTemplate, null, 0, _sizeSuffixes[0]);
-            }
-
-            var absSize = Math.Abs((double) size);
-            var fpPower = Math.Log(absSize, 1000);
-            var intPower = (int) fpPower;
-            var iUnit = intPower >= _sizeSuffixes.Length
-                ? _sizeSuffixes.Length - 1
-                : intPower;
-
-            var normSize = absSize / Math.Pow(1000, iUnit);
-
-            return string.Format(_sizeFormatTemplate, size < 0 ? "-" : null, normSize, _sizeSuffixes[iUnit]);
-        }
     }
 }

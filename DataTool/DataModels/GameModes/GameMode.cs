@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -36,7 +37,7 @@ namespace DataTool.DataModels.GameModes {
         private void Init(STUGameMode gamemode, ulong key = default) {
             GUID = (teResourceGUID) key;
             Name = GetString(gamemode.m_displayName);
-            GameRulesetSchemas = Helper.JSON.FixArray(gamemode.m_gameRulesetSchemas);
+            GameRulesetSchemas = gamemode.m_gameRulesetSchemas?.Select(x => x.GUID).ToArray();
             VoiceSet = gamemode.m_7F5B54B2;
             Type = gamemode.m_gameModeType;
         }

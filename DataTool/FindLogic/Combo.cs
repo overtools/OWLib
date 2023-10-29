@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DataTool.ConvertLogic.WEM;
 using DataTool.Helper;
-using Newtonsoft.Json;
 using TankLib;
 using TankLib.Chunks;
 using TankLib.STU;
@@ -175,12 +174,12 @@ namespace DataTool.FindLogic {
                 if (type == 0x118) return GetName(); // new model
                 if (type == 0x119) return GetName(); // new look
                 if (type == 0x127) return GetName(); // other material thing...
-                
+
                 // other effect types
                 if (type == 0x4A) return GetName();
                 if (type == 0x8E) return GetName();
                 if (type == 0x12B) return GetName();
-                
+
                 return $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
@@ -620,7 +619,7 @@ namespace DataTool.FindLogic {
                     }
 
                     if (info.m_animations.ContainsKey(guid)) break;
-                    
+
                     AnimationAsset animationInfo = new AnimationAsset(guid);
                     ComboContext animationContext = context.Clone();
                     animationContext.Animation = guid;
@@ -729,7 +728,7 @@ namespace DataTool.FindLogic {
                         if (context.Entity != 0) {
                             info.m_entities[context.Entity].m_effects.Add(guid);
                         }
-                    } 
+                    }
 
                     using (Stream effectStream = OpenFile(guid)) {
                         teChunkedData chunkedData = new teChunkedData(effectStream);

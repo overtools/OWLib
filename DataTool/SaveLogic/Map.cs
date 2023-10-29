@@ -9,7 +9,6 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using System;
 using DataTool.DataModels;
-using DataTool.Helper;
 
 namespace DataTool.SaveLogic {
     public static class Map {

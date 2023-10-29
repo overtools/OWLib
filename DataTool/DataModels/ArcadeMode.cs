@@ -51,7 +51,7 @@ namespace DataTool.DataModels {
                     Brawl = a1.m_5DC61E59;
                     break;
                 case STU_19C05237 a2:
-                    Children = Helper.JSON.FixArray(a2.m_children);
+                    Children = a2.m_children?.Select(x => x.GUID).ToArray();
                     break;
                 default:
                     break;

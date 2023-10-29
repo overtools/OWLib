@@ -1,13 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract;
-using TankLib;
-using TankLib.STU;
-using TankLib.STU.Types;
-using static DataTool.Helper.IO;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Debug {
     [Tool("te-map-placable-dump", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]

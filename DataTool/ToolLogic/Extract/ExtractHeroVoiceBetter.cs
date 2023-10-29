@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -8,7 +7,6 @@ using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;

@@ -5,7 +5,6 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib.Helpers;
-using TankLib.STU.Types;
 using static DataTool.Helper.Logger;
 
 namespace DataTool {
