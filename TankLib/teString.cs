@@ -37,7 +37,7 @@ namespace TankLib {
                 DisplayTextHeader header = reader.Read<DisplayTextHeader>();
                 char[] bytes = reader.ReadChars((int)(stream.Length - stream.Position));
 
-                Value = new string(bytes).Replace('\u00A0', ' ').TrimEnd('\0');
+                Value = new string(bytes);
             }
         }
 

@@ -326,13 +326,17 @@ namespace DataTool.Helper {
             }
         }
 
+        /// <summary>
+        /// Returns a string for the guid. NBSPs and trailing nulls are removed.
+        /// </summary>
         public static string GetString(ulong guid) {
             if (guid == 0) return null; // don't even try
             try {
                 if (Flags != null && Flags.StringsAsGuids)
                     return teResourceGUID.AsString(guid);
 
-                return GetStringInternal(guid);
+                // remove nbsp and trailing nulls which can cause issues
+                return GetStringInternal(guid)?.Replace('\u00A0', ' ').TrimEnd('\0');
             }
             catch {
                 return null;
@@ -345,6 +349,10 @@ namespace DataTool.Helper {
             return name?.TrimEnd(' ');
         }
 
+
+        /// <summary>
+        /// Returns the raw string for the guid.
+        /// </summary>
         public static string GetStringInternal(ulong guid) {
             if (guid == 0) return null; // don't even try
             try {
