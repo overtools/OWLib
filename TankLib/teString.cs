@@ -35,7 +35,7 @@ namespace TankLib {
             if (stream == null) return;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8)) {
                 DisplayTextHeader header = reader.Read<DisplayTextHeader>();
-                char[] bytes = reader.ReadChars((int)(stream.Length - stream.Position));
+                char[] bytes = reader.ReadChars((int) (stream.Length - stream.Position - 1));
 
                 Value = new string(bytes);
             }
