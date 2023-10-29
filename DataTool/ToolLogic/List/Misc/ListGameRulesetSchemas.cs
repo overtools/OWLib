@@ -12,12 +12,8 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListGameRulesetSchemas : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSONAlt(data, flags);
-                    return;
-                }
+            var flags = (ListFlags) toolFlags;
+            OutputJSON(data, flags);
         }
 
         public static Dictionary<teResourceGUID, GameRulesetSchema> GetData() {

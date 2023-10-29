@@ -6,9 +6,9 @@ using System.Runtime.Serialization;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
+using Newtonsoft.Json;
 using TankLib;
 using TankLib.STU.Types;
-using Utf8Json;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
@@ -69,8 +69,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     if (doneNodes.Contains(node.UniqueID)) continue;
                     doneNodes.Add(node.UniqueID);
                     root.nodes.Add(new GraphNode {x = node.Pos.X, y = node.Pos.Y, uuid = uuid, @class = "MaxObject", name = node.GetType().Name});
-                    
-                    
+
+
                     if (node.m_0DE1BA16 == null) continue;
                     foreach (STU_40274C18 stu_6C0Bbd69 in node.m_0DE1BA16) {
                         if (stu_6C0Bbd69.m_AF632ACD != null) {
@@ -93,12 +93,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     ParseNode(root, animNode);
                 }
 
-                byte[] json = JsonSerializer.PrettyPrintByteArray(JsonSerializer.NonGeneric.Serialize(root.GetType(), root));
-                string output = Path.Combine(path, $"{teResourceGUID.AsString(key)}.json");
-                using (Stream file = File.OpenWrite(output)) {
-                    file.SetLength(0);
-                    file.Write(json, 0, json.Length);
-                }
+                var output = Path.Combine(path, $"{teResourceGUID.AsString(key)}.json");
+                File.WriteAllText(output, JsonConvert.SerializeObject(root));
             }
         }
 

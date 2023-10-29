@@ -51,7 +51,7 @@ namespace ReplayMp4Tool {
             var replays = ReplayThing.ParseReplays(files);
 
             if (flags.JSON){
-                new JSONTool().OutputJSON(replays, flags);
+                JSONTool.OutputJSON(replays, flags);
             } else {
                 foreach (ReplayThing.Replay replay in replays){
                     Console.Out.WriteLine("Replay Info:");

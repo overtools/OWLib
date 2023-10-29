@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using TankLib;
 
 namespace DataTool.JSON {
-    public class teResourceGUID_Newtonsoft : JsonConverter<teResourceGUID> {
+    public class NewtonsoftResourceGUIDFormatter : JsonConverter<teResourceGUID> {
         public override void WriteJson(JsonWriter writer, teResourceGUID value, JsonSerializer serializer) {
             writer.WriteValue(value.ToString());
         }

@@ -11,12 +11,8 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListHeroesRulesets : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSONAlt(data, flags);
-                    return;
-                }
+            var flags = (ListFlags) toolFlags;
+            OutputJSON(data, flags);
         }
 
         public Dictionary<teResourceGUID, HeroRulesets> GetData() {

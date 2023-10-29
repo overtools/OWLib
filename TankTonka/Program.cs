@@ -37,7 +37,7 @@ namespace TankTonka {
 
             CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
                 new AssetRepoTypeFormatter(),
-                new ResourceGUIDFormatter()
+                new Utf8JsonResourceGUIDFormatter()
             }, new[] {
                 StandardResolver.Default
             });
