@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TACTLib;
 using TankLib;
@@ -113,7 +112,7 @@ namespace DataTool.DataModels {
             AvailableIn = GetString(unlock.m_53145FAF);
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);
-            Type = GetTypeForUnlock(unlock);
+            Type = GetUnlockType(unlock);
             ProductId = unlock.m_00B16A0B;
 
             IsTraditionalUnlock =
@@ -173,118 +172,46 @@ namespace DataTool.DataModels {
         }
 
         /// <summary>
-        /// Returns the UnlockType for an Unlock
-        /// </summary>
-        /// <param name="unlock">Source unlock</param>
-        private static UnlockType GetTypeForUnlock(STUUnlock unlock) {
-            return GetUnlockType(unlock.GetType());
-        }
-
-        /// <summary>
         /// Returns the UnlockType for a STUUnlock Type
         /// </summary>
-        /// <param name="type">unlock stu type</param>
-        public static UnlockType GetUnlockType(Type type) {
-            if (type == typeof(STUUnlock_SkinTheme)) {
-                return UnlockType.Skin;
+        /// <param name="stu">the unlock stu to get the type for</param>
+        public static UnlockType GetUnlockType(STUInstance stu) {
+            var unlockType = stu switch
+            {
+                STUUnlock_SkinTheme _ => UnlockType.Skin,
+                STUUnlock_AvatarPortrait _ => UnlockType.Icon,
+                STU_A458D547 _ => UnlockType.Souvenir, // has to be before emote because it inherits from it
+                STUUnlock_Emote _ => UnlockType.Emote,
+                STUUnlock_Pose _ => UnlockType.VictoryPose,
+                STUUnlock_VoiceLine _ => UnlockType.VoiceLine,
+                STUUnlock_SprayPaint _ => UnlockType.Spray,
+                STUUnlock_Currency _ => UnlockType.Currency,
+                STUUnlock_PortraitFrame _ => UnlockType.PortraitFrame,
+                STUUnlock_Weapon _ => UnlockType.WeaponSkin,
+                STUUnlock_POTGAnimation _ => UnlockType.HighlightIntro,
+                STUUnlock_CompetitiveCurrency _ => UnlockType.CompetitiveCurrency,
+                STUUnlock_OWLToken _ => UnlockType.OWLToken,
+                STUUnlock_LootBox _ => UnlockType.Lootbox,
+                STU_6A808718 _ => UnlockType.WeaponCharm,
+                STU_C3C6FD9E _ => UnlockType.Hero,
+                STU_7A1A4764 _ => UnlockType.BattlePassXP,
+                STU_DB1B05B5 _ => UnlockType.NameCard,
+                STU_514C0F6B _ => UnlockType.OverwatchCoins,
+                STU_52AB57E9 _ => UnlockType.PlayerTitle,
+                STU_AD84E2AA _ => UnlockType.BattlePass,
+                STU_184D5944 _ => UnlockType.SeasonXPBoost,
+                STU_1EB22BDB _ => UnlockType.Unknown,
+                STU_80C1169E _ => UnlockType.BattlePassTierSkip,
+                STU_3F17D547 _ => UnlockType.SkinComponent,
+                STU_A85D31BF _ => UnlockType.StoryMission,
+                _ => UnlockType.Unknown
+            };
+
+            if (unlockType == UnlockType.Unknown) {
+                Logger.Debug("Unlock", $"Unknown unlock type {stu.GetType()}");
             }
 
-            if (type == typeof(STUUnlock_AvatarPortrait)) {
-                return UnlockType.Icon;
-            }
-
-            if (type == typeof(STUUnlock_Emote)) {
-                return UnlockType.Emote;
-            }
-
-            if (type == typeof(STUUnlock_Pose)) {
-                return UnlockType.VictoryPose;
-            }
-
-            if (type == typeof(STUUnlock_VoiceLine)) {
-                return UnlockType.VoiceLine;
-            }
-
-            if (type == typeof(STUUnlock_SprayPaint)) {
-                return UnlockType.Spray;
-            }
-
-            if (type == typeof(STUUnlock_Currency)) {
-                return UnlockType.Currency;
-            }
-
-            if (type == typeof(STUUnlock_PortraitFrame)) {
-                return UnlockType.PortraitFrame;
-            }
-
-            if (type == typeof(STUUnlock_Weapon)) {
-                return UnlockType.WeaponSkin;
-            }
-
-            if (type == typeof(STUUnlock_POTGAnimation)) {
-                return UnlockType.HighlightIntro;
-            }
-
-            if (type == typeof(STUUnlock_CompetitiveCurrency)) {
-                return UnlockType.CompetitiveCurrency;
-            }
-
-            if (type == typeof(STUUnlock_OWLToken)) {
-                return UnlockType.OWLToken;
-            }
-
-            if (type == typeof(STUUnlock_LootBox)) {
-                return UnlockType.Lootbox;
-            }
-
-            if (type == typeof(STU_6A808718)) {
-                return UnlockType.WeaponCharm;
-            }
-
-            if (type == typeof(STU_C3C6FD9E)) {
-                return UnlockType.Hero;
-            }
-
-            if (type == typeof(STU_7A1A4764)) {
-                return UnlockType.BattlePassXP;
-            }
-
-            if (type == typeof(STU_A458D547)) {
-                return UnlockType.Souvenir;
-            }
-
-            if (type == typeof(STU_DB1B05B5)) {
-                return UnlockType.NameCard;
-            }
-
-            if (type == typeof(STU_514C0F6B)) {
-                return UnlockType.OverwatchCoins;
-            }
-
-            if (type == typeof(STU_52AB57E9)) {
-                return UnlockType.PlayerTitle;
-            }
-
-            if (type == typeof(STU_AD84E2AA)) {
-                return UnlockType.BattlePass;
-            }
-
-            if (type == typeof(STU_184D5944)) {
-                return UnlockType.SeasonXPBoost;
-            }
-
-            // some lootbox thing
-            if (type == typeof(STU_1EB22BDB)) {
-                return UnlockType.Unknown;
-            }
-
-            // battlepass tier skip thing
-            if (type == typeof(STU_80C1169E)) {
-                return UnlockType.Unknown;
-            }
-
-            Logger.Debug("Unlock", $"Unknown unlock type ${type}");
-            return UnlockType.Unknown;
+            return unlockType;
         }
 
         /// <summary>
@@ -366,5 +293,8 @@ namespace DataTool.DataModels {
         Souvenir,
         NameCard,
         Hero,
+        SkinComponent,
+        BattlePassTierSkip,
+        StoryMission,
     }
 }

@@ -16,7 +16,6 @@ using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
-using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 using static DataTool.Helper.SpellCheckUtils;
 using Logger = TankLib.Helpers.Logger;
 
@@ -281,71 +280,70 @@ namespace DataTool.ToolLogic.Extract {
 
             string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", GetValidFilename(unlock.GetName()));
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.Spray)) {
                 LoudLog($"\tExtracting spray {unlock.Name}");
                 SprayAndIcon.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_AvatarPortrait))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.Icon)) {
                 LoudLog($"\tExtracting icon {unlock.Name}");
                 SprayAndIcon.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_POTGAnimation))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.HighlightIntro)) {
                 LoudLog($"\tExtracting highlight intro {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_Emote))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.Emote)) {
                 LoudLog($"\tExtracting emote {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_Pose))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.VictoryPose)) {
                 LoudLog($"\tExtracting pose {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_VoiceLine))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.VoiceLine)) {
                 LoudLog($"\tExtracting voice line {unlock.Name}");
                 VoiceLine.Save(flags, thisPath, unlock, voiceSet);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SkinTheme))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.Skin)) {
                 SkinTheme.Save(flags, thisPath, unlock, hero);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_PortraitFrame))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.PortraitFrame)) {
                 // LoudLog($"\tExtracting level frame {unlock.Name}");
                 thisPath = Path.Combine(path, unlock.Type.ToString());
                 PortraitFrame.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STU_DB1B05B5))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.NameCard)) {
                 LoudLog($"\tExtracting name card {unlock.Name}");
                 NameCard.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STU_6A808718))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.WeaponCharm)) {
                 LoudLog($"\tExtracting charm {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, typeof(STU_A458D547))) {
+            if (ShouldDo(unlock, config, tags, UnlockType.Souvenir)) {
                 LoudLog($"\tExtracting souvenir {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
         }
 
-        private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, Type unlockType) {
-            var type = Unlock.GetUnlockType(unlockType);
-            var typeLower = type.ToString().ToLowerInvariant();
+        private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, UnlockType unlockType) {
+            var typeLower = unlockType.ToString().ToLowerInvariant();
 
             bool shouldDo;
             if (config == null) {
-                shouldDo = unlock.Type == type;
+                shouldDo = unlock.Type == unlockType;
             } else {
-                shouldDo = unlock.Type == type && config.ContainsKey(typeLower) &&
+                shouldDo = unlock.Type == unlockType && config.ContainsKey(typeLower) &&
                            config[typeLower].ShouldDo(unlock.GetName(), tags);
             }
 
