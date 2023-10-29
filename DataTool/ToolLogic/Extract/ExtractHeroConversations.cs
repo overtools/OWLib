@@ -30,20 +30,24 @@ namespace DataTool.ToolLogic.Extract {
                 path = Path.Combine(path, Program.Client.CreateArgs.SpeechLanguage ?? "enUS");
             }
 
-            Logger.Log($"Generating voiceline mappings, this will take some time.");
+            var validHeroes = Helpers.GetHeroNamesMapping();
+            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
+            if (parsedTypes == null) {
+                Logger.WarnLog("No query specified, extracting all conversations for all heroes.");
+            }
+
+            Logger.Log("Generating voiceline mappings, this will take a moment...");
             GenerateVoicelineMapping();
-            ProcessConversations(flags, path);
+            ProcessConversations(flags, path, parsedTypes);
         }
 
         private const string Container = "HeroConvo";
         private static readonly Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)>();
 
-        private void ProcessConversations(ExtractFlags flags, string basePath) {
-            var validHeroes = Helpers.GetHeroNamesMapping();
-            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
-
+        private void ProcessConversations(ExtractFlags flags, string basePath, Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes) {
             foreach (var conversationGuid in Program.TrackedFiles[0xD0]) {
                 var conversation = GetInstance<STUVoiceConversation>(conversationGuid);
+                if (conversation == null) continue;
 
                 var shouldProcessConvo = false;
                 if (parsedTypes != null) {
@@ -61,11 +65,15 @@ namespace DataTool.ToolLogic.Extract {
                             break;
                         }
                     }
+                } else {
+                    shouldProcessConvo = true; // no query so just process everything
                 }
 
                 if (!shouldProcessConvo) {
                     continue;
                 }
+
+                Logger.InfoLog($"Extracting {teResourceGUID.AsString(conversationGuid)}");
 
                 var newPath = basePath;
                 if (flags.VoiceGroupByHero) {
@@ -111,7 +119,7 @@ namespace DataTool.ToolLogic.Extract {
                 var heroStu = hero.STU;
 
                 string heroName = IO.GetValidFilename(hero.Name ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
-                Logger.Log($"Generating mapping for {heroName}");
+                Logger.InfoLog($"Generating mapping for {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
