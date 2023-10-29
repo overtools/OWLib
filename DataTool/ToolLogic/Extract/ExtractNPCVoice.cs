@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -28,13 +27,12 @@ namespace DataTool.ToolLogic.Extract {
             var heroes = Helpers.GetHeroes();
             var npcVoiceSets = new Dictionary<ulong, string>();
 
-            foreach (var (key, stu) in heroes) {
-                var hero = new Hero(stu, key);
+            foreach (var (key, hero) in heroes) {
                 if (hero.IsHero) {
                     continue;
                 }
 
-                var voiceSet = GetInstance<STUVoiceSetComponent>(stu?.m_gameplayEntity)?.m_voiceDefinition;
+                var voiceSet = GetInstance<STUVoiceSetComponent>(hero.STU?.m_gameplayEntity)?.m_voiceDefinition;
                 if (voiceSet > 0) {
                     npcVoiceSets.TryAdd(voiceSet, hero.Name);
                 }

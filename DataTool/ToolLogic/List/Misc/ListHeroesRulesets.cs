@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels.GameModes;
-using DataTool.DataModels.Hero;
 using DataTool.Flag;
+using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
-using static DataTool.Program;
 
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-heroes-rulesets", Description = "List heroes rulesets", CustomFlags = typeof(ListFlags), IsSensitive = true)]
@@ -21,21 +20,18 @@ namespace DataTool.ToolLogic.List.Misc {
         }
 
         public Dictionary<teResourceGUID, HeroRulesets> GetData() {
-            var heroes = new Dictionary<teResourceGUID, HeroRulesets>();
+            var rulesets = new Dictionary<teResourceGUID, HeroRulesets>();
 
-            foreach (teResourceGUID key in TrackedFiles[0x75]) {
-                var hero = new Hero(key);
-                if (hero.GUID == 0)
-                    continue;
-
-                heroes[key] = new HeroRulesets {
-                    GUID = key,
+            foreach (var (heroGuid, hero) in Helpers.GetHeroes()) {
+                var guid = new teResourceGUID(heroGuid);
+                rulesets[guid] = new HeroRulesets {
+                    GUID = guid,
                     Name = hero.Name,
                     RulesetSchemas = hero.STU.m_gameRulesetSchemas?.Select(x => new GameRulesetSchema(x)).ToArray()
                 };
             }
 
-            return heroes;
+            return rulesets;
         }
 
         public class HeroRulesets {

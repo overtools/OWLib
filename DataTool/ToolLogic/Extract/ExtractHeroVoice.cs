@@ -72,9 +72,10 @@ namespace DataTool.ToolLogic.Extract {
             SpellCheckQuery(parsedTypes, symSpell);
 
             foreach (var (heroGuid, hero) in heroes) {
-                if (hero == null) continue;
+                var heroStu = hero.STU;
+                if (heroStu == null) continue;
 
-                string heroNameActual = (GetCleanString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}");
+                string heroNameActual = hero.Name ?? $"Unknown{teResourceGUID.Index(heroGuid)}";
 
 
                 Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
@@ -88,19 +89,19 @@ namespace DataTool.ToolLogic.Extract {
 
                 string heroFileName = GetValidFilename(heroNameActual);
 
-                if (SaveSet(flags, basePath, hero.m_gameplayEntity, heroFileName, "Default", ref baseComponent, ref baseInfo)) {
-                    if (hero.m_heroProgression == 0) continue;
-                    var progression = new ProgressionUnlocks(hero);
+                if (SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroFileName, "Default", ref baseComponent, ref baseInfo)) {
+                    if (heroStu.m_heroProgression == 0) continue;
+                    var progression = new ProgressionUnlocks(heroStu);
 
                     bool npc = progression.LootBoxesUnlocks == null;
 
                     foreach (Unlock itemInfo in progression.OtherUnlocks) {
-                        ProcessUnlock(itemInfo, flags, basePath, heroFileName, hero, baseComponent, baseInfo);
+                        ProcessUnlock(itemInfo, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
                     }
 
                     if (npc) {
-                        foreach (var skin in hero.m_skinThemes)
-                            SaveSkin(flags, skin.m_5E9665E3, basePath, hero, heroFileName, GetFileName(skin.m_5E9665E3), baseComponent, baseInfo);
+                        foreach (var skin in heroStu.m_skinThemes)
+                            SaveSkin(flags, skin.m_5E9665E3, basePath, heroStu, heroFileName, GetFileName(skin.m_5E9665E3), baseComponent, baseInfo);
 
                         continue;
                     }
@@ -109,7 +110,7 @@ namespace DataTool.ToolLogic.Extract {
                         if (defaultUnlocks.Unlocks == null) continue; // wot??
 
                         foreach (Unlock unlock in defaultUnlocks.Unlocks) {
-                            ProcessUnlock(unlock, flags, basePath, heroFileName, hero, baseComponent, baseInfo);
+                            ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
                         }
                     }
 
@@ -117,7 +118,7 @@ namespace DataTool.ToolLogic.Extract {
                         if (eventUnlocks?.Unlocks == null) continue;
 
                         foreach (Unlock unlock in eventUnlocks.Unlocks) {
-                            ProcessUnlock(unlock, flags, basePath, heroFileName, hero, baseComponent, baseInfo);
+                            ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
                         }
                     }
                 }

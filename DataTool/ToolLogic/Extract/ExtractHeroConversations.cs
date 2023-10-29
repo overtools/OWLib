@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
-using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
@@ -103,16 +101,16 @@ namespace DataTool.ToolLogic.Extract {
         public void GenerateVoicelineMapping() {
             var seenVoiceSets = new HashSet<ulong>();
 
-            var heroes = Program.TrackedFiles[0x75]
-                .Select(x => new Hero(x))
-                .OrderBy(x => !x.IsHero)
-                .ThenBy(x => x.GUID.GUID)
+            var heroesDict = Helpers.GetHeroes();
+            var heroes = heroesDict.Values
+                .OrderBy(x => !x.IsHero) // sort by hero first
+                .ThenBy(x => x.GUID.GUID) // then by GUID
                 .ToArray();
 
             foreach (var hero in heroes) {
-                var heroStu = GetInstance<STUHero>(hero.GUID);
+                var heroStu = hero.STU;
 
-                string heroName = GetValidFilename(GetCleanString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
+                string heroName = IO.GetValidFilename(hero.Name ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
                 Logger.Log($"Generating mapping for {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
@@ -149,7 +147,7 @@ namespace DataTool.ToolLogic.Extract {
                 var voiceSet = GetInstance<STUVoiceSet>(guid);
                 if (voiceSet == null) continue;
 
-                var npcName = $"{GetCleanString(voiceSet.m_269FC4E9)} {GetCleanString(voiceSet.m_C0835C08)}".Trim();
+                var npcName = $"{IO.GetCleanString(voiceSet.m_269FC4E9)} {IO.GetCleanString(voiceSet.m_C0835C08)}".Trim();
                 if (string.IsNullOrEmpty(npcName)) {
                     npcName = IO.GetNullableGUIDName(guid) ?? $"Unknown{teResourceGUID.Index(guid):X}";
                 }

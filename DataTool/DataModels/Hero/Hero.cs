@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using TankLib;
 using TankLib.Math;
@@ -9,6 +10,7 @@ using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels.Hero {
     [DataContract]
+    [DebuggerDisplay("[{GUID.ToStringShort()}] {Name}")]
     public class Hero {
         [DataMember]
         public teResourceGUID GUID { get; set; }

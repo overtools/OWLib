@@ -24,8 +24,8 @@ namespace DataTool.ToolLogic.Extract {
             var heroIntelImageMapping = GetIntelDatabaseHeroImages();
             var heroProgressionImageMapping = GetHeroProgressionImageMapping();
 
-            foreach (var (key, heroStu) in Helpers.GetHeroes()) {
-                var hero = new Hero(heroStu, key);
+            foreach (var (key, hero) in Helpers.GetHeroes()) {
+                var heroStu = hero.STU;
                 var heroNameLower = hero.Name?.ToLower().Trim();
                 var heroCleanName = IO.GetValidFilename(hero.Name);
 

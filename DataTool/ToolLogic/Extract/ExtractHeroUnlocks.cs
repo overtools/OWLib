@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
-using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -99,8 +98,7 @@ namespace DataTool.ToolLogic.Extract {
                 throw new Exception("no output path");
             }
 
-            var heroes = Helpers.GetHeroes();
-            SaveUnlocksForHeroes(flags, heroes, basePath, NPCs);
+            SaveUnlocksForHeroes(flags, basePath);
 
             if (!HasSavedAnything) {
                 Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly?");
@@ -145,12 +143,13 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public void SaveUnlocksForHeroes(ICLIFlags flags, Dictionary<ulong, STUHero> heroes, string basePath, bool npc = false) {
+        public void SaveUnlocksForHeroes(ICLIFlags flags, string basePath) {
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);
                 return;
             }
 
+            var heroes = Helpers.GetHeroes();
             var validNames = Helpers.GetHeroNamesMapping(heroes);
             var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validNames);
             if (parsedTypes == null) return;
@@ -158,13 +157,11 @@ namespace DataTool.ToolLogic.Extract {
             FillHeroSpellDict(symSpell);
             SpellCheckQuery(parsedTypes,symSpell);
 
-            foreach (KeyValuePair<ulong, STUHero> heroPair in heroes) {
-                var hero = heroPair.Value;
-                string heroNameActual = Hero.GetCleanName(hero);
-
+            foreach (var (heroGuid, hero) in heroes) {
+                var heroNameActual = hero.Name;
                 if (heroNameActual == null) continue;
 
-                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroPair.Key).ToString("X"));
+                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroGuid).ToString("X"));
 
                 string heroFileName = GetValidFilename(heroNameActual);
 
@@ -172,13 +169,13 @@ namespace DataTool.ToolLogic.Extract {
 
                 string heroPath = Path.Combine(basePath, RootDir, heroFileName);
 
-                VoiceSet voiceSet = new VoiceSet(hero);
-                ProgressionUnlocks progressionUnlocks = new ProgressionUnlocks(hero);
-                if (progressionUnlocks.LevelUnlocks == null && !npc) {
+                VoiceSet voiceSet = new VoiceSet(hero.STU);
+                ProgressionUnlocks progressionUnlocks = new ProgressionUnlocks(hero.STU);
+                if (progressionUnlocks.LevelUnlocks == null && !NPCs) {
                     continue;
                 }
 
-                if (progressionUnlocks.LootBoxesUnlocks != null && npc) {
+                if (progressionUnlocks.LootBoxesUnlocks != null && NPCs) {
                     continue;
                 }
 
@@ -187,8 +184,8 @@ namespace DataTool.ToolLogic.Extract {
                 {
                     Combo.ComboInfo guiInfo = new Combo.ComboInfo();
 
-                    hero.m_8203BFE1 ??= Array.Empty<STU_1A496D3C>(); // todo: fix the gosh darn stu
-                    foreach (STU_1A496D3C tex in hero.m_8203BFE1) {
+                    hero.STU.m_8203BFE1 ??= Array.Empty<STU_1A496D3C>(); // todo: fix the gosh darn stu
+                    foreach (STU_1A496D3C tex in hero.STU.m_8203BFE1) {
                         Combo.Find(guiInfo, tex.m_texture);
                         guiInfo.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
                     }
@@ -201,15 +198,15 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
-                    SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet, hero);
+                    SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet, hero.STU);
                 }
 
-                if (npc) {
-                    foreach (var skin in hero.m_skinThemes) {
+                if (NPCs) {
+                    foreach (var skin in hero.STU.m_skinThemes) {
                         if (!config.ContainsKey("skin") || !config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
                             continue;
 
-                        SkinTheme.Save(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero);
+                        SkinTheme.Save(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero.STU);
                         HasSavedAnything = true;
                     }
 
@@ -219,7 +216,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (progressionUnlocks.LevelUnlocks != null) { // default unlocks
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                     foreach (LevelUnlocks levelUnlocks in progressionUnlocks.LevelUnlocks) {
-                        SaveUnlocks(flags, levelUnlocks.Unlocks, heroPath, "Default", config, tags, voiceSet, hero);
+                        SaveUnlocks(flags, levelUnlocks.Unlocks, heroPath, "Default", config, tags, voiceSet, hero.STU);
                     }
                 }
 
@@ -232,7 +229,7 @@ namespace DataTool.ToolLogic.Extract {
                             {"event", new TagExpectedValue(LootBox.GetBasicName(lootBoxUnlocks.LootBoxType))}
                         };
 
-                        SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet, hero);
+                        SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet, hero.STU);
                     }
                 }
 

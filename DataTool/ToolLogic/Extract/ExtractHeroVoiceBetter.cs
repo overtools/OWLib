@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
-using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -36,13 +35,13 @@ namespace DataTool.ToolLogic.Extract {
 
             // Do normal heroes first then NPCs, this is because NPCs have a lot of duplicate sounds and normal heroes (should) have none
             // so any duplicate sounds would only come up while processing NPCs which can be ignored as they (probably) belong to heroes
-            var heroes = Program.TrackedFiles[0x75]
-                .Select(x => new Hero(x))
-                .OrderBy(x => !x.IsHero)
-                .ThenBy(x => x.GUID.GUID)
+            var heroesDict = Helpers.GetHeroes();
+            var heroes = heroesDict.Values
+                .OrderBy(x => !x.IsHero) // sort by hero first
+                .ThenBy(x => x.GUID.GUID) // then by GUID
                 .ToArray();
 
-            var validHeroes = Helpers.GetHeroNamesMapping();
+            var validHeroes = Helpers.GetHeroNamesMapping(heroesDict);
             var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
 
             foreach (var hero in heroes) {

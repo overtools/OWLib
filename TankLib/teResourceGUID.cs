@@ -186,5 +186,10 @@ namespace TankLib {
         public bool Equals(teResourceGUID other) {
             return GUID == other.GUID;
         }
+
+        /// <summary>Shorted string representation of a GUID (ABB.075)</summary>
+        public string ToStringShort() {
+            return $"{LongKey(GUID):X}.{Type(GUID):X3}";
+        }
     }
 }

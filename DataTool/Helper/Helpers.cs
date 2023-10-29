@@ -5,22 +5,27 @@ using TankLib.STU.Types;
 
 namespace DataTool.Helper {
     public static class Helpers {
-        public static Dictionary<ulong, STUHero> GetHeroes() {
-            var @return = new Dictionary<ulong, STUHero>();
-            foreach (ulong key in Program.TrackedFiles[0x75]) {
+        /// <summary>
+        /// Returns dictionary of all Heroes by GUID using the <see cref="Hero"/> data model.
+        /// </summary>
+        public static Dictionary<ulong, Hero> GetHeroes() {
+            var @return = new Dictionary<ulong, Hero>();
+            foreach (var key in Program.TrackedFiles[0x75]) {
                 var hero = STUHelper.GetInstance<STUHero>(key);
                 if (hero == null) continue;
-                @return[key] = hero;
+                @return[key] = new Hero(hero, key);
             }
 
             return @return;
         }
 
-        public static Dictionary<ulong, string> GetHeroNamesMapping(Dictionary<ulong, STUHero> heroes = null) {
-            if (heroes == null)
-                heroes = GetHeroes();
-
-            return heroes.ToDictionary(x => x.Key, x => Hero.GetCleanName(x.Value)?.ToLowerInvariant());
+        /// <summary>
+        /// Returns a mapping of hero names to their GUIDs in lowercase.
+        /// </summary>
+        /// <param name="heroes">optional heroes dict if you already have one from <see cref="GetHeroes"/></param>
+        public static Dictionary<ulong, string> GetHeroNamesMapping(Dictionary<ulong, Hero> heroes = null) {
+            heroes ??= GetHeroes();
+            return heroes.ToDictionary(x => x.Key, x => x.Value.Name?.ToLowerInvariant());
         }
     }
 }

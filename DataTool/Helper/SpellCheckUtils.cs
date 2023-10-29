@@ -1,9 +1,7 @@
 ﻿using DataTool.DataModels;
-using DataTool.DataModels.Hero;
 using DataTool.ToolLogic.List;
 using System.Collections.Generic;
 using System.Reflection;
-using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Program;
@@ -35,15 +33,7 @@ namespace DataTool.Helper {
         }
 
         public static void FillHeroSpellDict(SymSpell symSpell) {
-            var heroes = new Dictionary<teResourceGUID, Hero>();
-
-            foreach (teResourceGUID key in TrackedFiles[0x75]) {
-                var hero = new Hero(key);
-                if (hero.GUID == 0)
-                    continue;
-
-                heroes[key] = hero;
-            }
+            var heroes = Helpers.GetHeroes();
 
             foreach (var (_, hero) in heroes) {
                 if (hero.Name != null)
@@ -67,6 +57,5 @@ namespace DataTool.Helper {
                 symSpell.CreateDictionaryEntry(attribute.Keyword.ToLower(), 1);
             }
         }
-
     }
 }
