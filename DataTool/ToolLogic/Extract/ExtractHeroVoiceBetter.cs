@@ -27,6 +27,7 @@ namespace DataTool.ToolLogic.Extract {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (ExtractFlags) toolFlags;
             flags.EnsureOutputDirectory();
+            var outputPath = Path.Combine(flags.OutputPath, Container);
 
             // Do normal heroes first then NPCs, this is because NPCs have a lot of duplicate sounds and normal heroes (should) have none
             // so any duplicate sounds would only come up while processing NPCs which can be ignored as they (probably) belong to heroes
@@ -55,7 +56,7 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.ComboInfo baseInfo = default;
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(hero.STU.m_gameplayEntity)?.m_voiceDefinition;
 
-                if (SaveVoiceSet(flags, flags.OutputPath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
+                if (SaveVoiceSet(flags, outputPath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
                     var skins = new ProgressionUnlocks(hero.STU).GetUnlocksOfType(UnlockType.Skin);
 
                     foreach (var unlock in skins) {
@@ -71,7 +72,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
                         }
 
-                        SaveVoiceSet(flags, flags.OutputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
+                        SaveVoiceSet(flags, outputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
                     }
                 }
             }

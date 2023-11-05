@@ -10,6 +10,8 @@ using static DataTool.Helper.STUHelper;
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags))]
     public class ExtractMusic : ITool {
+        private const string Container = "Music";
+        
         Dictionary<UInt32, string> music_types = new Dictionary<uint, string> {
             { 0xE590A66D, "LoadingScreen" },
             { 0xB5655E34, "Retribution" },
@@ -47,6 +49,7 @@ namespace DataTool.ToolLogic.Extract {
         public void ExtractType(ICLIFlags toolFlags) {
             var flags = (ExtractFlags) toolFlags;
             flags.EnsureOutputDirectory();
+            var outputPath = Path.Combine(flags.OutputPath, Container);
 
             foreach (ulong @ulong in TrackedFiles[0x2C]) {
                 STUSound music = GetInstance<STUSound>(@ulong);
@@ -59,7 +62,7 @@ namespace DataTool.ToolLogic.Extract {
                     FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
                     var context = new Combo.SaveContext(info);
                     FindLogic.Combo.Find(info, @ulong);
-                    SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(flags.OutputPath, music_types[s_class]), context);
+                    SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(outputPath, music_types[s_class]), context);
                 }
             }
         }
