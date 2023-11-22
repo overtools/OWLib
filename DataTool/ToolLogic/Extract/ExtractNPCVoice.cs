@@ -4,6 +4,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
+using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
@@ -22,23 +23,37 @@ namespace DataTool.ToolLogic.Extract {
 
             var heroes = Helpers.GetHeroes();
             var npcHeroVoiceSets = new Dictionary<ulong, string>();
-            var heroMainVoiceSets = new HashSet<ulong>();
+            var heroVoiceSets = new HashSet<ulong>();
 
             foreach (var (key, hero) in heroes) {
                 var voiceSet = GetInstance<STUVoiceSetComponent>(hero.STU?.m_gameplayEntity)?.m_voiceDefinition;
+                if (voiceSet == 0) continue;
 
                 if (hero.IsHero) {
-                    heroMainVoiceSets.Add(voiceSet);
+                    heroVoiceSets.Add(voiceSet);
                     continue;
                 }
                 
-                if (voiceSet > 0) {
-                    npcHeroVoiceSets.TryAdd(voiceSet, hero.Name);
+                npcHeroVoiceSets.TryAdd(voiceSet, hero.Name);
+            }
+            
+            foreach (var skinThemeGUID in Program.TrackedFiles[0xA6]) {
+                var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
+                if (skinTheme == null) continue;
+                if (skinTheme.m_runtimeOverrides == null) continue;
+
+                foreach (var runtimeOverride in skinTheme.m_runtimeOverrides) {
+                    var overrideGUID = runtimeOverride.Value.m_3D884507;
+                    
+                    if (teResourceGUID.Type(overrideGUID) != 0x5F) continue;
+                    // this skin overrides a voice set.
+                    // its not an npc, dont need it
+                    heroVoiceSets.Add(overrideGUID);
                 }
             }
 
             foreach (var guid in Program.TrackedFiles[0x5F]) {
-                if (heroMainVoiceSets.Contains(guid)) continue;
+                if (heroVoiceSets.Contains(guid)) continue;
                 
                 var voiceSet = GetInstance<STUVoiceSet>(guid);
                 if (voiceSet == null) continue;
