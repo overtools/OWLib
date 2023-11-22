@@ -240,7 +240,7 @@ namespace CASCEncDump {
             }
 
             HashSet<FullKey> hashSet = new HashSet<FullKey>(CASCKeyComparer.Instance);
-            foreach (FullKey hash in otherHashes.Select(FullKey.FromString)) {
+            foreach (FullKey hash in otherHashes.Select(x => FullKey.FromString(x))) {
                 hashSet.Add(hash);
             }
 

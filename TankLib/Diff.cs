@@ -89,7 +89,7 @@ namespace TankLib {
         }
 
         public static IEnumerable<CKey> ReadTextCKeys(StreamReader streamReader) {
-            return streamReader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Select(CKey.FromString);
+            return streamReader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Select(x => CKey.FromString(x));
         }
 
         public static HashSet<CKey> ReadCKeys(Stream stream) {
