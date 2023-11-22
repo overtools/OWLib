@@ -67,7 +67,7 @@ namespace DataTool {
     public class QueryType {
         public string Name;
         public string HumanName;
-        public List<QueryTag> Tags;
+        public List<QueryTag> Tags = new List<QueryTag>();
         public string DynamicChoicesKey;
     }
 
