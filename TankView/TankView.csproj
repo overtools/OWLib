@@ -39,10 +39,10 @@
     <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.1" />
     <PackageReference Include="DirectXTexNet" Version="1.0.3" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NAudio" Version="2.1.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
-    <PackageReference Include="NVorbis" Version="0.10.4" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />
+    <PackageReference Include="NVorbis" Version="0.10.5" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.8" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
