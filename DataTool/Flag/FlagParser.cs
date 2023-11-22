@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Utf8Json;
+using Newtonsoft.Json;
 
 namespace DataTool.Flag {
     public class FlagParser {
@@ -450,7 +450,7 @@ namespace DataTool.Flag {
 
         public static void LoadArgs() {
             if (File.Exists(ArgFilePath))
-                AppArgs = JsonSerializer.Deserialize<string[]>(File.ReadAllText(ArgFilePath))
+                AppArgs = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(ArgFilePath))
                     .Concat(AppArgs)
                     .Distinct()
                     .ToArray();
@@ -462,7 +462,7 @@ namespace DataTool.Flag {
                 .Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x)))
                 .Reverse()
                 .ToArray();
-            File.WriteAllText(ArgFilePath, JsonSerializer.ToJsonString(args));
+            File.WriteAllText(ArgFilePath, JsonConvert.SerializeObject(args));
         }
 
         public static void ResetArgs() {

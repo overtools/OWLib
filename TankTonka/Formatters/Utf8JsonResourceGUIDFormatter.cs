@@ -1,7 +1,7 @@
 using TankLib;
 using Utf8Json;
 
-namespace DataTool.JSON {
+namespace TankTonka.Formatters {
     public class Utf8JsonResourceGUIDFormatter : IJsonFormatter<teResourceGUID>, IJsonFormatter<teResourceGUID[]> {
         public void Serialize(ref JsonWriter writer, teResourceGUID value, IJsonFormatterResolver formatterResolver) {
             Serialize(ref writer, (ulong) value, formatterResolver);
