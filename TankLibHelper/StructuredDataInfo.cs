@@ -28,8 +28,8 @@ namespace TankLibHelper {
         }
 
         private void Load(string directory) {
-            LoadInstances(Path.Combine(directory, "RegisteredSTUTypes.json"));
-            LoadEnums(Path.Combine(directory, "RegisteredEnums.json"));
+            LoadInstances(Path.Combine(directory, "STUDump.json"));
+            LoadEnums(Path.Combine(directory, "EnumDump.json"));
             LoadNames(directory);
         }
         private void LoadNames(string directory) {
@@ -96,6 +96,7 @@ namespace TankLibHelper {
             if (string.IsNullOrEmpty(filepath)) {
                 return;
             }
+            if (!File.Exists(filepath)) return;
             string[] rows = File.ReadAllLines(filepath);
             if (rows.Length < 2) { // If it doesn't have at least 1 row after the header
                 return;

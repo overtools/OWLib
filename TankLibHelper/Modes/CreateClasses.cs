@@ -10,6 +10,9 @@ namespace TankLibHelper.Modes {
         private StructuredDataInfo _info;
 
         public ModeResult Run(string[] args) {
+            // example:
+            // createclasses "C:/Users/User/Desktop/New folder/tanklibclasses2_08" "path to stu dump" Data DataPreHashChange
+            
             if (args.Length < 2) {
                 Console.Out.WriteLine("Missing required arg: \"output\"");
                 return ModeResult.Fail;
