@@ -61,8 +61,7 @@ namespace DataTool.ToolLogic.Extract {
                 new QueryTag("event", "Event", new List<string> {"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
                 new QueryTag("leagueTeam", "League Team", new List<string>(), "none") {
                     DynamicChoicesKey = UtilDynamicChoices.VALID_OWL_TEAMS
-                },
-                new QueryTag("special", null, new List<string> {"sg2018"})
+                }
             };
             DynamicChoicesKey = uxKey;
         }
