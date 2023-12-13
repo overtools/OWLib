@@ -34,6 +34,7 @@ namespace DataTool.ToolLogic.Util {
         public const string VALID_VICTORYPOSE_NAMES = "datatool.ux.valid_victorypose_names";
         public const string VALID_HIGHLIGHTINTRO_NAMES = "datatool.ux.valid_highlightintro_names";
         public const string VALID_EMOTE_NAMES = "datatool.ux.valid_emote_names";
+        public const string VALID_WEAPONVARIANT_NAMES = "datatool.ux.valid_weaponvariant_names";
         public const string VALID_VOICELINE_NAMES = "datatool.ux.valid_voiceline_names";
 
         public const string VALID_OWL_TEAMS = "datatool.ux.valid_owl_teams";

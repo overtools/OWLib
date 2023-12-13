@@ -84,6 +84,7 @@ namespace DataTool.ToolLogic.Extract {
             new CosmeticType("highlightintro", "Highlight Intro", UtilDynamicChoices.VALID_HIGHLIGHTINTRO_NAMES),
             new CosmeticType("emote", "Emote", UtilDynamicChoices.VALID_EMOTE_NAMES),
             new CosmeticType("voiceline", "Voice Line", UtilDynamicChoices.VALID_VOICELINE_NAMES),
+            new CosmeticType("weaponvariant", "Weapon Variant", UtilDynamicChoices.VALID_WEAPONVARIANT_NAMES),
             new CosmeticType("namecard", "Name Card(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)", ""),
             new CosmeticType("weaponcharm", "Weapon Charm(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)", ""),
             new CosmeticType("souvenir", "Souvenir(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)", "")
@@ -333,6 +334,11 @@ namespace DataTool.ToolLogic.Extract {
             if (ShouldDo(unlock, config, tags, UnlockType.Souvenir)) {
                 LoudLog($"\tExtracting souvenir {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
+            }
+
+            if (ShouldDo(unlock, config, tags, UnlockType.WeaponVariant)) {
+                LoudLog($"\tExtracting weapon variant {unlock.Name}");
+                WeaponVariant.Save(flags, thisPath, unlock, hero);
             }
         }
 

@@ -204,6 +204,7 @@ namespace DataTool.DataModels {
                 STU_80C1169E _ => UnlockType.BattlePassTierSkip,
                 STU_3F17D547 _ => UnlockType.SkinComponent,
                 STU_A85D31BF _ => UnlockType.StoryMission,
+                STU_2448F3AA _ => UnlockType.WeaponVariant,
                 _ => UnlockType.Unknown
             };
 
@@ -296,5 +297,6 @@ namespace DataTool.DataModels {
         SkinComponent,
         BattlePassTierSkip,
         StoryMission,
+        WeaponVariant,
     }
 }
