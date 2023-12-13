@@ -336,6 +336,11 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.WeaponVariant)) {
+                if (unlock.STU.m_rarity == STUUnlockRarity.Common) {
+                    Logger.Debug("ExtractHeroUnlock", $"skipping common rarity weapon {unlock.Name}");
+                    return;
+                }
+                
                 LoudLog($"\tExtracting weapon variant {unlock.Name}");
                 WeaponVariant.Save(flags, thisPath, unlock, hero);
             }

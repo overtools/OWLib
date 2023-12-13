@@ -121,7 +121,8 @@ namespace DataTool.DataModels {
                 Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine ||
                 Type == UnlockType.Emote || Type == UnlockType.Souvenir ||
                 Type == UnlockType.NameCard || Type == UnlockType.PlayerTitle ||
-                Type == UnlockType.WeaponCharm || Type == UnlockType.WeaponSkin;
+                Type == UnlockType.WeaponCharm || Type == UnlockType.WeaponSkin ||
+                Type == UnlockType.WeaponVariant;
 
             if (unlock.m_BEE9BCDA != null) {
                 Categories = unlock.m_BEE9BCDA

@@ -188,7 +188,7 @@ namespace DataTool.SaveLogic.Unlock {
         /// Pass these replacements into Combo.Find to make sure you're getting the right files for a specific skin theme.
         /// </summary>
         public static Dictionary<ulong, ulong> GetReplacements(STU_21276722 skin) {
-            if (skin == null) return null;
+            if (skin == null) return new Dictionary<ulong, ulong>();
 
             var replacements = new Dictionary<ulong, ulong>();
             if (skin.m_runtimeOverrides != null) {
