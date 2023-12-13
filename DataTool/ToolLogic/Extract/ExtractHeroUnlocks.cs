@@ -53,8 +53,7 @@ namespace DataTool.ToolLogic.Extract {
 
     [DebuggerDisplay("CosmeticType: {" + nameof(Name) + "}")]
     public class CosmeticType : QueryType {
-        public CosmeticType(string name, string humanName, string uxKey) {
-            Name = name;
+        public CosmeticType(UnlockType type, string humanName) : base(UnlockTypeToName(type)) {
             HumanName = humanName;
             Tags = new List<QueryTag> {
                 new QueryTag("rarity", "Rarity", new List<string> {"common", "rare", "epic", "legendary"}),
@@ -63,7 +62,11 @@ namespace DataTool.ToolLogic.Extract {
                     DynamicChoicesKey = UtilDynamicChoices.VALID_OWL_TEAMS
                 }
             };
-            DynamicChoicesKey = uxKey;
+            DynamicChoicesKey = UtilDynamicChoices.GetUnlockKey(type);
+        }
+
+        public static string UnlockTypeToName(UnlockType type) {
+            return type.ToString().ToLowerInvariant();
         }
     }
 
@@ -76,17 +79,27 @@ namespace DataTool.ToolLogic.Extract {
         private static bool HasSavedAnything = false;
 
         public List<QueryType> QueryTypes => new List<QueryType> {
-            new CosmeticType("skin", "Skin", UtilDynamicChoices.VALID_SKIN_NAMES),
-            new CosmeticType("icon", "Icon", UtilDynamicChoices.VALID_ICON_NAMES),
-            new CosmeticType("spray", "Spray", UtilDynamicChoices.VALID_SPRAY_NAMES),
-            new CosmeticType("victorypose", "Victory Pose", UtilDynamicChoices.VALID_VICTORYPOSE_NAMES),
-            new CosmeticType("highlightintro", "Highlight Intro", UtilDynamicChoices.VALID_HIGHLIGHTINTRO_NAMES),
-            new CosmeticType("emote", "Emote", UtilDynamicChoices.VALID_EMOTE_NAMES),
-            new CosmeticType("voiceline", "Voice Line", UtilDynamicChoices.VALID_VOICELINE_NAMES),
-            new CosmeticType("weaponvariant", "Weapon Variant", UtilDynamicChoices.VALID_WEAPONVARIANT_NAMES),
-            new CosmeticType("namecard", "Name Card(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)", ""),
-            new CosmeticType("weaponcharm", "Weapon Charm(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)", ""),
-            new CosmeticType("souvenir", "Souvenir(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)", "")
+            new CosmeticType(UnlockType.Skin, "Skin"),
+            new CosmeticType(UnlockType.Icon, "Icon") {
+                Aliases = ["playericon"]
+            },
+            new CosmeticType(UnlockType.Spray, "Spray"),
+            new CosmeticType(UnlockType.VictoryPose, "Victory Pose") {
+                Aliases = ["pose"]
+            },
+            new CosmeticType(UnlockType.HighlightIntro, "Highlight Intro") {
+                Aliases = ["highlight", "intro"]
+            },
+            new CosmeticType(UnlockType.Emote, "Emote"),
+            new CosmeticType(UnlockType.VoiceLine, "Voice Line"),
+            new CosmeticType(UnlockType.WeaponSkin, "Weapon Skin") {
+                Aliases = ["weaponvariant"]
+            },
+            new CosmeticType(UnlockType.NameCard, "Name Card(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)"),
+            new CosmeticType(UnlockType.WeaponCharm, "Weapon Charm(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)") {
+                Aliases = ["charm"]
+            },
+            new CosmeticType(UnlockType.Souvenir, "Souvenir(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)")
         };
 
         public void Parse(ICLIFlags toolFlags) {
@@ -146,11 +159,11 @@ namespace DataTool.ToolLogic.Extract {
 
             var heroes = Helpers.GetHeroes();
             var validNames = Helpers.GetHeroNamesMapping(heroes);
-            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validNames);
+            var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validNames);
             if (parsedTypes == null) return;
 
-            FillHeroSpellDict(symSpell);
-            SpellCheckQuery(parsedTypes,symSpell);
+            FillHeroSpellDict(SymSpell);
+            SpellCheckQuery(parsedTypes,SymSpell);
 
             foreach (var (heroGuid, hero) in heroes) {
                 var heroNameActual = hero.Name;
@@ -335,26 +348,27 @@ namespace DataTool.ToolLogic.Extract {
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
-            if (ShouldDo(unlock, config, tags, UnlockType.WeaponVariant)) {
+            if (ShouldDo(unlock, config, tags, UnlockType.WeaponSkin)) {
                 if (unlock.STU.m_rarity == STUUnlockRarity.Common) {
                     Logger.Debug("ExtractHeroUnlock", $"skipping common rarity weapon {unlock.Name}");
                     return;
                 }
                 
-                LoudLog($"\tExtracting weapon variant {unlock.Name}");
-                WeaponVariant.Save(flags, thisPath, unlock, hero);
+                LoudLog($"\tExtracting weapon skin {unlock.Name}");
+                WeaponSkin.Save(flags, thisPath, unlock, hero);
             }
         }
 
         private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, UnlockType unlockType) {
-            var typeLower = unlockType.ToString().ToLowerInvariant();
-
+            if (unlock.Type != unlockType) return false;
+            
             bool shouldDo;
             if (config == null) {
-                shouldDo = unlock.Type == unlockType;
+                shouldDo = true;
             } else {
-                shouldDo = unlock.Type == unlockType && config.ContainsKey(typeLower) &&
-                           config[typeLower].ShouldDo(unlock.GetName(), tags);
+                var typeLower = CosmeticType.UnlockTypeToName(unlockType);
+                shouldDo = config.TryGetValue(typeLower, out var configForType) &&
+                           configForType.ShouldDo(unlock.GetName(), tags);
             }
 
             if (shouldDo) {

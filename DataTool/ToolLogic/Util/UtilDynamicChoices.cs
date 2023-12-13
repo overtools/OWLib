@@ -27,17 +27,11 @@ namespace DataTool.ToolLogic.Util {
         public const string VALID_HERO_NAMES = "datatool.ux.valid_hero_names";
         public const string VALID_NPC_NAMES = "datatool.ux.valid_npc_names";
         public const string VALID_MAP_NAMES = "datatool.ux.valid_map_names";
-
-        public const string VALID_SKIN_NAMES = "datatool.ux.valid_skin_names";
-        public const string VALID_ICON_NAMES = "datatool.ux.valid_icon_names";
-        public const string VALID_SPRAY_NAMES = "datatool.ux.valid_spray_names";
-        public const string VALID_VICTORYPOSE_NAMES = "datatool.ux.valid_victorypose_names";
-        public const string VALID_HIGHLIGHTINTRO_NAMES = "datatool.ux.valid_highlightintro_names";
-        public const string VALID_EMOTE_NAMES = "datatool.ux.valid_emote_names";
-        public const string VALID_WEAPONVARIANT_NAMES = "datatool.ux.valid_weaponvariant_names";
-        public const string VALID_VOICELINE_NAMES = "datatool.ux.valid_voiceline_names";
-
         public const string VALID_OWL_TEAMS = "datatool.ux.valid_owl_teams";
+
+        public static string GetUnlockKey(UnlockType unlockType) {
+            return "datatool.ux.valid_" + unlockType.ToString().ToLowerInvariant() + "_names";
+        }
 
         public class DynamicChoiceType {
             public List<DynamicChoice> Choices = new List<DynamicChoice>();
@@ -113,15 +107,14 @@ namespace DataTool.ToolLogic.Util {
                             continue;
                         }
                     }
-
-                    var key = "datatool.ux.valid_" + unlock.Type.ToString().ToLowerInvariant() + "_names";
-
+                    
                     if (choice.Children == null) {
                         choice.Children = new DynamicChoicesContainer();
                     }
 
-                    var test = choice.Children.GetType(key);
-                    test.Choices.Add(new DynamicChoice {
+                    var unlocksTypeKey = GetUnlockKey(unlock.Type);
+                    var unlocksType = choice.Children.GetType(unlocksTypeKey);
+                    unlocksType.Choices.Add(new DynamicChoice {
                         QueryName = unlock.Name,
                         DisplayName = unlock.Name
                     });

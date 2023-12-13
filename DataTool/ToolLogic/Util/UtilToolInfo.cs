@@ -54,7 +54,7 @@ namespace DataTool.ToolLogic.Util {
                 if (typeof(IQueryParser).IsAssignableFrom(toolType)) {
                     tool.SupportsQuery = true;
 
-                    var toolInstance = (IQueryParser) Activator.CreateInstance(toolType);
+                    var toolInstance = (IQueryParser) Activator.CreateInstance(toolType)!;
 
                     tool.QueryInfo = new QueryInfo {
                         DynamicChoicesKey = toolInstance.DynamicChoicesKey,
@@ -66,17 +66,14 @@ namespace DataTool.ToolLogic.Util {
                             HumanName = queryType.HumanName,
                             DynamicChoicesKey = queryType.DynamicChoicesKey
                         };
-                        if (queryType.Tags != null) {
-                            typeJson.Tags = new List<QueryTagJSON>();
-                            foreach (QueryTag tag in queryType.Tags) {
-                                if (tag.HumanName == null) continue; // avoid stuff that isn't really great e.g special
-                                typeJson.Tags.Add(new QueryTagJSON {
-                                    Name = tag.Name,
-                                    HumanName = tag.HumanName,
-                                    FixedValues = tag.Options,
-                                    DynamicChoicesKey = tag.DynamicChoicesKey
-                                });
-                            }
+                        
+                        foreach (QueryTag tag in queryType.Tags) {
+                            typeJson.Tags.Add(new QueryTagJSON {
+                                Name = tag.Name,
+                                HumanName = tag.HumanName,
+                                FixedValues = tag.Options,
+                                DynamicChoicesKey = tag.DynamicChoicesKey
+                            });
                         }
 
                         tool.QueryInfo.Types.Add(typeJson);
@@ -97,7 +94,7 @@ namespace DataTool.ToolLogic.Util {
             public string Name;
             public string HumanName;
             public string DynamicChoicesKey;
-            public List<QueryTagJSON> Tags;
+            public List<QueryTagJSON> Tags = new List<QueryTagJSON>();
         }
 
         public class QueryTagJSON {

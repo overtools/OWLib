@@ -50,8 +50,8 @@ namespace DataTool.ToolLogic.Extract {
                 return;
             }
 
-            FillMapSpellDict(symSpell);
-            SpellCheckMapName(parsedTypes,symSpell);
+            FillMapSpellDict(SymSpell);
+            SpellCheckMapName(parsedTypes,SymSpell);
 
             foreach (ulong key in TrackedFiles[0x9F]) {
                 STUMapHeader map = GetInstance<STUMapHeader>(key);

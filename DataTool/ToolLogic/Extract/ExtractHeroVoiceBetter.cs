@@ -38,7 +38,7 @@ namespace DataTool.ToolLogic.Extract {
                 .ToArray();
 
             var validHeroes = Helpers.GetHeroNamesMapping(heroesDict);
-            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
+            var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
 
             foreach (var hero in heroes) {
                 // if we have a query, check if we should process this hero

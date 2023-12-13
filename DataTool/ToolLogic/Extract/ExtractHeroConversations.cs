@@ -26,7 +26,7 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             var validHeroes = Helpers.GetHeroNamesMapping();
-            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
+            var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
             if (parsedTypes == null) {
                 Logger.WarnLog("No query specified, extracting all conversations for all heroes.");
             }

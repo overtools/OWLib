@@ -17,7 +17,10 @@ using static DataTool.Helper.SpellCheckUtils;
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice-old", IsSensitive = true, Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
-        public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "soundRestriction", HumanName = "Sound"}, new QueryType {Name = "groupRestriction", HumanName = "Group"}};
+        public List<QueryType> QueryTypes => new List<QueryType> {
+            new QueryType("soundRestriction") { HumanName = "Sound" }, 
+            new QueryType("groupRestriction") { HumanName = "Group" }
+        };
 
         public Dictionary<string, string> QueryNameOverrides => null;
 
@@ -64,8 +67,8 @@ namespace DataTool.ToolLogic.Extract {
             var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
 
-            FillHeroSpellDict(symSpell);
-            SpellCheckQuery(parsedTypes, symSpell);
+            FillHeroSpellDict(SymSpell);
+            SpellCheckQuery(parsedTypes, SymSpell);
 
             foreach (var (heroGuid, hero) in heroes) {
                 var heroStu = hero.STU;

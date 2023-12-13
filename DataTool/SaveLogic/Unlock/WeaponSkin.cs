@@ -8,7 +8,7 @@ using TankLib.STU.Types;
 
 namespace DataTool.SaveLogic.Unlock; 
 
-public static class WeaponVariant {
+public static class WeaponSkin {
     public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
         STU_2448F3AA weaponVariant = (STU_2448F3AA) unlock.STU;
         var replacements = SkinTheme.GetReplacements(weaponVariant.m_A9736011);

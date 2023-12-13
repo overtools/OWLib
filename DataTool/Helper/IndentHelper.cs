@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace DataTool.Helper {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public class IndentHelper {
+    public struct IndentHelper {
         private readonly uint _indentLevel;
 
-        protected static string IndentString = " ";
-        protected static uint IndentStringPerLevel = 4;
+        private static string IndentString = " ";
+        private static uint IndentStringPerLevel = 4;
 
-        protected string DebuggerDisplay => $"Level: {GetLevel()}";
+        private string DebuggerDisplay => $"Level: {GetLevel()}";
 
 
         public IndentHelper(uint level) {
@@ -35,8 +35,8 @@ namespace DataTool.Helper {
             // Debug.Assert(new IndentHelper(4).GetLevel() == new IndentHelper("                ").GetLevel());
         }
 
-        protected string GetIndentString(int count) => string.Concat(Enumerable.Repeat(IndentString, count));
-        protected string GetIndentString(uint count) => GetIndentString((int) count);
+        private string GetIndentString(int count) => string.Concat(Enumerable.Repeat(IndentString, count));
+        private string GetIndentString(uint count) => GetIndentString((int) count);
 
         public override string ToString() {
             return GetIndentString(_indentLevel * IndentStringPerLevel);

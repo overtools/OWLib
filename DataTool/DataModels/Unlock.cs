@@ -121,8 +121,8 @@ namespace DataTool.DataModels {
                 Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine ||
                 Type == UnlockType.Emote || Type == UnlockType.Souvenir ||
                 Type == UnlockType.NameCard || Type == UnlockType.PlayerTitle ||
-                Type == UnlockType.WeaponCharm || Type == UnlockType.WeaponSkin ||
-                Type == UnlockType.WeaponVariant;
+                Type == UnlockType.WeaponCharm || Type == UnlockType.WeaponVariant ||
+                Type == UnlockType.WeaponSkin;
 
             if (unlock.m_BEE9BCDA != null) {
                 Categories = unlock.m_BEE9BCDA
@@ -188,7 +188,7 @@ namespace DataTool.DataModels {
                 STUUnlock_SprayPaint _ => UnlockType.Spray,
                 STUUnlock_Currency _ => UnlockType.Currency,
                 STUUnlock_PortraitFrame _ => UnlockType.PortraitFrame,
-                STUUnlock_Weapon _ => UnlockType.WeaponSkin,
+                STUUnlock_Weapon _ => UnlockType.WeaponVariant,
                 STUUnlock_POTGAnimation _ => UnlockType.HighlightIntro,
                 STUUnlock_CompetitiveCurrency _ => UnlockType.CompetitiveCurrency,
                 STUUnlock_OWLToken _ => UnlockType.OWLToken,
@@ -205,7 +205,7 @@ namespace DataTool.DataModels {
                 STU_80C1169E _ => UnlockType.BattlePassTierSkip,
                 STU_3F17D547 _ => UnlockType.SkinComponent,
                 STU_A85D31BF _ => UnlockType.StoryMission,
-                STU_2448F3AA _ => UnlockType.WeaponVariant,
+                STU_2448F3AA _ => UnlockType.WeaponSkin,
                 _ => UnlockType.Unknown
             };
 
@@ -280,7 +280,7 @@ namespace DataTool.DataModels {
         VictoryPose,
         HighlightIntro,
         VoiceLine,
-        WeaponSkin,
+        WeaponVariant, // competitive reward
         Lootbox,
         PortraitFrame, // borders
         Currency, // legacy credits
@@ -298,6 +298,6 @@ namespace DataTool.DataModels {
         SkinComponent,
         BattlePassTierSkip,
         StoryMission,
-        WeaponVariant,
+        WeaponSkin, // ow2 weapon skin
     }
 }
