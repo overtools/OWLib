@@ -199,6 +199,7 @@ namespace TankView.Helper {
                 if (voiceSet.VoiceLines == null) continue;
 
                 foreach (var voiceSetVoiceLine in voiceSet.VoiceLines) {
+                    if (voiceSetVoiceLine.Value.VoiceSounds == null) continue;
                     @return[voiceSetVoiceLine.Key] = voiceSetVoiceLine.Value.VoiceSounds.Select(x => x.GUID).ToArray();
                 }
             }
