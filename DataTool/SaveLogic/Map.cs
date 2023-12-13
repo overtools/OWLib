@@ -404,7 +404,11 @@ namespace DataTool.SaveLogic {
             }
 
             if (variantModeInfo.m_celebration != 0) {
-                variantName += $" - {variantModeInfo.m_celebration}";
+                var celebrationName = variantModeInfo.m_celebration.ToString();
+                if (variantModeInfo.m_celebration == 0x04300000000001E9) {
+                    celebrationName = "Winter";
+                }
+                variantName += $" - {celebrationName}";
             }
 
             variantName = GetValidFilename(variantName);
