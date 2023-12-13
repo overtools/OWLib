@@ -15,8 +15,8 @@ namespace TankLib.STU.Types
         [STUField(0x50FDDF83, 80)] // size: 16
         public teStructuredDataAssetRef<STUTeamColor> m_50FDDF83;
 
-        [STUField(0xEBC69014, 96)] // size: 16
-        public teStructuredDataAssetRef<STUHeroWeapon> m_EBC69014;
+        [STUField(0x5FC3164C, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STU_BE423F96[] m_5FC3164C;
 
         [STUField(0x16051DC7, 112)] // size: 8
         public ulong m_16051DC7;

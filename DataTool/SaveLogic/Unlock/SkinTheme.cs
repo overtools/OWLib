@@ -124,12 +124,10 @@ namespace DataTool.SaveLogic.Unlock {
                 info.m_processExistingEntities = true;
                 List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
 
-                var heroWeapons = new[] {
-                    skinTheme.m_EBC69014
-                };
+                var heroWeapons = skin.m_5FC3164C ?? Array.Empty<STU_BE423F96>();
                 for (var index = 0; index < heroWeapons.Length; index++) {
-                    var weaponOverrideGUID = heroWeapons[index];
-                    STUHeroWeapon heroWeapon = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
+                    var heroWeaponThing = heroWeapons[index];
+                    var heroWeapon = GetInstance<STU_649567C7>(heroWeaponThing.m_BECFBDBA);
                     if (heroWeapon == null) continue;
 
                     Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
