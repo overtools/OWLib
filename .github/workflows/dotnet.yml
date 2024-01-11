@@ -16,7 +16,7 @@ jobs:
             -   name: Install .NET 8
                 uses: actions/setup-dotnet@v4
                 with:
-                    dotnet-version: 8.0.0
+                    global-json-file: global.json
             -   name: Mutate Run Number
                 run: |
                   $num = (997+$($Env:GITHUB_RUN_NUMBER))
