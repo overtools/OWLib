@@ -16,13 +16,14 @@ using TACTLib.Core;
 using TACTLib.Core.Key;
 using TACTLib.Core.Product.Tank;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.TACT;
 using CKey=TACTLib.Core.Key.FullKey;
 using EKey=TACTLib.Core.Key.TruncatedKey;
 
 namespace DataTool.ToolLogic.Dbg;
 
-[Tool("debug-install-issues", Description = "Collect debugging information about the game install", CustomFlags = typeof(ListFlags), UtilNoArchiveNeeded = true)]
+[Tool("debug-install-issues", Description = "Collect debugging information about the game install", CustomFlags = typeof(ListFlags), UtilNoArchiveNeeded = true, IsSensitive = true)]
 class DebugInstallIssues : ITool {
     public void Parse(ICLIFlags toolFlags) {
         const string filename = "install-issues.txt";
@@ -45,7 +46,10 @@ class DebugInstallIssues : ITool {
         var client = new ClientHandler(Program.Flags.OverwatchDirectory, args);
         LoadHelper.PostLoad(client);
 
-        var dynamicContainer = (ContainerHandler) client.ContainerHandler!;
+        if (client.ContainerHandler is not ContainerHandler dynamicContainer) {
+            Logger.Error("DebugInstallIssues", "This mode is only relevant for Battle.net installs"); 
+            return;
+        }
         
         int overwatchAssetCount = 0;
         var nonResidentOverwatchAssetCount = 0;

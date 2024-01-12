@@ -48,16 +48,8 @@ namespace DataTool.Helper {
             TankLib.Helpers.Logger.Info(null, syntax, payload);
         }
 
-        public static void ErrorLog() {
-            Console.Error.WriteLine();
-        }
-
         public static void ErrorLog(string syntax) {
             TankLib.Helpers.Logger.Error(null, syntax);
-        }
-
-        public static void ErrorLog(string syntax, params object[] payload) {
-            TankLib.Helpers.Logger.Error(null, syntax, payload);
         }
 
         public static void WarnLog(string syntax) {
