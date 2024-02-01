@@ -653,7 +653,7 @@ AF0,09F,Menu/Paris,1
 B2D,09F,Menu/OWL All Stars (2020),1
 B55,09F,Menu/Havana,1
 B56,09F,Menu/Havana (Archives),1
-BCE,09F,Menu/Summer Games (2020),1
+BCE,09F,Menu/Summer Games Beach,1
 C04,09F,Menu/Eichenwalde (Alt),1
 C46,09F,Menu/Temple of Anubis (Alt),1
 C61,09F,Menu/Black Forest (Winter) (Night),1
@@ -686,6 +686,11 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 112B,09F,Menu/Malevento,1
 1150,09F,Menu/Hanamura (Hanzo) (Mythic),1
 115C,09F,Menu/Blizzard World (Halloween),1
+1173,09F,Menu/LE SSERAFIM,1
+118A,09F,Menu/Samoa,1
+1197,09F,Menu/Black Forest (Orisa Mythic),1
+11AD,09F,Menu/Winter Wonderland (Blizzard World Art),1
+11B4,09F,Menu/Winter Wonderland (Mercy Art),1
 ; Celebrations,,,
 2168,01C,Christmas,1
 2498,01C,LunarNewYear,1
