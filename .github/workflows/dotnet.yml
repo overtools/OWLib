@@ -14,9 +14,9 @@ jobs:
                     fetch-depth: 0
                     submodules: 'recursive'
             -   name: Install .NET 8
-                uses: actions/setup-dotnet@v3
+                uses: actions/setup-dotnet@v4
                 with:
-                    dotnet-version: '8.0.x'
+                    dotnet-version: '8.0.100'
             -   name: Mutate Run Number
                 run: |
                   $num = (997+$($Env:GITHUB_RUN_NUMBER))
