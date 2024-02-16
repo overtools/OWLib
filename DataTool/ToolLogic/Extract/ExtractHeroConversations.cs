@@ -128,11 +128,12 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
 
                         Combo.ComboInfo info = default;
+                        var skinThemeGUID = unlockSkinTheme.m_skinTheme;
                         var skinTheme = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
                         if (skinTheme == null)
                             continue;
 
-                        var replacements = SkinTheme.GetReplacements(skinTheme);
+                        var replacements = SkinTheme.GetReplacements(skinThemeGUID);
                         foreach (var (_, newVoiceSetGuid) in replacements) {
                             seenVoiceSets.Add(newVoiceSetGuid);
                         }

@@ -17,7 +17,7 @@ namespace DataTool.SaveLogic.Unlock {
     public static class MythicSkin {
         private record PartTexture(byte[] data, int width, int height);
 
-        public static void SaveMythicSkin(ICLIFlags flags, string directory, ulong guid, STU_EF85B312 mythicSkin, STUHero hero) {
+        public static void SaveMythicSkin(ICLIFlags flags, string directory, teResourceGUID mythicSkinGUID, STU_EF85B312 mythicSkin, STUHero hero) {
             var partVariantIndices = new int[mythicSkin.m_942A6CCA.Length];
 
             var findInfo = new FindLogic.Combo.ComboInfo();
@@ -26,14 +26,14 @@ namespace DataTool.SaveLogic.Unlock {
             var partTextures = LoadPartTextures(mythicSkin, findInfo);
 
             void SavePermutation() {
-                var hash = guid;
+                var hash = (ulong)mythicSkinGUID;
                 for (int partIndex = 0; partIndex < partVariantIndices.Length; partIndex++) {
                     var partVariantIndex = partVariantIndices[partIndex];
 
                     var part = mythicSkin.m_942A6CCA[partIndex];
                     var partVariant = part.m_57CE9041[partVariantIndex];
 
-                    var intermediateHash = CRC64NoInout(BitConverter.GetBytes(guid), 0);
+                    var intermediateHash = CRC64NoInout(BitConverter.GetBytes(mythicSkinGUID), 0);
                     intermediateHash = CRC64NoInout(BitConverter.GetBytes(part.m_id.GUID), intermediateHash);
                     intermediateHash = CRC64NoInout(BitConverter.GetBytes(partVariant.m_id.GUID), intermediateHash);
 
@@ -48,19 +48,20 @@ namespace DataTool.SaveLogic.Unlock {
                     hash += intermediateSkinGUID;
                 }
 
-                var finalSkinGUID = hash & 0x7FFFFFFFFFFF;
-                finalSkinGUID |= 0x8000000000000 >> 4;
+                var finalSkinGUIDRaw = hash & 0x7FFFFFFFFFFF;
+                finalSkinGUIDRaw|= 0x8000000000000 >> 4;
                 {
-                    var finalSkinGUID_B = new teResourceGUID(finalSkinGUID);
+                    var finalSkinGUID_B = new teResourceGUID(finalSkinGUIDRaw);
                     finalSkinGUID_B.SetType(0xA6);
-                    finalSkinGUID = finalSkinGUID_B;
+                    finalSkinGUIDRaw = finalSkinGUID_B;
                 }
+                var finalSkinGUID = (teResourceGUID)finalSkinGUIDRaw;
 
                 //Console.Out.WriteLine(teResourceGUID.AsString(finalSkinGUID));
 
                 var variantSkin = GetInstance<STUSkinBase>(finalSkinGUID);
                 if (variantSkin == null) {
-                    Logger.Warn("SkinTheme", $"couldn't load mythic skin permutation {teResourceGUID.AsString(finalSkinGUID)} for {teResourceGUID.AsString(guid)}. shouldn't happen");
+                    Logger.Warn("SkinTheme", $"couldn't load mythic skin permutation {finalSkinGUID} for {teResourceGUID.AsString(mythicSkinGUID)}. shouldn't happen");
                     return;
                 }
 
@@ -73,7 +74,7 @@ namespace DataTool.SaveLogic.Unlock {
                 Logger.Debug("SkinTheme", $"Processing mythic variant {variantDirectoryName}");
 
                 findInfo.m_entities.Clear();
-                SkinTheme.FindEntities(findInfo, variantSkin, hero);
+                SkinTheme.FindEntities(findInfo, finalSkinGUID, hero);
 
                 var variantDirectory = Path.Combine(directory, variantDirectoryName);
                 foreach (var entity in findInfo.m_entities) {
@@ -83,7 +84,7 @@ namespace DataTool.SaveLogic.Unlock {
 
                 // save any sounds to main skin dir..
                 // todo: there arent any. probably replacing effect. just for sanity
-                SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkin));
+                SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(finalSkinGUID));
 
                 // calculate a proper sizes for sanity...
                 // for now they are all 256x256
@@ -135,7 +136,7 @@ namespace DataTool.SaveLogic.Unlock {
             PermuteMythic(0);
 
             // todo: anim effect broken
-            SkinTheme.SaveCore(flags, directory, mythicSkin, findInfo);
+            SkinTheme.SaveCore(flags, directory, mythicSkinGUID, findInfo);
             Program.Flags.Deduplicate = wasDeduping;
         }
 

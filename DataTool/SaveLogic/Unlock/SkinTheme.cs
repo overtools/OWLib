@@ -16,7 +16,8 @@ namespace DataTool.SaveLogic.Unlock {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
             if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
 
-            var skinBase = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
+            var skinThemeGUID = unlockSkinTheme.m_skinTheme;
+            var skinBase = GetInstance<STUSkinBase>(skinThemeGUID);
             if (skinBase == null) return;
 
             if (hero == null) {
@@ -25,9 +26,9 @@ namespace DataTool.SaveLogic.Unlock {
                 return;
             }
 
-            if (skinBase is STUSkinTheme skinTheme) {
+            if (skinBase is STUSkinTheme) {
                 LoudLog($"\tExtracting skin {unlock.Name}");
-                Save(flags, directory, skinTheme, hero);
+                Save(flags, directory, skinThemeGUID, hero);
             } else if (skinBase is STU_EF85B312 mythicSkin) {
                 LoudLog($"\tExtracting mythic skin {unlock.Name}");
                 MythicSkin.SaveMythicSkin(flags, directory, unlockSkinTheme.m_skinTheme, mythicSkin, hero);
@@ -36,15 +37,17 @@ namespace DataTool.SaveLogic.Unlock {
             }
         }
 
-        public static void Save(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
-            STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(skin.m_5E9665E3);
+        public static void SaveNpcSkin(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
+            var skinThemeGUID = skin.m_5E9665E3;
+            STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(skinThemeGUID);
             if (skinTheme == null) return;
-            LoudLog($"\tExtracting npc variant {IO.GetFileName(skin.m_5E9665E3)}");
-            Save(flags, directory, skinTheme, hero);
+            
+            LoudLog($"\tExtracting npc variant {IO.GetFileName(skinThemeGUID)}");
+            Save(flags, directory, skinThemeGUID, hero);
         }
 
-        public static Dictionary<ulong, ulong> FindEntities(FindLogic.Combo.ComboInfo info, STUSkinBase skin, STUHero hero) {
-            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
+        public static Dictionary<ulong, ulong> FindEntities(FindLogic.Combo.ComboInfo info, teResourceGUID skinGUID, STUHero hero) {
+            Dictionary<ulong, ulong> replacements = GetReplacements(skinGUID);
 
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
             info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
@@ -64,18 +67,18 @@ namespace DataTool.SaveLogic.Unlock {
             return replacements;
         }
 
-        public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
+        public static void Save(ICLIFlags flags, string directory, teResourceGUID skinGUID, STUHero hero) {
             LoudLog("\t\tFinding");
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            var replacements = FindEntities(info, skin, hero);
-            FindSkinStuff(skin, hero, info, replacements);
+            var replacements = FindEntities(info, skinGUID, hero);
+            FindSkinStuff(skinGUID, hero, info, replacements);
 
-            SaveCore(flags, directory, skin, info);
+            SaveCore(flags, directory, skinGUID, info);
         }
 
-        public static void SaveCore(ICLIFlags flags, string directory, STUSkinBase skin, FindLogic.Combo.ComboInfo info) {
-            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
+        public static void SaveCore(ICLIFlags flags, string directory, teResourceGUID skinGUID, FindLogic.Combo.ComboInfo info) {
+            Dictionary<ulong, ulong> replacements = GetReplacements(skinGUID);
 
             FindSoundFiles(flags, directory, replacements);
 
@@ -117,9 +120,10 @@ namespace DataTool.SaveLogic.Unlock {
             }
         }
 
-        private static void FindSkinStuff(STUSkinBase skin, STUHero hero, FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> skinReplacements) {
-            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
+        private static void FindSkinStuff(teResourceGUID skinGUID, STUHero hero, FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> skinReplacements) {
+            Dictionary<ulong, ulong> replacements = GetReplacements(skinGUID);
 
+            var skin = GetInstance<STUSkinBase>(skinGUID);
             if (skin is STUSkinTheme skinTheme) {
                 info.m_processExistingEntities = true;
                 List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
@@ -130,7 +134,7 @@ namespace DataTool.SaveLogic.Unlock {
                     var heroWeapon = GetInstance<STU_649567C7>(heroWeaponThing.m_BECFBDBA);
                     if (heroWeapon == null) continue;
 
-                    Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
+                    Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeaponThing.m_BECFBDBA);
 
                     foreach (var (key, value) in skinReplacements) {
                         weaponReplacements.TryAdd(key, value);
@@ -187,21 +191,21 @@ namespace DataTool.SaveLogic.Unlock {
         /// Returns mapping of replacements for the skin theme, replacements can override whole voice sets or individual voice lines or any file really.
         /// Pass these replacements into Combo.Find to make sure you're getting the right files for a specific skin theme.
         /// </summary>
-        public static Dictionary<ulong, ulong> GetReplacements(STU_21276722 skin) {
-            if (skin == null) return new Dictionary<ulong, ulong>();
-
-            var replacements = new Dictionary<ulong, ulong>();
-            if (skin.m_runtimeOverrides != null) {
-                foreach (var (key, value) in skin.m_runtimeOverrides) {
-                    replacements[key] = value.m_3D884507;
-                }
-            }
-            return replacements;
-        }
-
-        public static Dictionary<ulong, ulong> GetReplacements(teResourceGUID skinGUID) {
+        public static Dictionary<ulong, ulong> GetReplacements(ulong skinGUID) {
             var skin = GetInstance<STU_21276722>(skinGUID);
-            return GetReplacements(skin);
+            if (skin == null) return new Dictionary<ulong, ulong>(); // encrypted.. give up
+
+            if (!Program.TankHandler.m_resourceGraph!.m_skins.TryGetValue(skinGUID, out var trgSkin)) {
+                // trg has no idea what this skin is
+                return new Dictionary<ulong, ulong>();
+            }
+
+            var map = new Dictionary<ulong, ulong>();
+            foreach (var trgSkinAsset in trgSkin.m_assets) {
+                // not using add because im scared of crashes..
+                map[trgSkinAsset.m_srcAsset] = trgSkinAsset.m_destAsset;
+            }
+            return map;
         }
     }
 }

@@ -67,12 +67,13 @@ namespace DataTool.ToolLogic.Extract {
 
                         TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
                         Combo.ComboInfo info = default;
-                        var skinTheme = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
+                        var skinThemeGUID = unlockSkinTheme.m_skinTheme;
+                        var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
                         if (skinTheme == null) {
                             continue;
                         }
 
-                        SaveVoiceSet(flags, outputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
+                        SaveVoiceSet(flags, outputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinThemeGUID));
                     }
                 }
             }

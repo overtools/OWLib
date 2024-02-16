@@ -1136,19 +1136,6 @@ namespace DataTool.FindLogic {
 
                     break;
                 }
-                case 0xA6: {
-                    // why not
-                    if (replacements == null) break;
-                    STUSkinTheme skinOverride = GetInstance<STUSkinTheme>(guid);
-                    if (skinOverride?.m_runtimeOverrides == null) break;
-                    foreach (KeyValuePair<ulong, STUSkinRuntimeOverride> replacement in skinOverride.m_runtimeOverrides) {
-                        if (replacements.ContainsKey(replacement.Key)) continue;
-                        replacements[replacement.Key] = replacement.Value.m_3D884507;
-                    }
-
-                    // replacements one object that gets modified
-                    break;
-                }
                 case 0xA8: {
                     // hmm, if existing?
                     STUEffectLook effectLook = GetInstance<STUEffectLook>(guid);

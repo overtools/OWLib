@@ -132,8 +132,8 @@ namespace DataTool.ToolLogic.Extract {
             SaveSkin(flags, unlockSkinTheme.m_skinTheme, basePath, hero, heroFileName, unlock.Name, baseComponent, baseInfo);
         }
 
-        private static void SaveSkin(ICLIFlags flags, ulong skinResource, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
-            STUSkinBase skin = GetInstance<STUSkinBase>(skinResource);
+        private static void SaveSkin(ICLIFlags flags, teResourceGUID skinGUID, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
+            STUSkinBase skin = GetInstance<STUSkinBase>(skinGUID);
             if (skin == null)
                 return;
 
@@ -141,7 +141,7 @@ namespace DataTool.ToolLogic.Extract {
             Combo.ComboInfo info = default;
 
             SaveSet(flags, basePath, hero.m_gameplayEntity, heroFileName, GetValidFilename(name), ref component,
-                    ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skin));
+                    ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skinGUID));
         }
 
         private static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {

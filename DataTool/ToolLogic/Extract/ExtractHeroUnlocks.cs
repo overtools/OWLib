@@ -214,7 +214,7 @@ namespace DataTool.ToolLogic.Extract {
                         if (!config.ContainsKey("skin") || !config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
                             continue;
 
-                        SkinTheme.Save(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero.STU);
+                        SkinTheme.SaveNpcSkin(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero.STU);
                         HasSavedAnything = true;
                     }
 
