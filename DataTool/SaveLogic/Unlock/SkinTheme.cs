@@ -64,6 +64,15 @@ namespace DataTool.SaveLogic.Unlock {
             FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
 
+            var animContext = new FindLogic.Combo.ComboContext {
+                Entity = hero.m_gameplayEntity
+            };
+            if (info.m_entities.TryGetValue(hero.m_gameplayEntity, out var entityInfo)) {
+                animContext.Model = entityInfo.m_modelGUID;
+            }
+            FindLogic.Combo.Find(info, hero.m_419D3CA5, replacements, animContext); // souvenir anims
+            FindLogic.Combo.Find(info, hero.m_CFC554DC, replacements, animContext); // pve knocked down / interact
+
             return replacements;
         }
 
