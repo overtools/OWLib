@@ -47,7 +47,7 @@ namespace DataTool {
             { "japanese", "jaJP" },
             { "koreana", "koKR" },
             { "polish", "plPL" },
-            { "portuguese", "ptBR" },
+            { "brazilian", "ptBR" },
             { "russian", "ruRU" },
             { "thai", "thTH" },
             { "turkish", "trTR" },
