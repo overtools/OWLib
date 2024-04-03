@@ -247,13 +247,17 @@ namespace DataTool.Helper {
             }
         }
 
+        public static bool AssetExists(ulong guid) {
+            return TankHandler.m_assets.ContainsKey(guid);
+        }
+
         public static void WriteFile(ulong guid, string path) {
-            if (!TankHandler.m_assets.ContainsKey(guid)) return;
+            if (!AssetExists(guid)) return;
             WriteFile(OpenFile(guid), guid, path);
         }
 
         public static void WriteFile(ulong guid, string path, string filename) {
-            if (!TankHandler.m_assets.ContainsKey(guid)) return;
+            if (!AssetExists(guid)) return;
             WriteFile(OpenFile(guid), Path.Combine(path, filename));
         }
 

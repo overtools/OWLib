@@ -211,6 +211,11 @@ namespace DataTool.SaveLogic.Unlock {
 
             var map = new Dictionary<ulong, ulong>();
             foreach (var trgSkinAsset in trgSkin.m_assets) {
+                if (!IO.AssetExists(trgSkinAsset.m_srcAsset)) {
+                    // well this isn't going to work
+                    continue;
+                }
+                
                 // not using add because im scared of crashes..
                 map[trgSkinAsset.m_srcAsset] = trgSkinAsset.m_destAsset;
             }
