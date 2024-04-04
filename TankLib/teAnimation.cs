@@ -344,11 +344,7 @@ namespace TankLib {
             double y = b / 1024d;
             double z = c / 1024d;
 
-            double xDelta = (1 - x) / 1024d;
-            double yDelta = (1 - y) / 1024d;
-            double zDelta = (1 - z) / 1024d;
-
-            return new teVec3(xDelta + 1, yDelta + 1, zDelta + 1);
+            return new teVec3(x, y, z);
         }
 
         /// <summary>
