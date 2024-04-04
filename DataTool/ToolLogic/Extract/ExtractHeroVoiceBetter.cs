@@ -5,6 +5,7 @@ using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using TACTLib.Container;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
@@ -88,10 +89,21 @@ namespace DataTool.ToolLogic.Extract {
             var saveContext = new SaveLogic.Combo.SaveContext(info);
             Combo.Find(info, voiceSetGuid.Value, replacements);
 
+            var skinnedVoiceSet = Combo.GetReplacement(voiceSetGuid.Value, replacements);
+            if (!info.m_voiceSets.ContainsKey(skinnedVoiceSet)) {
+                if (Program.Client.ContainerHandler is StaticContainerHandler) {
+                    // (steam)
+                    TankLib.Helpers.Logger.Error("ExtractHeroVoice", $"Unable to load voice data {voiceSetGuid:X16}. Did you choose the correct voice locale and is the voice audio depot downloaded?");
+                    return false;
+                }
+                TankLib.Helpers.Logger.Error("ExtractHeroVoice", $"Unable to load voice data {voiceSetGuid:X16}");
+                return false;
+            }
+
             // if we're processing a skin, baseCombo is the combo from the hero, this remove duplicate check removes any sounds that belong to the base hero
             // this ensures you only get sounds unique to the skin when processing a skin
             if (baseCombo != null) {
-                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, voiceSetGuid.Value, Combo.GetReplacement(voiceSetGuid.Value, replacements)))
+                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, voiceSetGuid.Value, skinnedVoiceSet))
                     return false;
             }
 
