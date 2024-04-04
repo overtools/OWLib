@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using SharpDX;
 
 namespace TankLib.Math {
     /// <summary>4x3 matrix</summary>
@@ -26,12 +25,6 @@ namespace TankLib.Math {
         public string DebugString => $"{M11:F3} {M12:F3} {M13:F3} {M14:F3}\r\n" +
                                      $"{M21:F3} {M22:F3} {M23:F3} {M24:F3}\r\n" +
                                      $"{M31:F3} {M32:F3} {M33:F3} {M34:F3}";
-
-        public teMtx43(Matrix matrix) {
-            M11 = matrix.M11; M12 = matrix.M12; M13 = matrix.M13; M14 = matrix.M41;
-            M21 = matrix.M21; M22 = matrix.M22; M23 = matrix.M23; M24 = matrix.M42;
-            M31 = matrix.M31; M32 = matrix.M32; M33 = matrix.M33; M34 = matrix.M43;
-        }
         
         public static teMtx43 Identity() {
             return new teMtx43 {

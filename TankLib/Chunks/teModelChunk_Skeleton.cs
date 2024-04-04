@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
-using SharpDX;
 using TankLib.Math;
 
 namespace TankLib.Chunks {
@@ -41,7 +41,7 @@ namespace TankLib.Chunks {
         /// <summary>Header data</summary>
         public SkeletonHeader Header;
 
-        public teMtx44[] Matrices;
+        public Matrix4x4[] Matrices;
         public teMtx44[] MatricesInverted;
         public teMtx43[] Matrices34;
         public teMtx43[] Matrices34Inverted;
@@ -64,14 +64,14 @@ namespace TankLib.Chunks {
                     }
                 }
 
-                Matrices = new teMtx44[Header.BonesAbs];
+                Matrices = new Matrix4x4[Header.BonesAbs];
                 MatricesInverted = new teMtx44[Header.BonesAbs];
                 Matrices34 = new teMtx43[Header.BonesAbs];
                 Matrices34Inverted = new teMtx43[Header.BonesAbs];
 
                 if (Header.Matrix44Offset > 0) {
                     input.Position = Header.Matrix44Offset;
-                    Matrices = reader.ReadArray<teMtx44>(Header.BonesAbs);
+                    Matrices = reader.ReadArray<Matrix4x4>(Header.BonesAbs);
                 }
 
                 if (Header.Matrix44iOffset > 0) {
@@ -104,18 +104,9 @@ namespace TankLib.Chunks {
             }
         }
 
-        public void GetWorldSpace(int idx, out teVec3 scale, out teQuat rotation, out teVec3 translation) {
-            teMtx43 parBoneMat = idx == -1 ? teMtx43.Identity() : Matrices34[idx];
-            scale = new teVec3(parBoneMat[1, 0], parBoneMat[1, 1], parBoneMat[1, 2]);
-            rotation = new teQuat(parBoneMat[0, 0], parBoneMat[0, 1],parBoneMat[0, 2], parBoneMat[0, 3]);
-            translation = new teVec3(parBoneMat[2, 0], parBoneMat[2, 1], parBoneMat[2, 2]);
-        }
-
-        public Matrix GetWorldSpace(int idx) {
-            GetWorldSpace(idx, out teVec3 scale, out teQuat rotation, out teVec3 translation);
-            return Matrix.Scaling(scale) *
-                   Matrix.RotationQuaternion(rotation) *
-                   Matrix.Translation(translation);
+        public Matrix4x4 GetWorldSpace(int idx) {
+            if (idx == -1) return Matrix4x4.Identity;
+            return Matrices[idx];
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using SharpDX;
 using static System.Math;
 
 namespace TankLib.Math {
@@ -156,8 +155,8 @@ namespace TankLib.Math {
             return result;
         }
 
-        public static implicit operator Quaternion(teQuat quat) {
-            return new Quaternion(quat.X, quat.Y, quat.Z, quat.W);
+        public static implicit operator System.Numerics.Quaternion(teQuat quat) {
+            return new System.Numerics.Quaternion(quat.X, quat.Y, quat.Z, quat.W);
         }
     }
 }

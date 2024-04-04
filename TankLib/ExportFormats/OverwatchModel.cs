@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SharpDX;
+using System.Numerics;
 using TankLib.Chunks;
 using TankLib.Helpers;
 using TankLib.Math;
@@ -227,7 +226,7 @@ namespace TankLib.ExportFormats {
                         writer.Write(IdToString("hardpoint", teResourceGUID.Index(hardPoint.m_EDF0511C)));
                         writer.Write(IdToString("bone", teResourceGUID.Index(hardPoint.m_FF592924)));
 
-                        Matrix parentMat = Matrix.Identity;
+                        Matrix4x4 parentMat = Matrix4x4.Identity;
                         if (hardPoint.m_FF592924 != 0 && skeleton != null) {
                             int? boneIdx = null;
                             var hardPointBoneID = teResourceGUID.Index(hardPoint.m_FF592924);
@@ -240,7 +239,7 @@ namespace TankLib.ExportFormats {
                             }
 
                             if (boneIdx == null) {
-                                parentMat = Matrix.Identity;
+                                parentMat = Matrix4x4.Identity;
                                 Logger.Debug("OverwatchModel",
                                              $"Hardpoint {teResourceGUID.AsString(hardPoint.m_EDF0511C)} is attached to bone {teResourceGUID.AsString(hardPoint.m_FF592924)} which doesn't exist on model {teResourceGUID.AsString(GUID)}");
                             } else {
@@ -248,14 +247,14 @@ namespace TankLib.ExportFormats {
                             }
                         }
 
-                        Matrix hardPointMat = Matrix.RotationQuaternion(hardPoint.m_rotation) *
-                                              Matrix.Translation(hardPoint.m_position);
+                        Matrix4x4 hardPointMat = Matrix4x4.CreateFromQuaternion(hardPoint.m_rotation) *
+                                                 Matrix4x4.CreateTranslation(hardPoint.m_position);
 
-                        hardPointMat = hardPointMat * parentMat;
-                        hardPointMat.Decompose(out Vector3 _, out Quaternion rot, out Vector3 pos);
+                        hardPointMat *= parentMat;
+                        Matrix4x4.Decompose(hardPointMat, out _, out var worldOri, out var worldTranslation);
 
-                        writer.Write(pos);
-                        writer.Write(rot);
+                        writer.Write(worldTranslation);
+                        writer.Write(worldOri);
                     }
                 }
             }
@@ -264,12 +263,13 @@ namespace TankLib.ExportFormats {
         public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton, Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap, out teVec3 scale, out teQuat quat,
             out teVec3 translation) {
             if (clothNodeMap != null && clothNodeMap.ContainsKey(i)) {
-                Matrix thisMat = skeleton.GetWorldSpace(i);
-                Matrix parentMat = skeleton.GetWorldSpace(hierarchy[i]);
+                Matrix4x4 thisMat = skeleton.GetWorldSpace(i);
+                Matrix4x4 parentMat = skeleton.GetWorldSpace(hierarchy[i]);
 
-                Matrix newParentMat = thisMat * Matrix.Invert(parentMat);
+                Matrix4x4.Invert(parentMat, out var invParentMat);
+                Matrix4x4 newParentMat = thisMat * invParentMat;
 
-                newParentMat.Decompose(out Vector3 scl2, out Quaternion rot2, out Vector3 pos2);
+                Matrix4x4.Decompose(newParentMat, out var scl2, out var rot2, out var pos2);
 
                 quat = new teQuat(rot2.X, rot2.Y, rot2.Z, rot2.W);
                 scale = new teVec3(scl2.X, scl2.Y, scl2.Z);

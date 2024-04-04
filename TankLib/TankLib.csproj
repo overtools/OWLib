@@ -18,8 +18,6 @@
     <PackageReference Include="DynamicExpresso.Core" Version="2.16.1" />
     <PackageReference Include="lz4net" Version="1.0.15.93" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
     <PackageReference Include="ZstdNet" Version="1.4.5" />
   </ItemGroup>
   <ItemGroup>
