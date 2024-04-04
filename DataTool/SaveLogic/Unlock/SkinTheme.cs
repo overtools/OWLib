@@ -51,6 +51,11 @@ namespace DataTool.SaveLogic.Unlock {
 
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
             info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
+            
+            var firstPersonComponent = GetInstance<STUFirstPersonComponent>(hero.m_gameplayEntity);
+            if (firstPersonComponent != null) {
+                info.SetEntityName(firstPersonComponent.m_entity, "Gameplay1P");
+            }
 
             FindLogic.Combo.Find(info, hero.m_previewEmoteEntity, replacements);
             info.SetEntityName(hero.m_previewEmoteEntity, "PreviewEmote");
