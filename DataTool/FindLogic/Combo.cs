@@ -704,9 +704,10 @@ namespace DataTool.FindLogic {
                     break;
                 }
                 case 0xD:
-                case 0x8F: // sorry for breaking order
-                case 0x8E:
                 case 0x4A:
+                case 0x8F:
+                case 0x8E:
+                case 0xD4: // sequence
                 case 0x12B: {
                     if (info.m_effects.ContainsKey(guid)) break;
                     if (info.m_animationEffects.ContainsKey(guid)) break;
@@ -1244,6 +1245,8 @@ namespace DataTool.FindLogic {
                 Find(info, configVarTexture.m_texture, replacements, context);
             } else if (configVar is STU_9DB46B98 configVarGraphWithOverrides) {
                 Find(info, configVarGraphWithOverrides.m_6525E98B, replacements, context);
+            } else if (configVar is STU_18908331 configVarSequence) {
+                Find(info, configVarSequence.m_B1367BAA, replacements, context);
             }
         }
 

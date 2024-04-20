@@ -309,6 +309,12 @@ namespace DataTool.SaveLogic {
                 teMapPlaceableData placeableEntities = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
                 teMapPlaceableData placeableSounds = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SOUND);
                 teMapPlaceableData placeableEffects = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.EFFECT);
+                teMapPlaceableData placeableSequences = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SEQUENCE);
+
+                foreach (IMapPlaceable mapPlaceable in placeableSequences.Placeables ?? Array.Empty<IMapPlaceable>()) {
+                    teMapPlaceableSequence sequence = (teMapPlaceableSequence)mapPlaceable;
+                    FindLogic.Combo.Find(info, sequence.Header.Effect);
+                }
 
                 OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeableModel, placeableEntities, placeableLights, placeableSounds, placeableEffects);
                 using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{variantName}.{exportMap.Extension}"))) {

@@ -463,6 +463,16 @@ namespace TankLib {
             Header = reader.Read<Structure>();
         }
     }
+    
+    public class teMapPlaceableSequence : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.SEQUENCE;
+
+        public teMapPlaceableEffect.Structure Header;
+
+        public void Read(BinaryReader reader) {
+            Header = reader.Read<teMapPlaceableEffect.Structure>();
+        }
+    }
 
     public class teMapPlaceableDummy : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.UNKNOWN;
