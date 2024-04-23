@@ -263,6 +263,8 @@ namespace TankLib.ExportFormats {
         public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton, Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap, out teVec3 scale, out teQuat quat,
             out teVec3 translation) {
             if (clothNodeMap != null && clothNodeMap.ContainsKey(i)) {
+                // re-parent to the new parent the cloth system has given us
+                
                 Matrix4x4 thisMat = skeleton.GetWorldSpace(i);
                 Matrix4x4 parentMat = skeleton.GetWorldSpace(hierarchy[i]);
 
@@ -275,11 +277,11 @@ namespace TankLib.ExportFormats {
                 scale = new teVec3(scl2.X, scl2.Y, scl2.Z);
                 translation = new teVec3(pos2.X, pos2.Y, pos2.Z);
             } else {
-                teMtx43 bone = skeleton.Matrices34Inverted[i];
+                var bone = skeleton.BindPoseDeltas[i];
 
-                scale = new teVec3(bone[1, 0], bone[1, 1], bone[1, 2]);
-                quat = new teQuat(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
-                translation = new teVec3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                scale = bone.Scale;
+                quat = bone.Orientation;
+                translation = bone.Translation;
             }
         }
 

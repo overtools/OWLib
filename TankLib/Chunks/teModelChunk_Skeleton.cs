@@ -38,13 +38,21 @@ namespace TankLib.Chunks {
             // ... idk. something added tho
         }
 
+        public struct BoneTransform {
+            public teQuat Orientation;
+            public teVec3 Scale;
+            public float Pad;
+            public teVec3 Translation;
+            public float Pad2;
+        }
+
         /// <summary>Header data</summary>
         public SkeletonHeader Header;
 
         public Matrix4x4[] Matrices;
-        public teMtx44[] MatricesInverted;
-        public teMtx43[] Matrices34;
-        public teMtx43[] Matrices34Inverted;
+        public Matrix4x4[] MatricesInverted;
+        public BoneTransform[] BindPose;
+        public BoneTransform[] BindPoseDeltas;
         public short[] Hierarchy;
         public ushort[] Lookup;
         // ReSharper disable once InconsistentNaming
@@ -65,9 +73,9 @@ namespace TankLib.Chunks {
                 }
 
                 Matrices = new Matrix4x4[Header.BonesAbs];
-                MatricesInverted = new teMtx44[Header.BonesAbs];
-                Matrices34 = new teMtx43[Header.BonesAbs];
-                Matrices34Inverted = new teMtx43[Header.BonesAbs];
+                MatricesInverted = new Matrix4x4[Header.BonesAbs];
+                BindPose = new BoneTransform[Header.BonesAbs];
+                BindPoseDeltas = new BoneTransform[Header.BonesAbs];
 
                 if (Header.Matrix44Offset > 0) {
                     input.Position = Header.Matrix44Offset;
@@ -76,17 +84,17 @@ namespace TankLib.Chunks {
 
                 if (Header.Matrix44iOffset > 0) {
                     input.Position = Header.Matrix44iOffset;
-                    MatricesInverted = reader.ReadArray<teMtx44>(Header.BonesAbs);
+                    MatricesInverted = reader.ReadArray<Matrix4x4>(Header.BonesAbs);
                 }
 
                 if (Header.Matrix43Offset > 0) {
                     input.Position = Header.Matrix43Offset;
-                    Matrices34 = reader.ReadArray<teMtx43>(Header.BonesAbs);
+                    BindPose = reader.ReadArray<BoneTransform>(Header.BonesAbs);
                 }
 
                 if (Header.Matrix43iOffset > 0) {
                     input.Position = Header.Matrix43iOffset;
-                    Matrices34Inverted = reader.ReadArray<teMtx43>(Header.BonesAbs);
+                    BindPoseDeltas = reader.ReadArray<BoneTransform>(Header.BonesAbs);
                 }
 
                 Lookup = new ushort[Header.RemapCount];
@@ -104,9 +112,25 @@ namespace TankLib.Chunks {
             }
         }
 
+        public void GetWorldSpace(int idx, out teVec3 scale, out teQuat rotation, out teVec3 translation) {
+            if (idx == -1) {
+                translation = default;
+                rotation = teQuat.Identity;
+                scale = new teVec3(1, 1, 1);
+                return;
+            }
+            var bone = BindPose[idx];
+            scale = bone.Scale;
+            rotation = bone.Orientation;
+            translation = bone.Translation;
+        }
+
         public Matrix4x4 GetWorldSpace(int idx) {
-            if (idx == -1) return Matrix4x4.Identity;
-            return Matrices[idx];
+            // note: you shouldn't use matrices from disk.. they have det of 0..
+            GetWorldSpace(idx, out teVec3 scale, out teQuat rotation, out teVec3 translation);
+            return Matrix4x4.CreateScale(scale) *
+                   Matrix4x4.CreateFromQuaternion(rotation) *
+                   Matrix4x4.CreateTranslation(translation);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
-using TankLib.Math;
 
 namespace TankLib.Chunks {
     /// <inheritdoc />
@@ -30,7 +30,7 @@ namespace TankLib.Chunks {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Hardpoint {
             /// <summary>4x4 matrix</summary>
-            public teMtx44 Matrix;
+            public Matrix4x4 Matrix;
             
             /// <summary>03C Hardpoint GUID</summary>
             public teResourceGUID GUID;
