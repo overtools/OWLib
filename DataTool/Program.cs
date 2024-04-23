@@ -83,7 +83,7 @@ namespace DataTool {
             }
 
             // todo: this code cant detect e.g `"c:\mypath\" list-heroes` because flags validation fails
-            if (Flags.OverwatchDirectory.EndsWith("\"")) {
+            if (Flags.OverwatchDirectory.Contains("\"")) {
                 Logger.Error("Core", "The Overwatch directory you passed will confuse the tool! Please remove the last \\ character");
                 return;
             }
@@ -129,7 +129,7 @@ namespace DataTool {
             }
 
             if (targetToolFlags is ExtractFlags extractFlags) {
-                if (extractFlags.OutputPath.EndsWith("\"")) {
+                if (extractFlags.OutputPath.Contains("\"")) {
                     Logger.Error("Core", "The output directory you passed will confuse the tool! Please remove the last \\ character");
                     return;
                 }
