@@ -570,19 +570,16 @@ E89,078,Voicelines,1
 15E9,003,PlayerModel,0
 1611,003,Teacup,0
 1426,003,Biotic Grenade,0
-1425,003,Gameplay1P,0
 15CA,003,Sleep Dart,0
 159C,003,Biotic Rifle,0
 ; D.Va,Classic,47,
 2025,003,MEKA,0
 ; Echo,Classic,47,
-2594,003,Gameplay1P,0
 ; Sigma,Classic,47,
 324F,003,Rock,0
 33EB,003,Rock,0
 18BF,003,Rock,0
 1CC1,003,Barrier,0
-2AB0,003,Gameplay1P,0
 ; Hero Class, Identifiers used by StateScript,,
 850,01C,Tank,1
 851,01C,Support,1
@@ -619,6 +616,9 @@ BB6D,01C,Season4,1
 BD98,01C,Season5,1
 C0C9,01C,Season6,1
 C0CC,01C,Season7,1
+CD75,01C,Season8,1
+CEC0,01C,Season9,1
+D740,01C,Season10,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
