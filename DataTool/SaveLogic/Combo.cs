@@ -723,7 +723,6 @@ namespace DataTool.SaveLogic {
                 path += Path.DirectorySeparatorChar;
 
             string filePath = Path.Combine(path, options.FileNameOverride ?? $"{textureInfo.GetNameIndex()}");
-            if (teResourceGUID.Type(textureGUID) != 0x4) filePath += $".{teResourceGUID.Type(textureGUID):X3}";
 
             if (Program.Flags is { Deduplicate: true }) {
                 if (ScratchDBInstance.HasRecord(textureGUID)) {
