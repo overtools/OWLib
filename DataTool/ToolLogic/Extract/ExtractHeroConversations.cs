@@ -88,15 +88,16 @@ namespace DataTool.ToolLogic.Extract {
 
                     i++;
                     var (heroName, instance) = VoicelineHeroMapping[voicelineGuid.m_E295B99C];
-                    if (instance.SoundFiles.Count > 1 || instance.SoundFiles.Count == 0) {
-                        continue; // :david: it can happen, i don't know what this means
-                    }
+                    
+                    // todo: hammond could partake in a conversation where he just squeaks in response...
+                    // meaning no voice sound files
 
-                    var soundFile = instance.SoundFiles.First();
-                    var soundFileGuid = teResourceGUID.AsString(soundFile);
-                    var filename = $"{i}-{heroName ?? "Unknown"}-{soundFileGuid}";
-                    var path = Path.Combine(newPath, teResourceGUID.AsString(conversationGuid));
-                    SaveLogic.Combo.SaveVoiceLineInstance(flags, path, instance, filename);
+                    foreach (var soundFile in instance.SoundFiles) {
+                        var soundFileGuid = teResourceGUID.AsString(soundFile);
+                        var filename = $"{i}-{heroName ?? "Unknown"}-{soundFileGuid}";
+                        var path = Path.Combine(newPath, teResourceGUID.AsString(conversationGuid));
+                        SaveLogic.Combo.SaveVoiceLineInstance(flags, path, instance, filename);
+                    }
                 }
             }
         }

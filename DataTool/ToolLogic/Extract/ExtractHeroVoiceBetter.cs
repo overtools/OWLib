@@ -112,9 +112,11 @@ namespace DataTool.ToolLogic.Extract {
 
                 foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
                     foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
-                        if (!voiceLineInstance.SoundFiles.Any()) {
-                            continue;
-                        }
+                        // don't add this back !!
+                        // some hamster lines are non-voice audio only
+                        //if (!voiceLineInstance.SoundFiles.Any()) {
+                        //    continue;
+                        //}
 
                         var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                         if (stimulus == null) continue;
