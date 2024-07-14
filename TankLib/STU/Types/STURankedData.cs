@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8159A26D, 256)]
+    [STU(0x8159A26D, 264)]
     public class STURankedData : STUInstance
     {
         [STUField(0x58066D8F, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
@@ -57,16 +57,19 @@ namespace TankLib.STU.Types
         [STUField(0x503BAA0A, 236)] // size: 4
         public float m_503BAA0A = 168f;
 
-        [STUField(0xAE69132D, 240)] // size: 4
-        public uint m_AE69132D = 0x32;
+        [STUField(0x85059B03, 240)] // size: 4
+        public uint m_85059B03 = 0x32;
 
-        [STUField(0x46B0B905, 244)] // size: 4
+        [STUField(0x82AA08B4, 244)] // size: 4
+        public int m_82AA08B4 = 0xA;
+
+        [STUField(0x46B0B905, 248)] // size: 4
         public int m_46B0B905 = 0x7;
 
-        [STUField(0x842AF60F, 248)] // size: 4
+        [STUField(0x842AF60F, 252)] // size: 4
         public int m_842AF60F = 0x19;
 
-        [STUField(0xB5DD91B7, 252)] // size: 1
+        [STUField(0xB5DD91B7, 256)] // size: 1
         public byte m_B5DD91B7 = 0x1;
     }
 }

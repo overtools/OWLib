@@ -9,5 +9,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xE87119C8)] DEFAULT = 0,
         [STUField(0xF63DFCBD)] GOLDEN = 0x1,
         [STUField(0xD65C735C)] xD65C735C = 0x2,
+        [STUField(0xC0FF51EF)] xC0FF51EF = 0x3,
     }
 }

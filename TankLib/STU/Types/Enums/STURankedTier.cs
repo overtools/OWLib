@@ -13,6 +13,9 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x08F70978)] Diamond = 0x4,
         [STUField(0x027926D5)] Master = 0x5,
         [STUField(0x654A7C97)] GrandMaster = 0x6,
+        [STUField(0x05917F05)] x05917F05 = 0x7,
+        [STUField(0xB6112AD8)] xB6112AD8 = 0x8,
+        [STUField(0x00F4E91E)] x00F4E91E = 0x9,
         [STUField(0x3774AB86)] None = -1,
     }
 }

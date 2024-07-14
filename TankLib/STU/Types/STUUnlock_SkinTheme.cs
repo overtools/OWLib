@@ -4,13 +4,13 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE05E4446, 296)]
+    [STU(0xE05E4446, 312)]
     public class STUUnlock_SkinTheme : STU_3021DDED
     {
-        [STUField(0x4C167404, 272)] // size: 16
+        [STUField(0x4C167404, 288)] // size: 16
         public teStructuredDataAssetRef<STUSkinTheme> m_skinTheme;
 
-        [STUField(0x0619C597, 288)] // size: 4
+        [STUField(0x0619C597, 304)] // size: 4
         public Enum_D32A5854 m_type;
     }
 }

@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9D6CF8AC, 320)]
+    [STU(0x9D6CF8AC, 328)]
     public class STUStatescriptStateGameMessageEntry : STUStatescriptState
     {
         [STUField(0xBC2A8DA3, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
@@ -34,10 +34,16 @@ namespace TankLib.STU.Types
         [STUField(0x33DA5163, 304, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_904BFCEC m_33DA5163;
 
-        [STUField(0x39B47960, 312)] // size: 4
+        [STUField(0xEC6DBF5F, 312, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUStatescriptOutputPlug m_EC6DBF5F;
+
+        [STUField(0x39B47960, 320)] // size: 4
         public Enum_0B105E0B m_39B47960 = Enum_0B105E0B.x30A063CA;
 
-        [STUField(0x586B4905, 316)] // size: 1
+        [STUField(0x586B4905, 324)] // size: 1
         public byte m_586B4905;
+
+        [STUField(0x39BDA54F, 325)] // size: 1
+        public byte m_39BDA54F;
     }
 }

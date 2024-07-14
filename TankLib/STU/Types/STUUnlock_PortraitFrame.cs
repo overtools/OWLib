@@ -4,22 +4,22 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6FE91269, 312)]
+    [STU(0x6FE91269, 328)]
     public class STUUnlock_PortraitFrame : STU_3021DDED
     {
-        [STUField(0x949D9C2A, 272)] // size: 16
+        [STUField(0x949D9C2A, 288)] // size: 16
         public teStructuredDataAssetRef<ulong> m_949D9C2A;
 
-        [STUField(0xA4A66AB6, 288)] // size: 16
+        [STUField(0xA4A66AB6, 304)] // size: 16
         public teStructuredDataAssetRef<ulong> m_rankTexture;
 
-        [STUField(0x8F736177, 304)] // size: 4
+        [STUField(0x8F736177, 320)] // size: 4
         public STUPortraitFrameRank m_rank;
 
-        [STUField(0x2C01908B, 308)] // size: 2
+        [STUField(0x2C01908B, 324)] // size: 2
         public ushort m_level;
 
-        [STUField(0x78A2AC5C, 310)] // size: 2
+        [STUField(0x78A2AC5C, 326)] // size: 2
         public ushort m_stars;
     }
 }

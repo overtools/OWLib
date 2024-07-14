@@ -4,31 +4,31 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0B517D2E, 384)]
+    [STU(0x0B517D2E, 400)]
     public class STUUnlock_Emote : STU_3021DDED
     {
-        [STUField(0xA0D4ABDE, 272)] // size: 16
+        [STUField(0xA0D4ABDE, 288)] // size: 16
         public teStructuredDataAssetRef<STUAnimAlias> m_emote;
 
-        [STUField(0x2B8351DA, 288)] // size: 16
+        [STUField(0x2B8351DA, 304)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_emoteBlendTreeSet;
 
-        [STUField(0x89C64674, 304)] // size: 16
+        [STUField(0x89C64674, 320)] // size: 16
         public teStructuredDataAssetRef<ulong> m_89C64674;
 
-        [STUField(0x7E3ED979, 320)] // size: 16
+        [STUField(0x7E3ED979, 336)] // size: 16
         public teStructuredDataAssetRef<STUTargetTag>[] m_7E3ED979;
 
-        [STUField(0x421B4005, 336)] // size: 16
+        [STUField(0x421B4005, 352)] // size: 16
         public teStructuredDataAssetRef<STU_6BE90C5C>[] m_421B4005;
 
-        [STUField(0x28814AE5, 352)] // size: 12
+        [STUField(0x28814AE5, 368)] // size: 12
         public teVec3 m_28814AE5 = new teVec3(0f, 1f, 0f);
 
-        [STUField(0x69150A1D, 364)] // size: 12
+        [STUField(0x69150A1D, 380)] // size: 12
         public teVec3 m_69150A1D = new teVec3(1f, 1f, 1f);
 
-        [STUField(0x7AE191BC, 376)] // size: 1
+        [STUField(0x7AE191BC, 392)] // size: 1
         public byte m_7AE191BC;
     }
 }

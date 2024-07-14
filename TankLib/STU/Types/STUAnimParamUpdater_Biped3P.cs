@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9260236F, 176)]
+    [STU(0x9260236F, 184)]
     public class STUAnimParamUpdater_Biped3P : STU_72C48DD7
     {
         [STUField(0xD5AF8608, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
@@ -42,10 +42,13 @@ namespace TankLib.STU.Types
         [STUField(0x5F21028B, 168)] // size: 4
         public float m_5F21028B;
 
-        [STUField(0x2430F8CB, 172)] // size: 1
+        [STUField(0xC16BBDFD, 172)] // size: 4
+        public float m_C16BBDFD;
+
+        [STUField(0x2430F8CB, 176)] // size: 1
         public byte m_2430F8CB;
 
-        [STUField(0xB5CF1111, 173)] // size: 1
+        [STUField(0xB5CF1111, 177)] // size: 1
         public byte m_B5CF1111;
     }
 }

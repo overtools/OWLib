@@ -3,22 +3,22 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB7EEA3BE, 120)]
+    [STU(0xB7EEA3BE, 104)]
     public class STUSkinBase : STU_21276722
     {
-        [STUField(0xAA8E1BB0, 48)] // size: 16
+        [STUField(0xAA8E1BB0, 32)] // size: 16
         public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
 
-        [STUField(0xBCC55571, 64, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xBCC55571, 48, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_47C34433[] m_BCC55571;
 
-        [STUField(0x50FDDF83, 80)] // size: 16
+        [STUField(0x50FDDF83, 64)] // size: 16
         public teStructuredDataAssetRef<STUTeamColor> m_50FDDF83;
 
-        [STUField(0x5FC3164C, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x5FC3164C, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_BE423F96[] m_5FC3164C;
 
-        [STUField(0x16051DC7, 112)] // size: 8
+        [STUField(0x16051DC7, 96)] // size: 8
         public ulong m_16051DC7;
     }
 }
