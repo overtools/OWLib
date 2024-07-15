@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,23 +30,25 @@ namespace TankLib.ExportFormats {
         public string ModelLookFileName;
         public string Name;
         public ulong GUID;
+        public bool AllLODs;
 
-        public readonly StreamingLodsInfo m_streamedLods;
+        public readonly IReadOnlyList<StreamingLodsInfo> StreamedLods;
 
-        public OverwatchModel(teChunkedData chunkedData, ulong guid, string name, StreamingLodsInfo streamedLods=null) {
+        public OverwatchModel(teChunkedData chunkedData, ulong guid, string name, bool allLods=false, IReadOnlyList<StreamingLodsInfo> streamedLods=null) {
             _data = chunkedData;
-            GUID = guid;
             Name = name;
-            m_streamedLods = streamedLods;
+            GUID = guid;
+            AllLODs = allLods;
+            StreamedLods = streamedLods;
         }
 
-        private struct TempSubmesh {
+        private struct LoadedSubmesh {
             public readonly teModelChunk_RenderMesh.Submesh m_submesh;
-            public readonly ulong m_material;
+            public readonly ulong m_materialID;
 
-            public TempSubmesh(teModelChunk_RenderMesh.Submesh submesh, teModelChunk_Model srcModel) {
+            public LoadedSubmesh(teModelChunk_RenderMesh.Submesh submesh, teModelChunk_Model srcModel) {
                 m_submesh = submesh;
-                m_material = srcModel.Materials[submesh.Descriptor.Material];
+                m_materialID = srcModel.Materials[submesh.Descriptor.Material];
             }
         }
 
@@ -55,20 +58,19 @@ namespace TankLib.ExportFormats {
             teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
 
-            var allSubmeshes = new List<TempSubmesh>();
+            var allSubmeshes = new List<LoadedSubmesh>();
             if (renderMesh?.Submeshes != null) {
                 var model = _data.GetChunk<teModelChunk_Model>();
-                allSubmeshes.AddRange(renderMesh.Submeshes.Select(x => new TempSubmesh(x, model)));
+                allSubmeshes.AddRange(renderMesh.Submeshes.Select(x => new LoadedSubmesh(x, model)));
             }
-            if (m_streamedLods?.m_renderMesh != null) {
-                // todo: can multiple stream payloads be required? and therefore we miss meshes again?
-                // i wasn't paying attention in class
-                 
-                // todo: also turns out this wasn't needed for necromancer, which is why i write this code. (instead lod was equality instead of bitflag)
-                // but i guess its useful if we wanted to add lod models back
-                 
-                var streamedModel = m_streamedLods.m_model;
-                allSubmeshes.AddRange(m_streamedLods.m_renderMesh.Submeshes.Select(x => new TempSubmesh(x, streamedModel)));
+
+            foreach (var streamingLodsInfo in StreamedLods) {
+                if (streamingLodsInfo?.m_renderMesh == null) {
+                    continue;
+                }
+                
+                var streamedModel = streamingLodsInfo.m_model;
+                allSubmeshes.AddRange(streamingLodsInfo.m_renderMesh.Submeshes.Select(x => new LoadedSubmesh(x, streamedModel)));
             }
 
             using (BinaryWriter writer = new BinaryWriter(stream)) {
@@ -92,7 +94,11 @@ namespace TankLib.ExportFormats {
                     highestLOD = submeshesWithLod.Min(x => x.m_submesh.Descriptor.LOD);
                 }
 
-                TempSubmesh[] submeshesToWrite = allSubmeshes.Where(x => (x.m_submesh.Descriptor.LOD & highestLOD) != 0 || x.m_submesh.Descriptor.LOD == -1).ToArray();
+                Func<LoadedSubmesh, bool> submeshFilter = x => (x.m_submesh.Descriptor.LOD & highestLOD) != 0 || x.m_submesh.Descriptor.LOD == -1;
+                if (AllLODs) {
+                    submeshFilter = x => true;
+                }
+                LoadedSubmesh[] submeshesToWrite = allSubmeshes.Where(submeshFilter).ToArray();
 
                 short[] hierarchy = null;
                 Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
@@ -131,11 +137,16 @@ namespace TankLib.ExportFormats {
                 }
 
                 int submeshIdx = 0;
-                foreach (TempSubmesh submeshA in submeshesToWrite) {
-                    var submesh = submeshA.m_submesh;
+                foreach (LoadedSubmesh loadedSubmesh in submeshesToWrite) {
+                    var submesh = loadedSubmesh.m_submesh;
+
+                    var submeshName = $"Submesh_{submeshIdx}.{loadedSubmesh.m_materialID:X16}";
+                    if (AllLODs && loadedSubmesh.m_submesh.Descriptor.LOD != -1) {
+                        submeshName += $" (LOD: {BitOperations.Log2((byte)loadedSubmesh.m_submesh.Descriptor.LOD)})";
+                    }
                     
-                    writer.Write($"Submesh_{submeshIdx}.{submeshA.m_material:X16}");
-                    writer.Write(submeshA.m_material);
+                    writer.Write(submeshName);
+                    writer.Write(loadedSubmesh.m_materialID);
                     writer.Write(submesh.UVCount);
 
                     writer.Write(submesh.Vertices.Length);

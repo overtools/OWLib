@@ -359,10 +359,12 @@ namespace DataTool.SaveLogic {
         public static void SaveModel(ICLIFlags flags, string path, SaveContext info, ulong modelGUID) {
             bool convertModels = true;
             bool doRefpose = false;
+            bool allLods = false;
 
             if (flags is ExtractFlags extractFlags) {
                 convertModels = !extractFlags.RawModels && !extractFlags.Raw;
                 doRefpose = extractFlags.ExtractRefpose;
+                allLods = extractFlags.AllLODs;
                 if (extractFlags.SkipModels) return;
             }
 
@@ -387,24 +389,27 @@ namespace DataTool.SaveLogic {
                     var hasStream2 = (modelChunk.Header.m_104 & 0x1C0) != 0;
                     var hasStream3 = (modelChunk.Header.m_104 & 7) != 0;
 
-                    ulong streamedLodsModel = 0;
+                    var streamingLods = new List<StreamingLodsInfo>();
+                    StreamingLodsInfo LoadStreamingLods(ulong guid) {
+                        using Stream streamingLodStream = OpenFile(guid);
+                        teChunkedData streamingLodChunks = new teChunkedData(streamingLodStream);
+                        return new StreamingLodsInfo(streamingLodChunks);
+                    }
+                    
+                    // do we need to load every streaming payload? i don't know (how many models have >1? might be 0)
+                    // but, it is used for AllLODs support
+
+                    if (hasStream1) {
+                        streamingLods.Add(LoadStreamingLods(modelInfo.m_GUID & 0xFFFFFFF3FFFFFFFF | 0x200000000));
+                    }
+                    if (hasStream2) {
+                        streamingLods.Add(LoadStreamingLods(modelInfo.m_GUID & 0xFFFFFFF5FFFFFFFF | 0x400000000));
+                    }
                     if (hasStream3) {
-                        streamedLodsModel = modelInfo.m_GUID & 0xFFFFFFF7FFFFFFFF | 0x600000000;
-                    } else if (hasStream2) {
-                        streamedLodsModel = modelInfo.m_GUID & 0xFFFFFFF5FFFFFFFF | 0x400000000;
-                    } else if (hasStream1) {
-                        streamedLodsModel = modelInfo.m_GUID & 0xFFFFFFF3FFFFFFFF | 0x200000000;
+                        streamingLods.Add(LoadStreamingLods(modelInfo.m_GUID & 0xFFFFFFF7FFFFFFFF | 0x600000000));
                     }
 
-                    StreamingLodsInfo streamedLods = null;
-                    if (streamedLodsModel != 0) {
-                        using (Stream streamingLodStream = OpenFile(streamedLodsModel)) {
-                            teChunkedData streamingLodChunks = new teChunkedData(streamingLodStream);
-                            streamedLods = new StreamingLodsInfo(streamingLodChunks);
-                        }
-                    }
-
-                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, GetGUIDName(modelInfo.m_GUID), streamedLods);
+                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, GetGUIDName(modelInfo.m_GUID), allLods, streamingLods);
                     if (modelInfo.m_modelLooks.Count > 0) {
                         FindLogic.Combo.ModelLookAsset modelLookInfo = info.m_info.m_modelLooks[modelInfo.m_modelLooks.First()];
                         model.ModelLookFileName = Path.Combine("ModelLooks",
