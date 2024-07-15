@@ -354,7 +354,6 @@ namespace DataTool.ToolLogic.Extract {
                     return;
                 }
                 
-                LoudLog($"\tExtracting weapon skin {unlock.Name}");
                 WeaponSkin.Save(flags, thisPath, unlock, hero);
             }
         }
