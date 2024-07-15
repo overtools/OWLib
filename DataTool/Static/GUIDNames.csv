@@ -619,6 +619,7 @@ C0CC,01C,Season7,1
 CD75,01C,Season8,1
 CEC0,01C,Season9,1
 D740,01C,Season10,1
+D745,01C,Season11,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -645,6 +646,7 @@ D6C,09F,Menu/Toronto,1
 862,09F,Menu/OWL,1
 864,09F,Menu/OWL,1
 8B4,09F,Menu/Rialto (Archives),1
+8BA,09F,Menu/Pink Mercy,1
 8BE,09F,Menu/Rialto,1
 A13,09F,Menu/OWL,1
 A5A,09F,Menu/Chateau (Halloween),1
@@ -696,6 +698,9 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 121A,09F,Menu/Venture,1
 121E,09F,Menu/Mirrorwatch A,1
 123F,09F,Menu/Ultrawatch Art A,1
+1243,09F,Menu/Transformers Art,1
+1249,09F,Menu/Lifeguard Art,1
+124A,09F,Menu/Bound Demon,1
 ; Celebrations,,,
 2168,01C,Christmas,1
 2498,01C,LunarNewYear,1
