@@ -47,20 +47,32 @@ namespace DataTool.ToolLogic.Dump {
                 }
             }
 
+            foreach (var guid in @return.Keys.ToArray()) {
+                if (@return[guid].Count != 0) {
+                    // we got data for some locale
+                    continue;
+                }
+
+                // no data, e.g encrypted
+                @return[guid] = null;
+            }
+
             return @return;
         }
 
         private static void InitStorage(string language) {
             Logger.Info("CASC", $"Attempting to load language {language}");
-            Client = null;
+            //Client = null; // we will try share cdn indices so don't wipe just yet
             TankHandler = null;
             TrackedFiles = null;
 
             var args = new ClientCreateArgs {
-                SpeechLanguage = "enUS",
+                SpeechLanguage = "enUS", // doesn't matter, we aren't dumping subtitles/voice
                 TextLanguage = language,
                 HandlerArgs = new ClientCreateArgs_Tank(),
-                Online = false
+                Online = true, // could help on bnet if missing stuff :D
+                RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring", // just in case ig
+                TryShareCDNIndexWithHandler = Client
             };
 
             Client = new ClientHandler(Flags.OverwatchDirectory, args);

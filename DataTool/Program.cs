@@ -33,7 +33,6 @@ namespace DataTool {
         public static ToolFlags Flags;
         public static uint BuildVersion;
         public static bool IsPTR => Client?.ProductCode == "prot";
-        public static bool IsBeta => Client?.ProductCode == "prob";
 
         public static readonly string[] ValidLanguages = { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" };
 
