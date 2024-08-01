@@ -275,17 +275,28 @@ namespace DataTool.Helper {
         public static HashSet<ulong> MissingKeyLog = new ();
 
         public static Stream? OpenFile(ulong guid) {
+            if (guid == 0) return null;
+            
             try {
-                return TankHandler.OpenFile(guid);
+                var stream = TankHandler.OpenFile(guid);
+                if (stream == null) TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X16} - returned null");
+                return stream;
             } catch (Exception e) {
-                if (e is BLTEKeyException keyException) {
-                    if (MissingKeyLog.Add(keyException.MissingKey) && Debugger.IsAttached) {
-                        TankLib.Helpers.Logger.Warn("BLTE", $"Missing key: {keyException.MissingKey:X16}");
+                switch (e) {
+                    case BLTEKeyException keyException: {
+                        if (MissingKeyLog.Add(keyException.MissingKey) && Debugger.IsAttached) {
+                            TankLib.Helpers.Logger.Warn("BLTE", $"Missing key: {keyException.MissingKey:X16}");
+                        }
+                        TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X16} - encrypted");
+                        return null;
                     }
+                    case FileNotFoundException:
+                        TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X16} - not found");
+                        return null;
+                    default:
+                        TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X16} - {e}");
+                        return null;
                 }
-
-                TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X8}");
-                return null;
             }
         }
 
