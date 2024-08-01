@@ -13,7 +13,7 @@ using static DataTool.Helper.Logger;
 using System.Threading.Tasks;
 using TankLib;
 using TACTLib.Core.Product.Tank;
-using static TACTLib.Core.Product.Tank.ApplicationPackageManifest;
+using static TACTLib.Core.Product.Tank.AssetPackageManifest;
 
 namespace TankPackage
 {
@@ -86,7 +86,7 @@ namespace TankPackage
                 return;
             }
 
-            ApplicationPackageManifest apm = TankHandler.m_packageManifest;
+            AssetPackageManifest apm = TankHandler.m_packageManifest;
             foreach (ContentManifestFile contentManifest in new [] {TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest}) {
                 var ids = contentManifest.m_hashList.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.GUID))).Select(x => x.GUID);
                 Save(output, apm.m_header.m_checksum, ids, contentManifest);
@@ -106,7 +106,7 @@ namespace TankPackage
             Dictionary<ulong, PackageRecord[]> totalRecords = new Dictionary<ulong, PackageRecord[]>();
             Dictionary<ulong, PackageHeader> packages = new Dictionary<ulong, PackageHeader>();
 
-            ApplicationPackageManifest apm = TankHandler.m_packageManifest;
+            AssetPackageManifest apm = TankHandler.m_packageManifest;
             for (int i = 0; i < apm.m_packageEntries.Length; ++i)
             {
                 PackageEntry entry = apm.m_packageEntries[i];
@@ -210,7 +210,7 @@ namespace TankPackage
         {
             ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            ApplicationPackageManifest apm = TankHandler.m_packageManifest;
+            AssetPackageManifest apm = TankHandler.m_packageManifest;
             for (int i = 0; i < apm.m_packageEntries.Length; ++i)
             {
                 PackageEntry entry = apm.m_packageEntries[i];
@@ -227,7 +227,7 @@ namespace TankPackage
         {
             ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            ApplicationPackageManifest apm = TankHandler.m_packageManifest;
+            AssetPackageManifest apm = TankHandler.m_packageManifest;
             for (int i = 0; i < apm.m_packageEntries.Length; ++i)
             {
                 PackageEntry entry = apm.m_packageEntries[i];
@@ -244,7 +244,7 @@ namespace TankPackage
         {
             ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            ApplicationPackageManifest apm = TankHandler.m_packageManifest;
+            AssetPackageManifest apm = TankHandler.m_packageManifest;
             for (int i = 0; i < apm.m_packageEntries.Length; ++i)
             {
                 PackageEntry entry = apm.m_packageEntries[i];
