@@ -11,7 +11,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUIdentifier> m_identifier;
 
         [STUField(0xB48F1D22, 24)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_name;
+        public teStructuredDataAssetRef<STU_A7F15A16> m_name;
 
         [STUField(0x2C54AEAF, 40)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_category;

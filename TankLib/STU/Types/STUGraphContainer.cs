@@ -14,7 +14,7 @@ namespace TankLib.STU.Types
         public teString m_C65AA24E;
 
         [STUField(0xE3C80AC9, 104)] // size: 16
-        public teColorRGBA m_E3C80AC9;
+        public teColorRGBA m_E3C80AC9 = new teColorRGBA(0f, 0f, 0f, 0f);
 
         [STUField(0xB8938E78, 120)] // size: 16
         public teColorRGBA m_backgroundColor;
