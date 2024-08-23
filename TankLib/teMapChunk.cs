@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using TankLib.Math;
@@ -471,6 +472,45 @@ namespace TankLib {
 
         public void Read(BinaryReader reader) {
             Header = reader.Read<teMapPlaceableEffect.Structure>();
+        }
+    }
+    
+    public class teMapPlaceableArea : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.AREA;
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Structure {
+
+            [FieldOffset(12)] public ushort BoxCount;
+            [FieldOffset(14)] public ushort SphereCount;
+            [FieldOffset(16)] public ushort CapsuleCount;
+            [FieldOffset(18)] public ushort Unknown1Count;
+            [FieldOffset(20)] public ushort Unknown2Count;
+
+            [FieldOffset(24)] public uint BoxOffset;
+            [FieldOffset(28)] public uint SphereOffset;
+            [FieldOffset(32)] public uint CapsuleOffset;
+            [FieldOffset(36)] public uint Unknown1Offset;
+            [FieldOffset(40)] public uint Unknown2Offset;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Box {
+            [FieldOffset(0)] public Quaternion Orientation;
+            [FieldOffset(16)] public Vector3 Translation;
+            [FieldOffset(28)] public Vector3 Extents;
+            [FieldOffset(40)] public Vector4 NoIdea;
+        }
+
+        public Structure Header;
+        public Box[] Boxes;
+
+        public void Read(BinaryReader reader) {
+            var basePos = reader.BaseStream.Position;
+            var header = reader.Read<Structure>();
+
+            reader.BaseStream.Position = basePos + header.BoxOffset;
+            Boxes = reader.ReadArray<Box>(header.BoxCount);
         }
     }
 
