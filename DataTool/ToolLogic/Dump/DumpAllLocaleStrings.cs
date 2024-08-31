@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.JSON;
@@ -15,11 +16,14 @@ namespace DataTool.ToolLogic.Dump {
     [Tool("dump-all-locale-strings", Description = "Dump strings for all languages", CustomFlags = typeof(ListFlags), IsSensitive = true, UtilNoArchiveNeeded = true)]
     public class DumpStringsLocale : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            var data = GetData();
+            var flags = (ListFlags) toolFlags;
 
-            if (toolFlags is ListFlags flags) {
-                OutputJSON(data, flags);
+            if (!Directory.Exists(Flags.OverwatchDirectory)) {
+                throw new DirectoryNotFoundException($"Invalid archive directory. Directory \"{Flags.OverwatchDirectory}\" does not exist. Please specify a valid directory.");
             }
+
+            var data = GetData();
+            OutputJSON(data, flags);
         }
 
         private Dictionary<teResourceGUID, Dictionary<string, string>> GetData() {
