@@ -64,6 +64,9 @@ namespace DataTool {
         [Alias("argd")]
         public bool DeleteArgs;
 
+        [CLIFlag(Default = false, Flag = "debug", Help = "Enable debug logging", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool Debug;
+
         public override bool Validate() => true;
     }
 }

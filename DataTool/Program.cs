@@ -55,25 +55,18 @@ namespace DataTool {
         };
 
         public static void Main() {
-            InitTankSettings();
             HookConsole();
+
+            // Verify that tool is being run from the console
             LaunchHelpers.VerifyConsoleLaunch();
 
-            var tools = GetTools();
-
-        #if DEBUG
-            FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => {
-                Logger.Error("Flag", $"The flag \"{flag}\" from {duplicate} is a duplicate!");
-            });
-        #endif
-
-            FlagParser.LoadArgs();
-
             Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{Util.GetVersion(typeof(Program).Assembly)}");
-
             Logger.Info("Core", $"CommandLine: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
 
-            Flags = FlagParser.Parse<ToolFlags>(full => PrintHelp(full, tools));
+            var tools = GetTools();
+            InitFlags(tools);
+
+            // If the flags failed to parse or something, just return. Flag parsing will have printed an error.
             if (Flags == null)
                 return;
 
@@ -100,7 +93,7 @@ namespace DataTool {
                 Flags.OverwatchDirectory = overwatchDirectoryOverride;
             }
 
-            Logger.Info("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
+            Logger.Debug("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
 
             if (Flags.SaveArgs) {
                 FlagParser.AppArgs = FlagParser.AppArgs.Where(x => !x.StartsWith("--arg")).ToArray();
@@ -184,7 +177,6 @@ namespace DataTool {
             ShutdownMisc();
         }
 
-
         private static void HookConsole() {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
             Process.GetCurrentProcess()
@@ -195,8 +187,20 @@ namespace DataTool {
             Console.OutputEncoding = Encoding.UTF8;
         }
 
-        private static void InitTankSettings() {
-            Logger.ShowDebug |= Debugger.IsAttached;
+        private static void InitFlags(HashSet<Type> tools) {
+            FlagParser.LoadArgs();
+
+            Flags = FlagParser.Parse<ToolFlags>(full => PrintHelp(full, tools));
+
+            if (Flags.Debug) {
+                Logger.ShowDebug = true;
+            }
+
+        #if DEBUG
+            FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => {
+                Logger.Error("Flag", $"The flag \"{flag}\" from {duplicate} is a duplicate!");
+            });
+        #endif
         }
 
         public static void InitMisc() {
