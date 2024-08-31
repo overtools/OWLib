@@ -6,7 +6,6 @@ using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 using Combo = DataTool.FindLogic.Combo;
 
 namespace DataTool.ToolLogic.Extract {

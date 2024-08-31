@@ -4,6 +4,7 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.STU.Types;
 using static DataTool.Program;
 
@@ -21,7 +22,7 @@ namespace DataTool.ToolLogic.Extract {
                 try {
                     SaveVectorImage(guid, outputDir);
                 } catch (Exception ex) {
-                    Logger.ErrorLog($"Failed to save vector image {teResourceGUID.AsString(guid)}: {ex.Message}");
+                    Logger.Error($"Failed to save vector image {teResourceGUID.AsString(guid)}: {ex.Message}");
                 }
             }
         }

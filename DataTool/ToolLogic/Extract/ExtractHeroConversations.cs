@@ -6,6 +6,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
@@ -28,7 +29,7 @@ namespace DataTool.ToolLogic.Extract {
             var validHeroes = Helpers.GetHeroNamesMapping();
             var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
             if (parsedTypes == null) {
-                Logger.WarnLog("No query specified, extracting all conversations for all heroes.");
+                Logger.Warn("No query specified, extracting all conversations for all heroes.");
             }
 
             Logger.Log("Generating voiceline mappings, this will take a moment...");
@@ -68,7 +69,7 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
                 }
 
-                Logger.InfoLog($"Extracting {teResourceGUID.AsString(conversationGuid)}");
+                Logger.Info($"Extracting {teResourceGUID.AsString(conversationGuid)}");
 
                 var newPath = basePath;
                 if (flags.VoiceGroupByHero) {
@@ -88,7 +89,7 @@ namespace DataTool.ToolLogic.Extract {
 
                     i++;
                     var (heroName, instance) = VoicelineHeroMapping[voicelineGuid.m_E295B99C];
-                    
+
                     // todo: hammond could partake in a conversation where he just squeaks in response...
                     // meaning no voice sound files
 
@@ -115,7 +116,7 @@ namespace DataTool.ToolLogic.Extract {
                 var heroStu = hero.STU;
 
                 string heroName = IO.GetValidFilename(hero.Name ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
-                Logger.InfoLog($"Generating mapping for {heroName}");
+                Logger.Info($"Generating mapping for {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;

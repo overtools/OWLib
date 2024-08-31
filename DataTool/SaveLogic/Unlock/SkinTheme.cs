@@ -8,7 +8,7 @@ using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
-using static DataTool.Helper.Logger;
+using TankLib.Helpers;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.SaveLogic.Unlock {
@@ -21,16 +21,16 @@ namespace DataTool.SaveLogic.Unlock {
             if (skinBase == null) return;
 
             if (hero == null) {
-                LoudLog($"\tSkipping skin {unlock.Name}");
-                LoudLog("\t\tCan not extract skin without a hero (thanks blizz)");
+                Logger.Log($"\tSkipping skin {unlock.Name}");
+                Logger.Log("\t\tCan not extract skin without a hero (thanks blizz)");
                 return;
             }
 
             if (skinBase is STUSkinTheme) {
-                LoudLog($"\tExtracting skin {unlock.Name}");
+                Logger.Log($"\tExtracting skin {unlock.Name}");
                 Save(flags, directory, skinThemeGUID, hero);
             } else if (skinBase is STU_EF85B312 mythicSkin) {
-                LoudLog($"\tExtracting mythic skin {unlock.Name}");
+                Logger.Log($"\tExtracting mythic skin {unlock.Name}");
                 MythicSkin.SaveMythicSkin(flags, directory, unlockSkinTheme.m_skinTheme, mythicSkin, hero);
             } else {
                 throw new Exception($"wtf is a {skinBase.GetType()} when its at home");
@@ -41,8 +41,8 @@ namespace DataTool.SaveLogic.Unlock {
             var skinThemeGUID = skin.m_5E9665E3;
             STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(skinThemeGUID);
             if (skinTheme == null) return;
-            
-            LoudLog($"\tExtracting npc variant {IO.GetFileName(skinThemeGUID)}");
+
+            Logger.Log($"\tExtracting npc variant {IO.GetFileName(skinThemeGUID)}");
             Save(flags, directory, skinThemeGUID, hero);
         }
 
@@ -51,7 +51,7 @@ namespace DataTool.SaveLogic.Unlock {
 
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
             info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
-            
+
             var firstPersonComponent = GetInstance<STUFirstPersonComponent>(hero.m_gameplayEntity);
             if (firstPersonComponent != null) {
                 info.SetEntityName(firstPersonComponent.m_entity, "Gameplay1P");
@@ -82,7 +82,7 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void Save(ICLIFlags flags, string directory, teResourceGUID skinGUID, STUHero hero) {
-            LoudLog("\t\tFinding");
+            Logger.Log("\t\tFinding");
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             var replacements = FindEntities(info, skinGUID, hero);
@@ -96,11 +96,11 @@ namespace DataTool.SaveLogic.Unlock {
 
             FindSoundFiles(flags, directory, replacements);
 
-            LoudLog("\t\tSaving");
+            Logger.Log("\t\tSaving");
             var saveContext = new Combo.SaveContext(info);
             Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
             Combo.Save(flags, directory, saveContext);
-            LoudLog("\t\tDone");
+            Logger.Log("\t\tDone");
         }
 
         public static void FindSoundFiles(ICLIFlags flags, string directory, Dictionary<ulong, ulong> replacements) {
@@ -220,7 +220,7 @@ namespace DataTool.SaveLogic.Unlock {
                     // well this isn't going to work
                     continue;
                 }
-                
+
                 // not using add because im scared of crashes..
                 map[trgSkinAsset.m_srcAsset] = trgSkinAsset.m_destAsset;
             }

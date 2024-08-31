@@ -7,6 +7,7 @@ using DataTool.Flag;
 using DataTool.Helper;
 using TACTLib.Container;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
@@ -66,7 +67,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue; // no idea what this is
                         }
 
-                        TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
+                        Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
                         Combo.ComboInfo info = default;
                         var skinThemeGUID = unlockSkinTheme.m_skinTheme;
                         var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
@@ -93,10 +94,10 @@ namespace DataTool.ToolLogic.Extract {
             if (!info.m_voiceSets.ContainsKey(skinnedVoiceSet)) {
                 if (Program.Client.ContainerHandler is StaticContainerHandler) {
                     // (steam)
-                    TankLib.Helpers.Logger.Error("ExtractHeroVoice", $"Unable to load voice data {voiceSetGuid:X16}. Did you choose the correct voice locale and is the voice audio depot downloaded?");
+                    Logger.Error("ExtractHeroVoice", $"Unable to load voice data {voiceSetGuid:X16}. Did you choose the correct voice locale and is the voice audio depot downloaded?");
                     return false;
                 }
-                TankLib.Helpers.Logger.Error("ExtractHeroVoice", $"Unable to load voice data {voiceSetGuid:X16}");
+                Logger.Error("ExtractHeroVoice", $"Unable to load voice data {voiceSetGuid:X16}");
                 return false;
             }
 
@@ -152,7 +153,7 @@ namespace DataTool.ToolLogic.Extract {
                             }
 
                             if (SoundIdCache.Contains(soundFile)) {
-                                TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
+                                Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
                                 continue;
                             }
 

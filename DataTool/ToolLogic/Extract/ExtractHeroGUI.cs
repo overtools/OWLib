@@ -5,6 +5,7 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract {

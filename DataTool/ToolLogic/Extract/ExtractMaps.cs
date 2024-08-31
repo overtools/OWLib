@@ -9,7 +9,6 @@ using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.Logger;
 using Map = DataTool.SaveLogic.Map;
 using static DataTool.Helper.SpellCheckUtils;
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,9 +8,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
 using TankLib.Helpers;
-using static DataTool.Helper.Logger;
-
-#nullable enable
 
 namespace DataTool {
     public record ParsedArg {
@@ -23,7 +22,7 @@ namespace DataTool {
 
         public ParsedArg Combine(ParsedArg? second) {
             if (second == null) return this;
-            
+
             Dictionary<string, TagValue> combinedTags = Tags.ToDictionary();
             foreach (KeyValuePair<string, TagValue> tag in second.Tags) {
                 combinedTags[tag.Key] = tag.Value;
@@ -94,7 +93,7 @@ namespace DataTool {
         public bool IsEqual(string query) {
             return string.Equals(query, Value, StringComparison.InvariantCultureIgnoreCase);
         }
-        
+
         public bool IsEqual(ReadOnlySpan<char> query) {
             return query.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
         }
@@ -108,12 +107,13 @@ namespace DataTool {
     }
 
     public class QueryParser {
+        public static void Log(string message = "") => Logger.Log(message);
         protected static readonly SymSpell SymSpell = new SymSpell(128, 4);
-        
+
         protected virtual void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
 
-            Log("Error parsing query:");
+            Logger.Error("Error parsing query:");
             Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
             Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
             Log($"{indent + 1}All hero and item names are in your selected locale");
@@ -127,14 +127,16 @@ namespace DataTool {
 
             foreach (QueryType argType in types) {
                 foreach (QueryTag argTypeTag in argType.Tags) {
-                    LogSL($"{indent + 1}{argTypeTag.Name}:");
+                    Logger.Log(null, $"{indent + 1}{argTypeTag.Name}: ", false);
                     if (argTypeTag.Default != null) {
-                        TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.XTermColor.Wheat, false, Console.Out, null, $" \"{argTypeTag.Default}\"");
-                    }
-
-                    Log();
-                    foreach (string option in argTypeTag.Options) {
-                        Log($"{indent + 2}{option}");
+                        Logger.Log24Bit(ConsoleSwatch.XTermColor.Wheat, false, Console.Out, null, $"\"{argTypeTag.Default}\"");
+                        Log();
+                        foreach (string option in argTypeTag.Options) {
+                            Log($"{indent + 2}{option}");
+                        }
+                    } else {
+                        Logger.Log(null, $"{string.Join(", ", argTypeTag.Options.ToArray())}", false);
+                        Log();
                     }
                 }
 
@@ -157,7 +159,7 @@ namespace DataTool {
             var queryTypeMap = new Dictionary<string, QueryType>();
             foreach (var queryType in queryTypes) {
                 queryTypeMap.Add(queryType.Name.ToLowerInvariant(), queryType);
-                
+
                 foreach (var alias in queryType.Aliases) {
                     queryTypeMap.Add(alias.ToLowerInvariant(), queryType);
                 }
@@ -165,7 +167,7 @@ namespace DataTool {
 
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
-            
+
             Dictionary<string, Dictionary<string, ParsedArg>> output = new Dictionary<string, Dictionary<string, ParsedArg>>();
 
             foreach (string opt in inputArguments) {
@@ -185,7 +187,7 @@ namespace DataTool {
                         hero = nameForThisLocale;
                     }
                 }
-                
+
                 var heroOutput = new Dictionary<string, ParsedArg>();
                 output[hero] = heroOutput;
 
@@ -193,12 +195,12 @@ namespace DataTool {
                 if (afterHero.Length == 0) {
                     // just "Reaper"
                     // everything for this hero
-                    
+
                     foreach (QueryType type in queryTypes) {
                         var parsedArg = new ParsedArg(type);
                         parsedArg.Allowed.Add("*"); // allow anything
                         PopulateDefaultTags(type, parsedArg);
-                        
+
                         heroOutput.Add(type.Name, parsedArg);
                     }
                     continue;
@@ -225,7 +227,7 @@ namespace DataTool {
                         var parsedArg = new ParsedArg(queryType);
                         heroOutput.Add(queryType.Name, parsedArg);
                         // todo: using .Add here can of course fail but we would previously only use the 2nd occurrence.. its better to explode
-                        
+
                         // todo: rewrite this parse loop...
                         bool isBracket = false;
                         foreach (string item in givenValues) {
@@ -286,7 +288,7 @@ namespace DataTool {
         private static void PopulateDefaultTags(QueryType typeObj, ParsedArg parsedArg) {
             foreach (QueryTag tagObj in typeObj.Tags) {
                 if (tagObj.Default == null) continue;
-                            
+
                 string tagName = tagObj.Name.ToLowerInvariant();
                 // dont override user given value
                 if (parsedArg.Tags.ContainsKey(tagName)) continue;
@@ -299,10 +301,10 @@ namespace DataTool {
             Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>();
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
-                
+
                 string nameInvariant = nameToMatch.ToLowerInvariant();
                 if (!parsedHeroes.TryGetValue(nameInvariant, out var parsedHero)) continue;
-                
+
                 foreach (KeyValuePair<string, ParsedArg> parsedType in parsedHero) {
                     if (output.TryGetValue(parsedType.Key, out ParsedArg? existingArg)) {
                         output[parsedType.Key] = existingArg.Combine(parsedType.Value);

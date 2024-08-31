@@ -4,11 +4,13 @@ using System.IO;
 using DataTool.ToolLogic.List;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using TankLib.Helpers;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.JSON {
     public class JSONTool {
+        public static void Log(string message = "", params object[] arg) => Logger.Log(null, message, arg);
+
         /// <summary>
         /// Serialize the object to JSON and writes it to the output path.
         /// By default, the JSON is indented, enums are serialized as strings, and teResourceGUIDs are serialized as strings.

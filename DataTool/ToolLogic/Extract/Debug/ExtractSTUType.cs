@@ -10,6 +10,7 @@ using TankLib.STU;
 using System.Collections.Generic;
 using System.Linq;
 using DragonLib.Indent;
+using TankLib.Helpers;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     public class teResourceGUIDSerializer : IDragonMLSerializer {
@@ -74,10 +75,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
             string path = (toolFlags as ExtractFlags).OutputPath;
 
             if (toolFlags.Positionals.Length > 3) {
-                Logger.InfoLog($"Extracting {toolFlags.Positionals[3]} ");
+                Logger.Info($"Extracting {toolFlags.Positionals[3]} ");
                 WriteType(Convert.ToUInt16(toolFlags.Positionals[3], 16), path, flags.ConvertToXML);
             } else {
-                Logger.InfoLog("Extracting most of STUs!");
+                Logger.Info("Extracting most of STUs!");
                 foreach (var type in default_types) {
                     WriteType(type, path, flags.ConvertToXML);
                 }

@@ -29,8 +29,8 @@ namespace DataTool.ToolLogic.Dump {
         private Dictionary<teResourceGUID, Dictionary<string, string>> GetData() {
             var @return = new Dictionary<teResourceGUID, Dictionary<string, string>>();
 
-            Helper.Logger.Log($"Preparing to dump strings for following languages: {string.Join(", ", Program.ValidLanguages)}");
-            Helper.Logger.Log("You must have the language installed in order for it to be included, languages not installed will be ignored.");
+            Logger.Log($"Preparing to dump strings for following languages: {string.Join(", ", Program.ValidLanguages)}");
+            Logger.Log("You must have the language installed in order for it to be included, languages not installed will be ignored.");
 
             foreach (var language in Program.ValidLanguages) {
                 try {

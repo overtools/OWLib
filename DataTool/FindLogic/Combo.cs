@@ -7,6 +7,7 @@ using DataTool.ConvertLogic.WEM;
 using DataTool.Helper;
 using TankLib;
 using TankLib.Chunks;
+using TankLib.Helpers;
 using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
@@ -442,7 +443,7 @@ namespace DataTool.FindLogic {
             guid = GetReplacement(guid, replacements);
 
             if (info.m_fullLog) {
-                Logger.DebugLog("Combo", $"Searching in {GetFileName(guid)}");
+                Logger.Debug("Combo", $"Searching in {GetFileName(guid)}");
             }
 
             // Debugger break area:

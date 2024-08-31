@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List.Misc {

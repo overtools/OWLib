@@ -8,7 +8,6 @@ using TankLib;
 using TACTLib.Core.Product.Tank;
 using static DataTool.Program;
 using CKey=TACTLib.Core.Key.FullKey;
-using EKey=TACTLib.Core.Key.TruncatedKey;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-newents", Description = "Extract new entities (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

@@ -21,7 +21,6 @@ using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
 using TankLib.Helpers;
 using ValveKeyValue;
-using static DataTool.Helper.Logger;
 using Logger = TankLib.Helpers.Logger;
 using static DataTool.Helper.SpellCheckUtils;
 
@@ -133,7 +132,7 @@ namespace DataTool {
                 }
 
                 if (extractFlags.OutputPath.StartsWith("{") || extractFlags.OutputPath.EndsWith("}")) {
-                    Logger.Error("Core", "Do not include { or } in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
+                    Logger.Error("Core", "Do not include {{ or }} in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
                     return;
                 }
             }
@@ -522,10 +521,10 @@ namespace DataTool {
             var tools = new List<Type>(eTools);
             tools.Sort(new ToolComparer());
 
-            Log();
-            Log("Modes:");
-            Log("  {0, -26} | {1, -40}", "mode", "description");
-            Log("".PadLeft(94, '-'));
+            Logger.Log();
+            Logger.Log("Modes:");
+            Logger.Log("  {0, -26} | {1, -40}", "mode", "description");
+            Logger.Log("".PadLeft(94, '-'));
             foreach (var t in tools) {
                 var attribute = t.GetCustomAttribute<ToolAttribute>();
                 if (attribute.IsSensitive) continue;
@@ -533,7 +532,7 @@ namespace DataTool {
                 var desc = attribute.Description;
                 if (attribute.Description == null) desc = "";
 
-                Log("  {0, -26} | {1}", attribute.Keyword, desc);
+                Logger.Log("  {0, -26} | {1}", attribute.Keyword, desc);
             }
 
             var flagTypes = new List<Type>();
@@ -552,8 +551,8 @@ namespace DataTool {
 
             foreach (var flagType in flagTypes) {
                 var flagInfo = flagType.GetCustomAttribute<FlagInfo>();
-                Log();
-                Log($"{flagInfo?.Name ?? flagType.Name} Flags - {flagInfo?.Description ?? ""}");
+                Logger.Log();
+                Logger.Log($"{flagInfo?.Name ?? flagType.Name} Flags - {flagInfo?.Description ?? ""}");
                 typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp))
                     ?.MakeGenericMethod(flagType)
                     .Invoke(null, new object[] { null, true });

@@ -3,7 +3,6 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-report-responses", Description = "Lists the messages shown after the punishment of the reported player", CustomFlags = typeof(ListFlags), IsSensitive = true)]

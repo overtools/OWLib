@@ -2,7 +2,6 @@
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
-using static DataTool.Helper.Logger;
 using TankLib.Helpers;
 
 namespace DataTool.ToolLogic.List {

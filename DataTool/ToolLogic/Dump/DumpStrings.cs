@@ -5,7 +5,6 @@ using DataTool.Flag;
 using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 using DataTool.ToolLogic.List;
 
 namespace DataTool.ToolLogic.Dump {

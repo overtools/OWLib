@@ -4,7 +4,6 @@ using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-subtitles", Description = "List subtitles", CustomFlags = typeof(ListFlags))]

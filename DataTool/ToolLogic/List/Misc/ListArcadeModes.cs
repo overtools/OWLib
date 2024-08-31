@@ -4,7 +4,6 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-arcade-modes", Description = "List arcade modes", CustomFlags = typeof(ListFlags), IsSensitive = true)]

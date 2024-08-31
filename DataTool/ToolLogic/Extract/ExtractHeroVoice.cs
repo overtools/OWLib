@@ -5,7 +5,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.Logger;
+using TankLib.Helpers;
 using static DataTool.Helper.STUHelper;
 using DataTool.DataModels;
 using DataTool.SaveLogic.Unlock;
@@ -18,7 +18,7 @@ namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice-old", IsSensitive = true, Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType> {
-            new QueryType("soundRestriction") { HumanName = "Sound" }, 
+            new QueryType("soundRestriction") { HumanName = "Sound" },
             new QueryType("groupRestriction") { HumanName = "Group" }
         };
 
@@ -33,21 +33,21 @@ namespace DataTool.ToolLogic.Extract {
         protected override void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
 
-            Log("Please specify what you want to extract:");
-            Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
+            Logger.Log("Please specify what you want to extract:");
+            Logger.Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
+            Logger.Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
 
-            Log($"{indent + 1}All hero names are in your selected locale");
+            Logger.Log($"{indent + 1}All hero names are in your selected locale");
 
-            Log("\r\nTypes:");
+            Logger.Log("\r\nTypes:");
             foreach (QueryType argType in types) {
-                Log($"{indent + 1}{argType.Name}");
+                Logger.Log($"{indent + 1}{argType.Name}");
             }
 
-            Log("\r\nExample commands: ");
-            Log($"{indent + 1}\"Lúcio|soundRestriction=00000000B56B.0B2\"");
-            Log($"{indent + 1}\"Torbjörn|groupRestriction=0000000000CD.078\"");
-            Log($"{indent + 1}\"Moira\"");
+            Logger.Log("\r\nExample commands: ");
+            Logger.Log($"{indent + 1}\"Lúcio|soundRestriction=00000000B56B.0B2\"");
+            Logger.Log($"{indent + 1}\"Torbjörn|groupRestriction=0000000000CD.078\"");
+            Logger.Log($"{indent + 1}\"Moira\"");
         }
 
         private const string Container = "HeroVoice";
@@ -81,7 +81,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (config.Count == 0) continue;
 
-                Log($"Processing data for {heroNameActual}");
+                Logger.Log($"Processing data for {heroNameActual}");
 
                 STUVoiceSetComponent baseComponent = default;
                 Combo.ComboInfo baseInfo = default;
@@ -159,7 +159,7 @@ namespace DataTool.ToolLogic.Extract {
                     return false;
             }
 
-            Log($"\tSaving {skin}");
+            Logger.Log($"\tSaving {skin}");
 
             var context = new SaveLogic.Combo.SaveContext(info);
             SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), context, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));

@@ -6,7 +6,7 @@ using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.Logger;
+using TankLib.Helpers;
 using System;
 using DataTool.DataModels;
 
@@ -85,7 +85,7 @@ namespace DataTool.SaveLogic {
                                         FindLogic.Combo.Find(Info, graphWithOverrides);
                                     }
                                 }
-                                
+
                                 FindLogic.Combo.Find(Info, statescriptComponentInstanceData.m_2D9815BA);
                             } else if (instanceData is STUModelComponentInstanceData modelComponentInstanceData) {
                                 // (anim)
@@ -250,7 +250,7 @@ namespace DataTool.SaveLogic {
                         var effect = (teMapPlaceableEffect) mapPlaceable;
                         FindLogic.Combo.Find(Info, effect.Header.Effect);
                         // todo: wtf
-                        
+
                         // todo: who did this - zingy
                     }
                 }
@@ -259,7 +259,7 @@ namespace DataTool.SaveLogic {
 
         public static void Save(ICLIFlags flags, MapHeader mapInfo, STUMapHeader mapHeader, ulong key, string basePath) {
             var name = mapInfo.GetName();
-            LoudLog($"Extracting map {name}/{teResourceGUID.Index(key):X}");
+            Logger.Log($"Extracting map {name}/{teResourceGUID.Index(key):X}");
 
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?
@@ -269,7 +269,7 @@ namespace DataTool.SaveLogic {
             CreateDirectoryFromFile(mapPath);
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            LoudLog("\tFinding");
+            Logger.Log("\tFinding");
             FindLogic.Combo.Find(info, mapHeader.m_map);
 
             for (int i = 0; i < mapHeader.m_D97BC44F.Length; i++) {
@@ -367,7 +367,7 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_musicTease);
             info.SetEffectName(mapHeader.m_0342E00E?.m_musicTease, "MusicTease");
 
-            LoudLog("\tSaving");
+            Logger.Log("\tSaving");
             var context = new Combo.SaveContext(info);
             Combo.Save(flags, mapPath, context);
             Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), context);
@@ -383,7 +383,7 @@ namespace DataTool.SaveLogic {
             Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), context);
             Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), context);
 
-            LoudLog("\tDone");
+            Logger.Log("\tDone");
         }
 
         public static string GetVariantName(STU_71B2D30A variantModeInfo, STU_7FB10A24 variantResultingMap) {

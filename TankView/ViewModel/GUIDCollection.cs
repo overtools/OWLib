@@ -17,8 +17,8 @@ using TankView.View;
 using TACTLib.Client;
 using TACTLib.Core.Key;
 using TACTLib.Core.Product.Tank;
+using TankLib.Helpers;
 using TankView.ObjectModel;
-using Logger = TACTLib.Logger;
 
 namespace TankView.ViewModel {
     public class GUIDCollection : INotifyPropertyChanged, IDisposable {

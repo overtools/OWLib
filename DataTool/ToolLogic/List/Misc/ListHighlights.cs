@@ -10,7 +10,6 @@ using TankLib.Replay;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.Logger;
 using STUHero = TankLib.STU.Types.STUHero;
 using STUUnlock_Emote = TankLib.STU.Types.STUUnlock_Emote;
 using STUUnlock_VoiceLine = TankLib.STU.Types.STUUnlock_VoiceLine;

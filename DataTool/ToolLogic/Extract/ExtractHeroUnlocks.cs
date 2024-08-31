@@ -15,7 +15,6 @@ using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.Logger;
 using static DataTool.Helper.SpellCheckUtils;
 using Logger = TankLib.Helpers.Logger;
 
@@ -109,7 +108,7 @@ namespace DataTool.ToolLogic.Extract {
             SaveUnlocksForHeroes(flags, flags.OutputPath);
 
             if (!HasSavedAnything) {
-                Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly?");
+                Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly? Names must match exactly with what is in-game.");
                 if (Client.CreateArgs.TextLanguage != "enUS") {
                     Logger.Error("Tool", $"Reminder! Your language is set to \"{Client.CreateArgs.TextLanguage}\".");
                     Logger.Warn("Tool", $"When extracting data in other languages, the names of the unlocks must be in the language you're extracting as they might differ from their English versions.");
@@ -294,32 +293,32 @@ namespace DataTool.ToolLogic.Extract {
             string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", GetValidFilename(unlock.GetName()));
 
             if (ShouldDo(unlock, config, tags, UnlockType.Spray)) {
-                LoudLog($"\tExtracting spray {unlock.Name}");
+                Log($"\tExtracting spray {unlock.Name}");
                 SprayAndIcon.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.Icon)) {
-                LoudLog($"\tExtracting icon {unlock.Name}");
+                Log($"\tExtracting icon {unlock.Name}");
                 SprayAndIcon.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.HighlightIntro)) {
-                LoudLog($"\tExtracting highlight intro {unlock.Name}");
+                Log($"\tExtracting highlight intro {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.Emote)) {
-                LoudLog($"\tExtracting emote {unlock.Name}");
+                Log($"\tExtracting emote {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.VictoryPose)) {
-                LoudLog($"\tExtracting pose {unlock.Name}");
+                Log($"\tExtracting pose {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.VoiceLine)) {
-                LoudLog($"\tExtracting voice line {unlock.Name}");
+                Log($"\tExtracting voice line {unlock.Name}");
                 VoiceLine.Save(flags, thisPath, unlock, voiceSet);
             }
 
@@ -328,23 +327,23 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.PortraitFrame)) {
-                // LoudLog($"\tExtracting level frame {unlock.Name}");
+                // Log($"\tExtracting level frame {unlock.Name}");
                 thisPath = Path.Combine(path, unlock.Type.ToString());
                 PortraitFrame.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.NameCard)) {
-                LoudLog($"\tExtracting name card {unlock.Name}");
+                Log($"\tExtracting name card {unlock.Name}");
                 NameCard.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.WeaponCharm)) {
-                LoudLog($"\tExtracting charm {unlock.Name}");
+                Log($"\tExtracting charm {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, UnlockType.Souvenir)) {
-                LoudLog($"\tExtracting souvenir {unlock.Name}");
+                Log($"\tExtracting souvenir {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
@@ -353,14 +352,14 @@ namespace DataTool.ToolLogic.Extract {
                     Logger.Debug("ExtractHeroUnlock", $"skipping common rarity weapon {unlock.Name}");
                     return;
                 }
-                
+
                 WeaponSkin.Save(flags, thisPath, unlock, hero);
             }
         }
 
         private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, UnlockType unlockType) {
             if (unlock.Type != unlockType) return false;
-            
+
             bool shouldDo;
             if (config == null) {
                 shouldDo = true;

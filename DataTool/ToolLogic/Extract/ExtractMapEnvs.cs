@@ -2,7 +2,7 @@
 using DataTool.Flag;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.Logger;
+using TankLib.Helpers;
 using static DataTool.Helper.IO;
 using static DataTool.ToolLogic.List.ListMaps;
 using System.IO;
@@ -121,7 +121,7 @@ namespace DataTool.ToolLogic.Extract {
                         }
                     }
                 }
-                Log($"Saved Environment data for {mapName}");
+                Logger.Log($"Saved Environment data for {mapName}");
             }
         }
 

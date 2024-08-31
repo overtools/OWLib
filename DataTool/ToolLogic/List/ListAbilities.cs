@@ -5,7 +5,6 @@ using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-abilities", Description = "List abilities", CustomFlags = typeof(ListFlags))]

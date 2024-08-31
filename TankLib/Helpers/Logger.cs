@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using static TankLib.Helpers.ConsoleSwatch;
+
 // ReSharper disable UnusedMember.Local
 
 namespace TankLib.Helpers {
@@ -22,7 +24,6 @@ namespace TankLib.Helpers {
             if (UseColor) {
                 Console.ForegroundColor = color;
             }
-            
 
             string output = message;
 
@@ -39,7 +40,7 @@ namespace TankLib.Helpers {
             }
 
             writer.Write(output);
-            
+
             if (UseColor) {
                 Console.ForegroundColor = ConsoleColor.Gray; // erm, reset
             }
@@ -135,31 +136,46 @@ namespace TankLib.Helpers {
             }
         }
 
-        public static void Log(ConsoleColor color, bool newline, bool stderr, string category, string message, params object[] arg) {
+        public static void Log(ConsoleColor color, bool newline, bool stderr, string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
             Log24Bit(color, newline, stderr ? Console.Error : Console.Out, category, message, arg);
         }
 
-        public static void Success(string category, string message, params object[] arg) {
-            Log(ConsoleColor.Green, true, false, category, message, arg);
-        }
-
-        public static void Info(string category, string message, params object[] arg) {
+        public static void Log(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
             Log(ConsoleColor.White, true, false, category, message, arg);
         }
 
-        public static void Debug(string category, string message, params object[] arg) {
+        public static void Log(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, bool newline, params object[] arg) {
+            Log(ConsoleColor.White, newline, false, category, message, arg);
+        }
+
+        public static void Success(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
+            Log(ConsoleColor.Green, true, false, category, message, arg);
+        }
+
+        public static void Info(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
+            Log(ConsoleColor.White, true, false, category, message, arg);
+        }
+
+        public static void Debug(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
             if (!ShowDebug) return;
             Log(ConsoleColor.DarkGray, true, false, category, message, arg);
         }
 
-        public static void Warn(string category, string message, params object[] arg) {
+        public static void Warn(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
             Log(ConsoleColor.DarkYellow, true, false, category, message, arg);
         }
 
-        public static void Error(string category, string message, params object[] arg) {
+        public static void Error(string category, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message, params object[] arg) {
             Log(ConsoleColor.Red, true, true, category, message, arg);
         }
-        
+
+        public static void Log(string message = "") => Log(null, message);
+        public static void Success(string message = "") => Success(null, message);
+        public static void Info(string message = "") => Info(null, message);
+        public static void Warn(string message = "") => Warn(null, message);
+        public static void Error(string message = "") => Error(null, message);
+        public static void Debug(string message = "") => Debug(null, message);
+
         public static string ReadLine(TextWriter writer, bool @private) {
             StringBuilder builder = new StringBuilder();
             ConsoleKeyInfo ch;
@@ -171,29 +187,29 @@ namespace TankLib.Helpers {
                             writer.Write(" ");
                             writer.Write(ch.KeyChar);
                         }
-                        
+
                         builder.Remove(builder.Length - 1, 1);
                     } else {
                         Console.Beep();
                     }
                 } else {
                     builder.Append(ch.KeyChar);
-                    
+
                     if (!@private) writer.Write(ch.KeyChar);
                 }
             }
+
             writer.WriteLine();
             return builder.ToString();
         }
-        
+
         private static string LastMessage { get; set; }
-        private static void Fill<T>(T[] array, T value)
-        {
+
+        private static void Fill<T>(T[] array, T value) {
             Fill(array, value, 0, array.Length);
         }
 
-        private static void Fill<T>(T[] array, T value, int start, int length)
-        {
+        private static void Fill<T>(T[] array, T value, int start, int length) {
             for (int i = 0; i < length; ++i) array[i + start] = value;
         }
 
@@ -208,6 +224,7 @@ namespace TankLib.Helpers {
                 LastMessage = message;
                 Logger.Log24Bit(messageColor, true, Console.Out, null, message);
             }
+
             Console.Out.Write(empty);
             Console.CursorLeft = 0;
             var remaining = width - pre.Length - post.Length - 4;
@@ -216,22 +233,23 @@ namespace TankLib.Helpers {
                 Logger.Log24Bit(brickColor, false, Console.Out, null, " [");
                 empty = new char[remaining];
                 Fill(empty, ' ');
-                Fill(empty, '=', 0, (int)System.Math.Round(remaining * System.Math.Min(value, 1)));
+                Fill(empty, '=', 0, (int) System.Math.Round(remaining * System.Math.Min(value, 1)));
                 Logger.Log24Bit(processColor, false, Console.Out, null, string.Join("", empty));
                 Logger.Log24Bit(brickColor, false, Console.Out, null, "] ");
 
-                if(showProgressValue && remaining > 6) {
+                if (showProgressValue && remaining > 6) {
                     var valueText = (System.Math.Min(value, 1) * 100).ToString().Split('.')[0] + "%";
-                    Console.CursorLeft = pre.Length + 2 + (int)System.Math.Floor(remaining / 2.0d - valueText.Length / 2.0d);
+                    Console.CursorLeft = pre.Length + 2 + (int) System.Math.Floor(remaining / 2.0d - valueText.Length / 2.0d);
                     Logger.Log24Bit(processValueColor, false, Console.Out, null, valueText);
                     Console.CursorLeft = width - post.Length;
                 }
             }
+
             Logger.Log24Bit(postColor, false, Console.Out, null, post);
             Console.CursorLeft = Console.WindowWidth - 1;
             Console.CursorTop -= 1;
         }
-        
+
         public static void FlushProgress() {
             Console.CursorTop += 1;
             Console.WriteLine();

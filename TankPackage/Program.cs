@@ -9,7 +9,7 @@ using DataTool.Flag;
 using DataTool.ToolLogic.Extract;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.Logger;
+using TankLib.Helpers;
 using System.Threading.Tasks;
 using TankLib;
 using TACTLib.Core.Product.Tank;
@@ -29,11 +29,11 @@ namespace TankPackage
                 return;
             }
             var f = Flags;
-            
+
             InitStorage();
             InitMisc();
             InitKeys();
-            
+
             string[] modeArgs = Flags.Positionals.Skip(2).ToArray();
 
             switch (Flags.Mode.ToLower())

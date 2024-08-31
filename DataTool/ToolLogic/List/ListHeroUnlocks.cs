@@ -4,7 +4,6 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-unlocks", Description = "List hero unlocks", CustomFlags = typeof(ListFlags))]

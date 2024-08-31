@@ -8,11 +8,11 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.Helpers.Hash;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using Image = SixLabors.ImageSharp.Image;
-using Logger = TACTLib.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
     public static class MythicSkin {
@@ -21,11 +21,11 @@ namespace DataTool.SaveLogic.Unlock {
         public static void SaveMythicSkin(ICLIFlags flags, string directory, teResourceGUID mythicSkinGUID, STU_EF85B312 mythicSkin, STUHero hero) {
             var wasDeduping = Program.Flags.Deduplicate;
             if (!wasDeduping) {
-                Helper.Logger.WarnLog("\t\tTemporarily enabling texture deduplication");
+                Logger.Warn("\t\tTemporarily enabling texture deduplication");
             }
             Program.Flags.Deduplicate = true;
-            Helper.Logger.LoudLog("\t\tFinding");
-            
+            Logger.Log("\t\tFinding");
+
             var findInfo = new FindLogic.Combo.ComboInfo();
             var saveContext = new Combo.SaveContext(findInfo);
             var partTextures = LoadPartTextures(mythicSkin, findInfo);
@@ -52,7 +52,7 @@ namespace DataTool.SaveLogic.Unlock {
                 // save any sounds to main skin dir..
                 // todo: there arent any. probably replacing effect. just for sanity
                 SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkinGUID));
-                
+
                 using var infoTexture = BuildVariantInfoImage(partVariantIndices, partTextures);
                 infoTexture?.SaveAsPng(Path.Combine(variantDirectory, "Info.png"));
             }
@@ -105,16 +105,16 @@ namespace DataTool.SaveLogic.Unlock {
 
         public static IEnumerable<int[]> IteratePermutations(STU_4BC3E632 mythicSkin) {
             var partVariantIndices = new int[mythicSkin.m_942A6CCA.Length];
-            
+
             // todo: iterative algorithm..
             // and well... this is naughty
             // retuning the same array over and over again means ToArray on the IEnumerable would be useless
 
             foreach (var permutation in IteratePermutations(mythicSkin, partVariantIndices, 0)) {
                 yield return permutation;
-            } 
+            }
         }
-        
+
         private static IEnumerable<int[]> IteratePermutations(STU_4BC3E632 mythicSkin, int[] partVariantIndices, int thisPartIndex) {
             if (thisPartIndex < mythicSkin.m_942A6CCA.Length) {
                 var thisPart = mythicSkin.m_942A6CCA[thisPartIndex];

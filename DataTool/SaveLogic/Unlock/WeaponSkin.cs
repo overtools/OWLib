@@ -5,10 +5,10 @@ using DataTool.Flag;
 using DataTool.Helper;
 using SixLabors.ImageSharp;
 using TankLib;
+using TankLib.Helpers;
 using TankLib.STU.Types;
-using Logger = TACTLib.Logger;
 
-namespace DataTool.SaveLogic.Unlock; 
+namespace DataTool.SaveLogic.Unlock;
 
 public static class WeaponSkin {
     public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
@@ -17,19 +17,19 @@ public static class WeaponSkin {
         var weaponSkinSTU = STUHelper.GetInstance<STUSkinBase>(weaponSkinGUID);
 
         if (weaponSkinSTU is STU_4BC3E632) {
-            DataTool.Helper.Logger.LoudLog($"\tExtracting mythic weapon skin {unlock.Name}");
-            
+            Logger.Log($"\tExtracting mythic weapon skin {unlock.Name}");
+
             var wasDeduping = Program.Flags.Deduplicate;
             if (!wasDeduping) {
-                Helper.Logger.WarnLog("\t\tTemporarily enabling texture deduplication");
+                Logger.Warn("\t\tTemporarily enabling texture deduplication");
             }
             Program.Flags.Deduplicate = true;
-            
+
             SaveMythicWeaponSkin(flags, directory, hero, weaponSkinGUID);
-            
+
             Program.Flags.Deduplicate = wasDeduping;
         } else {
-            DataTool.Helper.Logger.LoudLog($"\tExtracting weapon skin {unlock.Name}");
+            Logger.Log($"\tExtracting weapon skin {unlock.Name}");
             SaveNormalWeaponSkin(flags, directory, hero, weaponSkinGUID);
         }
     }
@@ -47,7 +47,7 @@ public static class WeaponSkin {
 
     private static void SaveMythicWeaponSkin(ICLIFlags flags, string directory, STUHero hero, teResourceGUID mythicSkinGUID) {
         var mythicSkin = STUHelper.GetInstance<STU_4BC3E632>(mythicSkinGUID);
-        
+
         FindLogic.Combo.ComboInfo findInfo = new FindLogic.Combo.ComboInfo();
         var saveContext = new Combo.SaveContext(findInfo);
         var partTextures = MythicSkin.LoadPartTextures(mythicSkin, findInfo);
@@ -60,13 +60,13 @@ public static class WeaponSkin {
                 Logger.Warn("WeaponSkin", $"couldn't load mythic weapon skin permutation {variantSkinGUID} for {teResourceGUID.AsString(mythicSkinGUID)}. shouldn't happen");
                 return;
             }
-            
+
             var variantDirectoryName = MythicSkin.BuildVariantName(mythicSkin, partVariantIndices);
             Logger.Debug("WeaponSkin", $"Processing mythic variant {variantDirectoryName}");
             var variantDirectory = Path.Combine(directory, variantDirectoryName);
-            
+
             var variantReplacements = SkinTheme.GetReplacements(variantSkinGUID);
-            
+
             findInfo.m_entities.Clear(); // sanity
             FindWeapons(findInfo, variantReplacements, hero);
             MythicSkin.SaveAndFlushEntities(flags, findInfo, saveContext, variantDirectory);
@@ -75,7 +75,7 @@ public static class WeaponSkin {
             using var infoTexture = MythicSkin.BuildVariantInfoImage(partVariantIndices, partTextures);
             infoTexture?.SaveAsPng(Path.Combine(variantDirectory, "Info.png"));
         }
-        
+
         Combo.Save(flags, directory, saveContext);
     }
 

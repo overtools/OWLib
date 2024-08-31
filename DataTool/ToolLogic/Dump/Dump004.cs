@@ -6,7 +6,6 @@ using DataTool.Flag;
 using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Dump {
     [Tool("dump-textures", Description = "Saves all textures", CustomFlags = typeof(ExtractFlags))]
