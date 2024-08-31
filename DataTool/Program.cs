@@ -57,6 +57,7 @@ namespace DataTool {
         public static void Main() {
             InitTankSettings();
             HookConsole();
+            LaunchHelpers.VerifyConsoleLaunch();
 
             var tools = GetTools();
 
