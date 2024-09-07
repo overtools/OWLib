@@ -172,7 +172,7 @@ namespace DataTool.SaveLogic {
                 priority = parsedAnimation.Header.Priority;
                 group = parsedAnimation.Header.Group;
             } catch (Exception) {
-                Logger.Error("Combo", $"Unable to parse animation {animationInfo.GetName()}");
+                Logger.Warn("Combo", $"Unable to parse animation {animationInfo.GetName()}");
             }
 
             string animationDirectory = Path.Combine(path, "Animations", priority.ToString(), group.ToString());
@@ -395,7 +395,7 @@ namespace DataTool.SaveLogic {
                         teChunkedData streamingLodChunks = new teChunkedData(streamingLodStream);
                         return new StreamingLodsInfo(streamingLodChunks);
                     }
-                    
+
                     // do we need to load every streaming payload? i don't know (how many models have >1? might be 0)
                     // but, it is used for AllLODs support
 
