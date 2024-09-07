@@ -62,7 +62,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,lifeweaver
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;enUS,,
 2,75,reaper
 3,75,tracer
@@ -101,7 +104,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,lifeweaver
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;esES,,
 2,75,reaper
 3,75,tracer
@@ -140,7 +146,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,lifeweaver
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;esMX,,
 2,75,reaper
 3,75,tracer
@@ -179,7 +188,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,lifeweaver
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;frFR,,
 2,75,faucheur
 3,75,tracer
@@ -218,7 +230,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,vital
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;itIT,,
 2,75,reaper
 3,75,tracer
@@ -257,7 +272,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,lifeweaver
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;jaJP,,
 2,75,リーパー
 3,75,トレーサー
@@ -296,7 +314,10 @@ DD,75,メイ
 23B,75,シグマ
 28D,75,ラマットラ
 291,75,ライフウィーバー
+30A,75,マウガ
 31C,75,イラリー
+32B,75,ベンチャー
+365,75,ジュノ
 ;koKR,,
 2,75,리퍼
 3,75,트레이서
@@ -335,7 +356,10 @@ DD,75,메이
 23B,75,시그마
 28D,75,라마트라
 291,75,라이프위버
+30A,75,마우가
 31C,75,일리아리
+32B,75,벤처
+365,75,주노
 ;plPL,,
 2,75,żniwiarz
 3,75,smuga
@@ -374,7 +398,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,życiodawca
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;ptBR,,
 2,75,reaper
 3,75,tracer
@@ -413,7 +440,10 @@ DD,75,mei
 23B,75,sigma
 28D,75,ramattra
 291,75,lifeweaver
+30A,75,mauga
 31C,75,illari
+32B,75,venture
+365,75,juno
 ;ruRU,,
 2,75,жнец
 3,75,трейсер
@@ -452,7 +482,10 @@ DD,75,мэй
 23B,75,сигма
 28D,75,раматтра
 291,75,ткач жизни
+30A,75,мауга
 31C,75,иллари
+32B,75,авентюра
+365,75,юнона
 ;thTH,,
 2,75,รีปเปอร์
 3,75,เทรเซอร์
@@ -491,7 +524,10 @@ DD,75,เหมย
 23B,75,ซิกม่า
 28D,75,รามัตตรา
 291,75,ไลฟ์วีเวอร์
+30A,75,มาวกา
 31C,75,อิลลารี
+32B,75,เวนเจอร์
+365,75,จูโน
 ;trTR,,
 2,75,reaper
 3,75,tracer
@@ -506,7 +542,6 @@ DD,75,เหมย
 68,75,zarya
 7A,75,d.va
 12E,75,sombra
-13B,75,ana
 1EC,75,sojourn
 200,75,ashe
 206,75,echo
@@ -550,7 +585,10 @@ DD,75,美
 23B,75,西格玛
 28D,75,拉玛刹
 291,75,生命之梭
+30A,75,毛加
 31C,75,伊拉锐
+32B,75,探奇
+365,75,朱诺
 ;zhTW,,
 2,75,死神
 3,75,閃光
@@ -589,4 +627,7 @@ DD,75,小美
 23B,75,席格馬
 28D,75,拉瑪塔
 291,75,織命
+30A,75,莫加
 31C,75,伊拉里
+32B,75,無畏
+365,75,朱諾
