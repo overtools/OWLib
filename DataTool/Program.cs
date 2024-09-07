@@ -21,7 +21,6 @@ using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
 using TankLib.Helpers;
 using ValveKeyValue;
-using Logger = TankLib.Helpers.Logger;
 using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool {
@@ -324,11 +323,11 @@ namespace DataTool {
         }
 
         public static void InitKeys() {
-            Logger.Info("Core", "Checking ResourceKeys");
-
             // todo: broken for now..
             // surely fix
-            /*foreach (var key in TrackedFiles[0x90]) {
+            /*Logger.Info("Core", "Checking ResourceKeys");
+
+             foreach (var key in TrackedFiles[0x90]) {
                 if (!ValidKey(key)) continue;
 
                 var resourceKey = GetInstance<STUResourceKey>(key);
@@ -523,7 +522,7 @@ namespace DataTool {
 
             Logger.Log();
             Logger.Log("Modes:");
-            Logger.Log("  {0, -26} | {1, -40}", "mode", "description");
+            Logger.Log(null, "  {0, -26} | {1, -40}", "mode", "description");
             Logger.Log("".PadLeft(94, '-'));
             foreach (var t in tools) {
                 var attribute = t.GetCustomAttribute<ToolAttribute>();
@@ -532,7 +531,7 @@ namespace DataTool {
                 var desc = attribute.Description;
                 if (attribute.Description == null) desc = "";
 
-                Logger.Log("  {0, -26} | {1}", attribute.Keyword, desc);
+                Logger.Log(null, "  {0, -26} | {1}", attribute.Keyword, desc);
             }
 
             var flagTypes = new List<Type>();

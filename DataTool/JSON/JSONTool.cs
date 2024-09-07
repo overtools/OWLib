@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using DataTool.ToolLogic.List;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.JSON {
     public class JSONTool {
-        public static void Log(string message = "", params object[] arg) => Logger.Log(null, message, arg);
+        public static void Log([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message = "", params object[] arg) => Logger.Log(null, message, arg);
 
         /// <summary>
         /// Serialize the object to JSON and writes it to the output path.
