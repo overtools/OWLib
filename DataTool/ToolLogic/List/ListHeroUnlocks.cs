@@ -76,7 +76,10 @@ namespace DataTool.ToolLogic.List {
             var @return = new Dictionary<string, ProgressionUnlocks>();
             var heroes = Helpers.GetHeroes();
             foreach (var (heroGuid, hero) in heroes) {
-                if (string.IsNullOrEmpty(hero.Name)) continue;
+                if (!hero.IsHero || string.IsNullOrEmpty(hero.Name)) {
+                    continue;
+                }
+
                 @return[hero.Name] = new ProgressionUnlocks(hero.STU);
             }
 
