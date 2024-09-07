@@ -131,7 +131,7 @@ namespace DataTool {
                 }
 
                 if (extractFlags.OutputPath.StartsWith("{") || extractFlags.OutputPath.EndsWith("}")) {
-                    Logger.Error("Core", "Do not include {{ or }} in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
+                    Logger.Error("Core", "Do not include { or } in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
                     return;
                 }
             }
@@ -189,6 +189,8 @@ namespace DataTool {
             FlagParser.LoadArgs();
 
             Flags = FlagParser.Parse<ToolFlags>(full => PrintHelp(full, tools));
+            if (Flags == null)
+                return;
 
             if (Flags.Debug) {
                 Logger.ShowDebug = true;
