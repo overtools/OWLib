@@ -23,7 +23,7 @@ namespace DataTool.ToolLogic.Extract {
 
             foreach (var (key, hero) in Helpers.GetHeroes()) {
                 var heroStu = hero.STU;
-                var heroNameLower = hero.Name?.ToLower().Trim();
+                var heroNameLower = hero.Name?.ToLowerInvariant().Trim();
                 var heroCleanName = IO.GetValidFilename(hero.Name);
 
                 if (string.IsNullOrEmpty(heroCleanName)) {
@@ -46,8 +46,10 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
 
-                if (heroProgressionImageMapping.TryGetValue(hero.GUID, out var progressionImage)) {
-                    FindLogic.Combo.Find(heroImageCombo, progressionImage);
+                if (heroProgressionImageMapping.TryGetValue(hero.GUID, out var progressionImages)) {
+                    foreach (var progressionImage in progressionImages) {
+                        FindLogic.Combo.Find(heroImageCombo, progressionImage);
+                    }
                 }
 
                 Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
@@ -156,7 +158,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
                         }
 
-                        heroName = hero.Name?.ToLower().Trim();
+                        heroName = hero.Name?.ToLowerInvariant().Trim();
                         break;
                     }
                     case STU_1640A86B generalIntelStu:
@@ -165,7 +167,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
                         }
 
-                        heroName = IO.GetString(generalIntelStu.m_93E355A7)?.ToLower().Trim();
+                        heroName = IO.GetString(generalIntelStu.m_93E355A7)?.ToLowerInvariant().Trim();
                         break;
                     default:
                         continue;
@@ -198,16 +200,20 @@ namespace DataTool.ToolLogic.Extract {
             return imageMapping;
         }
 
-        private static Dictionary<teResourceGUID, teResourceGUID> GetHeroProgressionImageMapping() {
-            var imageMapping = new Dictionary<teResourceGUID, teResourceGUID>();
+        private static Dictionary<teResourceGUID, List<teResourceGUID>> GetHeroProgressionImageMapping() {
+            var imageMapping = new Dictionary<teResourceGUID, List<teResourceGUID>>();
 
             foreach (var key in Program.TrackedFiles[0x165]) {
                 var stu = STUHelper.GetInstance<STU_80B85097>(key);
-                if (stu?.m_hero == null || stu.m_5AE357B7 == null) {
-                    continue;
-                }
+                if (stu == null) continue;
+                if (stu.m_hero == 0) continue;
 
-                imageMapping.TryAdd(stu.m_hero, stu.m_5AE357B7);
+                if (!imageMapping.TryGetValue(stu.m_hero, out var imageList)) {
+                    imageList = new List<teResourceGUID>();
+                    imageMapping.Add(stu.m_hero, imageList);
+                }
+                if (stu.m_5AE357B7 != 0) imageList.Add(stu.m_5AE357B7); // bg
+                if (stu.m_910D7A6A != 0) imageList.Add(stu.m_910D7A6A); // progression update portrait
             }
 
             return imageMapping;
