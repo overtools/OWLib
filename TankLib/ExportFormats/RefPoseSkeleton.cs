@@ -32,9 +32,9 @@ namespace TankLib.ExportFormats {
             if (skeleton == null) return;
 
             short[] hierarchy = skeleton.Hierarchy;
-            Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
+            HashSet<short> reparentedBones = null;
             if (cloth != null) {
-                hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
+                hierarchy = cloth.CreateFakeHierarchy(skeleton, out reparentedBones);
             }
 
             using (StreamWriter writer = new StreamWriter(stream, Encoding.Default, 512)) {
@@ -53,7 +53,7 @@ namespace TankLib.ExportFormats {
                 writer.WriteLine("skeleton");
                 writer.WriteLine("time 0");
                 for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
-                    OverwatchModel.GetRefPoseTransform(i, hierarchy, skeleton, clothNodeMap, out teVec3 scale, out teQuat quat,
+                    OverwatchModel.GetRefPoseTransform(i, hierarchy, skeleton, reparentedBones, out teVec3 scale, out teQuat quat,
                         out teVec3 pos);
 
                     teVec3 rot = quat.ToEulerAngles();

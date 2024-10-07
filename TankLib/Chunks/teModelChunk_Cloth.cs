@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using TankLib.Math;
 
 namespace TankLib.Chunks {
-    /// <inheritdoc />
-    /// <summary>mskl: Defines model skeleton</summary>
     public class teModelChunk_Cloth : IChunk {
         public string ID => "CLTH";
         public List<IChunk> SubChunks { get; set; }
@@ -19,9 +16,11 @@ namespace TankLib.Chunks {
             public long Offset;
         }
 
-        /// <summary>Cloth description</summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public unsafe struct ClothDesc {
+        // this is a shared format
+        // see dmClothDataMirror in d4
+        // (not quite identical)
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct DominoClothData {
             public long PositionsOffset;
             public long SectionOffset3;
             public long SectionOffset4;
@@ -29,12 +28,12 @@ namespace TankLib.Chunks {
             public long SectionOffset6;
             public long SectionOffset7;
             public long SectionOffset8;
-            public long VertParent1Offset;
-            public long VertParent2Offset;
-            public long DiagParentOffset;
-            public long WeightOffset;
-            public long IndicesOffset;
-            public long BoneSectionOffset;
+            public long m_vertexParentIndices;
+            public long SectionOffset10;
+            public long SectionOffset11;
+            public long m_vertexDriverWeights;
+            public long m_vertexDriverInfluences;
+            public long m_vertexFollowerBoneIndices;
             public long SectionOffset15;
             public long SectionOffset16;
             public long SectionOffset17;
@@ -47,23 +46,30 @@ namespace TankLib.Chunks {
             public long SectionOffset24;
             public long SectionOffset25;
             public long SectionOffset26;
-            public long SectionOffset27;
+            public long m_driverToBoneMap;
             public fixed byte Name[32];
             public int Unknown1;
-            public ushort ClothBonesUsed;
-            public ushort DriverNodeCount;
+            public ushort m_vertexCount;
+            public ushort UnkCount2;
             public ushort UnkCount3;
-            public ushort ThreeNodeRelationCount;
+            public ushort UnkCount4;
             public ushort UnkCount5;
             public ushort UnkCount6;
             public ushort UnkCount7;
             public ushort UnkCount8;
             public ushort UnkCount9;
             public ushort UnkCount10;
-            public ushort DriverChainCount;
-            public ushort UnkCount12;
+            public ushort UnkCount11;
+            public ushort m_boneCount;
             public ushort UnkCount13;
             public ushort UnkCount14;
+        }
+
+        /// <summary>Cloth description</summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ClothDesc {
+            public DominoClothData m_dominoData;
+            
             public long Offset28;
             public long MapOffset;
             public teResourceGUID UnknownGuidx81;
@@ -72,137 +78,135 @@ namespace TankLib.Chunks {
             public long Unknown4;
             public long Unknown5;
             public long Unknown6;
-
-            public string StringName {
-                get {
-                    fixed (byte* n = Name) {
-                        return Encoding.ASCII.GetString(n, 32).Split('\0')[0];
-                    }
-                }
-            }
         }
 
-        public class ClothNodeWeight {
-            /// <summary>Bone index</summary>
-            public short Bone;
-
-            /// <summary>Weight value</summary>
+        private struct VertexDriverWeight {
+            public short DriverIdx;
             public float Weight;
 
-            public ClothNodeWeight(short bone, float weight) {
-                Bone = bone;
+            public VertexDriverWeight(short driverIdx, float weight) {
+                DriverIdx = driverIdx;
                 Weight = weight;
             }
         }
 
         /// <summary>Cloth node</summary>
-        public class ClothNode {
+        private struct ClothVertex {
+            public short FollowerBone;
             public short VerticalParent;
-            public ClothNodeWeight[] Bones;
+            public VertexDriverWeight[] DriverWeights;
+        }
+        
+        private ClothHeader Header;
+        private ClothPiece[] Pieces;
+
+        private class ClothPiece {
+            public ClothDesc Descriptor;
+            public ClothVertex[] Vertices;
+            public short[] BoneToDriverMap;
         }
 
-        /// <summary>Header data</summary>
-        public ClothHeader Header;
-
-        /// <summary>Cloth descriptors</summary>
-        public ClothDesc[] Descriptors;
-
-        /// <summary>Cloth nodes</summary>
-        public ClothNode[][] Nodes;
-
-        /// <summary>Cloth nodes => skeleton bones map</summary>
-        public Dictionary<int, short>[] NodeBones;
-
         public void Parse(Stream input) {
-            using (BinaryReader reader = new BinaryReader(input)) {
-                Header = reader.Read<ClothHeader>();
+            using BinaryReader reader = new BinaryReader(input);
+            Header = reader.Read<ClothHeader>();
+            reader.BaseStream.Position = Header.Offset;
 
-                if (Header.Offset > 0) {
-                    reader.BaseStream.Position = Header.Offset;
+            Pieces = new ClothPiece[Header.Count];
+            
+            for (ulong i = 0; i < Header.Count; i++) {
+                var descriptor = reader.Read<ClothDesc>();
+                long nextDescriptorPos = reader.BaseStream.Position;
 
-                    Descriptors = new ClothDesc[Header.Count];
-                    Nodes = new ClothNode[Header.Count][];
-                    NodeBones = new Dictionary<int, short>[Header.Count];
-
-                    if (Header.Count > 0) {
-                        for (ulong i = 0; i < Header.Count; i++) {
-                            Descriptors[i] = reader.Read<ClothDesc>();
-
-                            long nextStartPos = reader.BaseStream.Position;
-
-                            reader.BaseStream.Position = Descriptors[i].BoneSectionOffset;
-                            NodeBones[i] = new Dictionary<int, short>();
-                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
-                                NodeBones[i][nodeIndex] = reader.ReadInt16();
-                            }
-                            
-                            reader.BaseStream.Position = Descriptors[i].VertParent1Offset;
-                            var vertParent1 = reader.ReadArray<short>(Descriptors[i].ClothBonesUsed);
-                            reader.BaseStream.Position = Descriptors[i].WeightOffset;
-                            var weight = reader.ReadArray<float>(Descriptors[i].ClothBonesUsed * 4);
-                            reader.BaseStream.Position = Descriptors[i].IndicesOffset;
-                            var indices = reader.ReadArray<short>(Descriptors[i].ClothBonesUsed * 4);
-                            
-                            Nodes[i] = new ClothNode[Descriptors[i].ClothBonesUsed];
-                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
-                                Nodes[i][nodeIndex] = new ClothNode {
-                                    VerticalParent = vertParent1[nodeIndex],
-                                    Bones = new[] {
-                                        new ClothNodeWeight(indices[nodeIndex * 4], weight[nodeIndex * 4]),
-                                        new ClothNodeWeight(indices[nodeIndex * 4 + 1], weight[nodeIndex * 4 + 1]),
-                                        new ClothNodeWeight(indices[nodeIndex * 4 + 2], weight[nodeIndex * 4 + 2]),
-                                        new ClothNodeWeight(indices[nodeIndex * 4 + 3], weight[nodeIndex * 4 + 3]),
-                                    }
-                                };
-                            }
-
-                            reader.BaseStream.Position = nextStartPos;
-                        }
-                    }
+                reader.BaseStream.Position = descriptor.m_dominoData.m_vertexFollowerBoneIndices;
+                var followerBoneIndices = reader.ReadArray<short>(descriptor.m_dominoData.m_vertexCount);
+                    
+                reader.BaseStream.Position = descriptor.m_dominoData.m_vertexParentIndices;
+                var vertexParentIndices = reader.ReadArray<short>(descriptor.m_dominoData.m_vertexCount);
+                
+                reader.BaseStream.Position = descriptor.m_dominoData.m_vertexDriverWeights;
+                var vtxDriverWeights = reader.ReadArray<float>(descriptor.m_dominoData.m_vertexCount * 4);
+                
+                reader.BaseStream.Position = descriptor.m_dominoData.m_vertexDriverInfluences;
+                var vtxDriverIndices = reader.ReadArray<short>(descriptor.m_dominoData.m_vertexCount * 4);
+                
+                reader.BaseStream.Position = descriptor.m_dominoData.m_driverToBoneMap;
+                var boneToDriverMap = reader.ReadArray<short>(descriptor.m_dominoData.m_boneCount);
+                    
+                var nodes = new ClothVertex[descriptor.m_dominoData.m_vertexCount];
+                for (int vtxIdx = 0; vtxIdx < descriptor.m_dominoData.m_vertexCount; vtxIdx++) {
+                    nodes[vtxIdx] = new ClothVertex {
+                        FollowerBone = followerBoneIndices[vtxIdx],
+                        VerticalParent = vertexParentIndices[vtxIdx],
+                        DriverWeights = [
+                            new VertexDriverWeight(vtxDriverIndices[vtxIdx*4 + 0], vtxDriverWeights[vtxIdx*4 + 0]),
+                            new VertexDriverWeight(vtxDriverIndices[vtxIdx*4 + 1], vtxDriverWeights[vtxIdx*4 + 1]),
+                            new VertexDriverWeight(vtxDriverIndices[vtxIdx*4 + 2], vtxDriverWeights[vtxIdx*4 + 2]),
+                            new VertexDriverWeight(vtxDriverIndices[vtxIdx*4 + 3], vtxDriverWeights[vtxIdx*4 + 3])
+                        ]
+                    };
                 }
+
+                Pieces[i] = new ClothPiece {
+                    Descriptor = descriptor,
+                    Vertices = nodes,
+                    BoneToDriverMap = boneToDriverMap
+                };
+                reader.BaseStream.Position = nextDescriptorPos;
             }
         }
 
-        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, out Dictionary<int, ClothNode> nodeMap) {
+        private static short GetEffectiveBoneIndex(in HierarchyBuildContext ctx, short vertexIndex) {
+            ref readonly var vertex = ref ctx.Piece.Vertices[vertexIndex];
+            var parentVertex = vertex.VerticalParent;
+
+            short parentBoneIndex;
+            if (parentVertex == vertexIndex || parentVertex == -1) {
+                // sometimes a vertex's parent is itself
+                // presumably that means use driver
+                // (definitely do not parent to self, blender will delete the bones -_-)
+                
+                var highestWeightedDriver = vertex.DriverWeights.MaxBy(x => x.Weight);
+                if (highestWeightedDriver.DriverIdx == -1) return -1;
+
+                parentBoneIndex = (short)ctx.Piece.BoneToDriverMap.AsSpan().IndexOf(highestWeightedDriver.DriverIdx);
+            } else {
+                parentBoneIndex = GetEffectiveBoneIndex(ctx, parentVertex);
+            }
+
+            if (vertex.FollowerBone == -1) {
+                return parentBoneIndex;
+            }
+            
+            if (parentBoneIndex != -1) {
+                ctx.Hierarchy[vertex.FollowerBone] = parentBoneIndex;
+                ctx.ReparentedBones.Add(vertex.FollowerBone);
+            }
+            return vertex.FollowerBone;
+        }
+
+        private struct HierarchyBuildContext {
+            public short[] Hierarchy;
+            public HashSet<short> ReparentedBones;
+            public ClothPiece Piece;
+        }
+
+        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, out HashSet<short> reparentedBones) {
             short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
-            nodeMap = new Dictionary<int, ClothNode>();
+            reparentedBones = new HashSet<short>();
+            
+            var ctx = new HierarchyBuildContext {
+                Hierarchy = hierarchy,
+                ReparentedBones = reparentedBones,
+                Piece = null!
+            };
 
-            uint clothIndex = 0;
-            foreach (ClothNode[] nodeCollection in Nodes) {
-                if (nodeCollection == null) continue;
-                int nodeIndex = 0;
-                foreach (ClothNode node in nodeCollection) {
-                    int parentRaw = node.VerticalParent;
-                    if (NodeBones[clothIndex].ContainsKey(nodeIndex) &&
-                        NodeBones[clothIndex].ContainsKey(parentRaw)) {
-                        if (NodeBones[clothIndex][nodeIndex] != -1) {
-                            hierarchy[NodeBones[clothIndex][nodeIndex]] =
-                                NodeBones[clothIndex][parentRaw];
-                            if (NodeBones[clothIndex][parentRaw] == -1) { // todo: this is unpredictable with new cloth
-                                ClothNodeWeight weightedBone =
-                                    node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
-                                hierarchy[NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
-                            }
-                        }
-                    } else {
-                        if (NodeBones[clothIndex].ContainsKey(nodeIndex)) { // todo: this is unpredictable with new cloth
-                            if (NodeBones[clothIndex][nodeIndex] != -1) {
-                                hierarchy[NodeBones[clothIndex][nodeIndex]] = -1;
-                                ClothNodeWeight weightedBone =
-                                    node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
-                                hierarchy[NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
-                            }
-                        }
-                    }
-                    if (NodeBones[clothIndex].ContainsKey(nodeIndex)) {
-                        if (NodeBones[clothIndex][nodeIndex] != -1) {
-                            nodeMap[NodeBones[clothIndex][nodeIndex]] = node;
-                        }
-                    }
+            foreach (var piece in Pieces) {
+                ctx.Piece = piece;
 
-                    nodeIndex++;
+                for (int i = 0; i < piece.Vertices.Length; i++) {
+                    // some duplicate work, but doesn't really matter
+                    GetEffectiveBoneIndex(ctx, (short)i);
                 }
-                clothIndex++;
             }
 
             return hierarchy;
