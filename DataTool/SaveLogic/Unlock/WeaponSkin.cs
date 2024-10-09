@@ -39,9 +39,12 @@ public static class WeaponSkin {
 
         FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
         FindWeapons(info, replacements, hero);
-        SkinTheme.FindSoundFiles(flags, directory, replacements);
+        FindEffects(info, replacements);
+        SkinTheme.FindSoundFiles(flags, directory, replacements); // save any sounds to main skin dir
 
-        var context = new Combo.SaveContext(info);
+        var context = new Combo.SaveContext(info) {
+            m_saveAnimationEffectsAsLoose = true
+        };
         Combo.Save(flags, directory, context);
     }
 
@@ -49,7 +52,9 @@ public static class WeaponSkin {
         var mythicSkin = STUHelper.GetInstance<STU_4BC3E632>(mythicSkinGUID);
 
         FindLogic.Combo.ComboInfo findInfo = new FindLogic.Combo.ComboInfo();
-        var saveContext = new Combo.SaveContext(findInfo);
+        var saveContext = new Combo.SaveContext(findInfo) {
+            m_saveAnimationEffectsAsLoose = true
+        };
         var partTextures = MythicSkin.LoadPartTextures(mythicSkin, findInfo);
 
         foreach (var partVariantIndices in MythicSkin.IteratePermutations(mythicSkin)) {
@@ -70,6 +75,9 @@ public static class WeaponSkin {
             findInfo.m_entities.Clear(); // sanity
             FindWeapons(findInfo, variantReplacements, hero);
             MythicSkin.SaveAndFlushEntities(flags, findInfo, saveContext, variantDirectory);
+
+            FindEffects(findInfo, variantReplacements);
+            SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkinGUID)); // save any sounds to main skin dir
 
             // todo: the part textures seem to not be set... bound demon = hanzo mythic bow
             using var infoTexture = MythicSkin.BuildVariantInfoImage(partVariantIndices, partTextures);
@@ -93,6 +101,24 @@ public static class WeaponSkin {
             Loadout loadout = new Loadout(weaponEntity.m_loadout);
             if (loadout.GUID == 0) continue;
             info.SetEntityName(weaponEntity.m_entityDefinition, $"{loadout.Name}-{teResourceGUID.Index(weaponEntity.m_entityDefinition)}");
+        }
+    }
+
+    private static void FindEffects(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> replacements) {
+        // for weapon skins we don't save the whole hero, only preview weapon entities
+        // because of this, no effects are saved automatically
+        
+        // instead, manually locate effect replacements
+        // (which means we will only save replaced things, not every sound from the hero)
+        
+        foreach (KeyValuePair<ulong, ulong> replacement in replacements) {
+            uint type = teResourceGUID.Type(replacement.Value);
+            if (type != 0xD && type != 0x8F) {
+                // effect, animation effect
+                continue;
+            }
+            
+            FindLogic.Combo.Find(info, replacement.Value);
         }
     }
 }

@@ -6,7 +6,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using DataTool.ConvertLogic;
 using DataTool.ConvertLogic.WEM;
 using DataTool.Flag;
@@ -28,11 +27,10 @@ namespace DataTool.SaveLogic {
     public static class Combo {
         public static ScratchDB ScratchDBInstance = new ScratchDB();
 
-        private static SemaphoreSlim s_texurePrepareSemaphore = new SemaphoreSlim(100, 100); // don't load too many texures into memory
-
         public class SaveContext {
             public FindLogic.Combo.ComboInfo m_info;
             public bool m_saveAnimationEffects = true;
+            public bool m_saveAnimationEffectsAsLoose;
 
             public SaveContext(FindLogic.Combo.ComboInfo info) {
                 m_info = info;
@@ -49,7 +47,13 @@ namespace DataTool.SaveLogic {
             }
 
             foreach (FindLogic.Combo.EffectInfoCombo effectInfo in context.m_info.m_effects.Values) {
-                SaveEffect(flags, path, context, effectInfo.m_GUID);
+                SaveEffect(flags, path, context, effectInfo);
+            }
+
+            if (context.m_saveAnimationEffectsAsLoose) {
+                foreach (FindLogic.Combo.EffectInfoCombo animationEffectInfo in context.m_info.m_animationEffects.Values) {
+                    SaveEffect(flags, path, context, animationEffectInfo);
+                }
             }
         }
 
@@ -340,7 +344,10 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveEffect(ICLIFlags flags, string path, SaveContext context, ulong effect) {
-            FindLogic.Combo.EffectInfoCombo effectInfo = context.m_info.m_effects[effect];
+            SaveEffect(flags, path, context, context.m_info.m_effects[effect]);
+        }
+
+        private static void SaveEffect(ICLIFlags flags, string path, SaveContext context, FindLogic.Combo.EffectInfoCombo effectInfo) {
             string effectDirectory = Path.Combine(path, "Effects", effectInfo.GetName());
 
             SaveEffectExtras(flags, effectDirectory, context, effectInfo.Effect, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines);
