@@ -621,6 +621,7 @@ CEC0,01C,Season9,1
 D740,01C,Season10,1
 D745,01C,Season11,1
 D748,01C,Season12,1
+D749,01C,Season13,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -706,6 +707,8 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 1277,09F,Menu/Reaper Mythic Art,1
 1289,09F,Menu/Ana Midnight Sun Mythic Weapon,1
 1293,09F,Menu/WoW Art,1
+12A4,09F,Menu/MHA Art,1
+12A5,09F,Menu/Spellbinder Art,1
 ; Celebrations,,,
 2168,01C,Christmas,1
 2498,01C,LunarNewYear,1
