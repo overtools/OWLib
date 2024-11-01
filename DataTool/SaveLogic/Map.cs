@@ -410,10 +410,11 @@ namespace DataTool.SaveLogic {
             }
 
             if (variantModeInfo.m_celebration != 0) {
-                var celebrationName = variantModeInfo.m_celebration.ToString();
-                if (variantModeInfo.m_celebration == 0x04300000000001E9) {
-                    celebrationName = "Winter";
-                }
+                var celebrationName = variantModeInfo.m_celebration.GUID.GUID switch {
+                    0x04300000000001E9 => "Winter",
+                    0x0430000000000254 => "Halloween",
+                    _ => variantModeInfo.m_celebration.ToString()
+                };
                 variantName += $" - {celebrationName}";
             }
 
