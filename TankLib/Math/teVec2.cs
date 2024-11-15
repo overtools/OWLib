@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -19,13 +20,11 @@ namespace TankLib.Math {
             Y = y;
         }
 
-        public static teVec2 FromHalf(IReadOnlyList<ushort> val) {
+        public static teVec2 FromHalf(IReadOnlyList<Half> val) {
             if (val.Count != 2) {
                 throw new InvalidDataException();
             }
-            Half.Half x = Half.Half.ToHalf(val[0]);
-            Half.Half y = Half.Half.ToHalf(val[1]);
-            return new teVec2(x, y);
+            return new teVec2((float)val[0], (float)val[1]);
         }
 
         public static teVec2 operator +(teVec2 left, teVec2 right) {

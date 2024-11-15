@@ -364,23 +364,19 @@ namespace TankLib.Chunks {
                 case SemanticFormat.SINGLE_3:
                     return new[] {reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()};
                 case SemanticFormat.HALF_2:
-                    return new[] {reader.ReadUInt16(), reader.ReadUInt16()};
+                    return new[] {reader.ReadHalf(), reader.ReadHalf()};
                 case SemanticFormat.UINT8_4:
                     return new[] {reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte()};
                 case SemanticFormat.UINT16_4:
                     return new[] {reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16()};
                 case SemanticFormat.UINT8_UNORM4:
                     return new[] {
-                        reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f,
-                        reader.ReadByte() / 255f
+                        reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f
                     };
                 case SemanticFormat.UINT8_SNORM4:
                     return new[] {
-                        reader.ReadSByte() / 255f, reader.ReadSByte() / 255f, reader.ReadSByte() / 255f,
-                        reader.ReadSByte() / 255f
+                        reader.ReadSByte() / 128f, reader.ReadSByte() / 128f, reader.ReadSByte() / 128f, reader.ReadSByte() / 128f
                     };
-                case SemanticFormat.NONE:
-                    throw new NotImplementedException($"Unhandled Semantic Format {format:X}!\n");
                 case SemanticFormat.UINT32:
                     return reader.ReadUInt32();
                 default:
@@ -454,7 +450,7 @@ namespace TankLib.Chunks {
                                 }
                                 break;
                             case teShaderInstance.ShaderInputUse.TexCoord: {
-                                ushort[] uv = (ushort[]) value;
+                                Half[] uv = (Half[]) value;
                                 submesh.UV[k][element.Index] = teVec2.FromHalf(uv);
                             }
                                 break;
