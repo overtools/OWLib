@@ -22,7 +22,6 @@
         <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />
         <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
         <ProjectReference Include="..\TankLib\TankLib.csproj" />
-        <ProjectReference Include="..\TextureDecoder\AssetRipper.TextureDecoder\AssetRipper.TextureDecoder.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="Static\GUIDNames.csv">
@@ -38,6 +37,7 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="AssetRipper.TextureDecoder" Version="2.2.1" />
         <PackageReference Include="DirectXTexNet" Version="1.0.7" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />

@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TankLib.Test", "TankLib.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplayMp4Tool", "ReplayMp4Tool\ReplayMp4Tool.csproj", "{08F8C3DE-4A68-4D68-BED5-C438C3D33989}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetRipper.TextureDecoder", "TextureDecoder\AssetRipper.TextureDecoder\AssetRipper.TextureDecoder.csproj", "{9E9EF49D-B93C-4AF1-BF26-057057D18B25}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{6ACB37AE-3D6C-4E85-BFD4-8EEA307C86F3}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -146,14 +144,6 @@ Global
 		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.ReleasePublish|Any CPU.ActiveCfg = Release|Any CPU
 		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.ReleasePublish|Any CPU.Build.0 = Release|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.DebugPublish|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.DebugPublish|Any CPU.Build.0 = Debug|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.ReleasePublish|Any CPU.ActiveCfg = Release|Any CPU
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25}.ReleasePublish|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,7 +158,6 @@ Global
 		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{CC681FAC-B05D-483F-9FA1-D8DEC4871B99} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 		{08F8C3DE-4A68-4D68-BED5-C438C3D33989} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
-		{9E9EF49D-B93C-4AF1-BF26-057057D18B25} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 		{679F3D52-890B-4461-9C7F-7159169B489E} = {6ACB37AE-3D6C-4E85-BFD4-8EEA307C86F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

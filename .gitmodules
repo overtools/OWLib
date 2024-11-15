@@ -4,6 +4,3 @@
 [submodule "TACTLib"]
 	path = TACTLib
 	url = https://github.com/overtools/TACTLib
-[submodule "TextureDecoder"]
-	path = TextureDecoder
-	url = https://github.com/AssetRipper/TextureDecoder
