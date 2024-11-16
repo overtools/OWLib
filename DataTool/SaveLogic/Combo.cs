@@ -648,7 +648,7 @@ namespace DataTool.SaveLogic {
         }
 
         private static void ProcessIconTexture(teTexture texture, string filePath, string convertType) {
-            var converted = new TexDecoder(texture);
+            var converted = new TexDecoder(texture, false);
 
             using Image<Bgra32> alphaImage = converted.GetFrame(0);
             using Image<Bgra32> colorImage = converted.GetFrame(1);
@@ -713,6 +713,7 @@ namespace DataTool.SaveLogic {
             var splitMultiSurface = false;
             var maxMips = 1;
             var useTextureDecoder = !OperatingSystem.IsWindows();
+            var grayscale = false;
 
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
@@ -721,6 +722,7 @@ namespace DataTool.SaveLogic {
                 splitMultiSurface = (split || !extractFlags.CombineMultiSurface) && convertTextures && !createMultiSurfaceSheet;
                 convertType = fileType ?? extractFlags.ConvertTexturesType.ToLowerInvariant();
                 useTextureDecoder = extractFlags.UseTextureDecoder || useTextureDecoder;
+                grayscale = extractFlags.Grayscale;
 
                 if (extractFlags.ForceDDSMultiSurface) {
                     multiSurfaceConvertType = "dds";
@@ -803,7 +805,7 @@ namespace DataTool.SaveLogic {
 
                     if (useTextureDecoder) {
                         try {
-                            ConvertTexture(texture, splitMultiSurface, createMultiSurfaceSheet, filePath, convertType);
+                            ConvertTexture(texture, splitMultiSurface, createMultiSurfaceSheet, grayscale, filePath, convertType);
                             return;
                         } catch(Exception e) {
                             Logger.Warn("Combo", $"Failed to convert {Path.GetFileName(filePath)} using the texture decoder: {e.Message}");
@@ -822,8 +824,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, string filePath, string convertType) {
-            var tex = new TexDecoder(texture);
+        private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, bool grayscale, string filePath, string convertType) {
+            var tex = new TexDecoder(texture, grayscale);
 
             if (splitMultiSurface) {
                 for (var surfaceNr = 0; surfaceNr < tex.Surfaces; ++surfaceNr) {

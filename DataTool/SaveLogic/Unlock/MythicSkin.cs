@@ -191,7 +191,7 @@ namespace DataTool.SaveLogic.Unlock {
                         texture = new teTexture(textureStream);
                     }
 
-                    var convertedTexture = new TexDecoder(texture);
+                    var convertedTexture = new TexDecoder(texture, false);
                     partTextures[partIndex][partVariantIndex] = new PartTexture(convertedTexture.PixelData, texture.Header.Width, texture.Header.Height);
                 }
             }
