@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
+using Spectre.Console;
 using TankLib;
 using TankLib.STU.Types.Enums;
 using static DataTool.Program;
@@ -41,14 +40,24 @@ namespace DataTool.ToolLogic.Dump {
                 Combo.Find(info, guid);
             }
 
-            Log($"Preparing to save roughly {info.m_textures.Count()} textures.");
+            Log($"Preparing to save roughly {info.m_textures.Count} textures.");
             var saveContext = new SaveLogic.Combo.SaveContext(info);
             var outputPath = Path.Combine(basePath, "UITextureDump");
             var saveOptions = new SaveLogic.Combo.SaveTextureOptions {
                 ProcessIcon = true,
             };
 
-            SaveLogic.Combo.SaveLooseTextures(flags, outputPath, saveContext, saveOptions);
+            AnsiConsole.Progress().Start(ctx => {
+                var task = ctx.AddTask("Saving textures", true, info.m_textures.Values.Count);
+
+                foreach (var textureInfo in info.m_textures.Values) {
+                    task.Increment(1);
+                    if (!textureInfo.m_loose) continue;
+                    SaveLogic.Combo.SaveTexture(flags, outputPath, saveContext, textureInfo.m_GUID);
+                }
+
+                task.StopTask();
+            });
         }
     }
 }

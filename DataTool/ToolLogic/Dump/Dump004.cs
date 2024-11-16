@@ -1,22 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
+using Spectre.Console;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Dump {
     [Tool("dump-textures", Description = "Saves all textures", CustomFlags = typeof(ExtractFlags))]
     public class DumpTextures : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            var basePath = flags.OutputPath;
 
             Combo.ComboInfo info = new Combo.ComboInfo();
 
@@ -24,10 +19,23 @@ namespace DataTool.ToolLogic.Dump {
                 Combo.Find(info, key);
             }
 
-            Log($"Preparing to save roughly {info.m_textures.Count()} textures.");
+            Log($"Preparing to save roughly {info.m_textures.Count} textures.");
             Log($"This will take a long time and take up a lot of space.");
+
             var saveContext = new SaveLogic.Combo.SaveContext(info);
-            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "TextureDump"), saveContext);
+            var outputPath = Path.Combine(basePath, "TextureDump");
+
+            AnsiConsole.Progress().Start(ctx => {
+                var task = ctx.AddTask("Saving textures", true, info.m_textures.Values.Count);
+
+                foreach (var textureInfo in info.m_textures.Values) {
+                    task.Increment(1);
+                    if (!textureInfo.m_loose) continue;
+                    SaveLogic.Combo.SaveTexture(flags, outputPath, saveContext, textureInfo.m_GUID);
+                }
+
+                task.StopTask();
+            });
         }
     }
 }
