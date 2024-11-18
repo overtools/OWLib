@@ -24,7 +24,8 @@ namespace TankLib {
         /// <summary>Header for 07C and 0A9 strings</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct DisplayTextHeader {
-            public short Unknown;
+            public byte Unknown;
+            public byte ParamCount;
         }
 
         /// <summary>
