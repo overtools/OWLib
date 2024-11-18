@@ -53,7 +53,7 @@ namespace DataTool.ToolLogic.Dump {
                 foreach (var textureInfo in info.m_textures.Values) {
                     task.Increment(1);
                     if (!textureInfo.m_loose) continue;
-                    SaveLogic.Combo.SaveTexture(flags, outputPath, saveContext, textureInfo.m_GUID);
+                    SaveLogic.Combo.SaveTexture(flags, outputPath, saveContext, textureInfo.m_GUID, saveOptions);
                 }
 
                 task.StopTask();
