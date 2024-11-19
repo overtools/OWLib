@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6226036A, 368)]
+    [STU(0x6226036A, 376)]
     public class STUStatescriptStateCombatModFilter : STU_FC063208
     {
         [STUField(0xF60AA143, 232)] // size: 16
@@ -25,34 +25,37 @@ namespace TankLib.STU.Types
         [STUField(0x73A57332, 296, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_73A57332;
 
-        [STUField(0x50530EAB, 304, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x00768EF7, 304, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_00768EF7;
+
+        [STUField(0x50530EAB, 312, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_50530EAB;
 
-        [STUField(0x941C56C2, 312, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x941C56C2, 320, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_941C56C2;
 
-        [STUField(0x893AABFC, 320, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x893AABFC, 328, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_893AABFC;
 
-        [STUField(0xE9517777, 328, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xE9517777, 336, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_E9517777;
 
-        [STUField(0xF7872851, 336, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xF7872851, 344, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_F7872851;
 
-        [STUField(0x72EDDF72, 344)] // size: 4
+        [STUField(0x72EDDF72, 352)] // size: 4
         public Enum_98B96E4A m_72EDDF72;
 
-        [STUField(0x7724EC51, 348)] // size: 4
+        [STUField(0x7724EC51, 356)] // size: 4
         public uint m_7724EC51 = 0x1;
 
-        [STUField(0x5BF820E4, 352)] // size: 4
+        [STUField(0x5BF820E4, 360)] // size: 4
         public uint m_5BF820E4 = 0x3;
 
-        [STUField(0xDE43A93C, 356)] // size: 4
+        [STUField(0xDE43A93C, 364)] // size: 4
         public uint m_DE43A93C;
 
-        [STUField(0x41B10FF2, 360)] // size: 4
+        [STUField(0x41B10FF2, 368)] // size: 4
         public Enum_32773B82 m_41B10FF2;
     }
 }

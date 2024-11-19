@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq;
 using DataTool.Helper;
 using TankLib.STU.Types;
@@ -9,22 +10,22 @@ namespace DataTool.DataModels {
         /// <summary>
         /// "Other" Unlocks. Common examples are OWL skins and achievement rewards
         /// </summary>
-        public Unlock[] OtherUnlocks { get; set; }
+        public Unlock[]? OtherUnlocks { get; set; }
 
         /// <summary>
         /// Unknown Unlocks
         /// </summary>
-        public Unlock[] UnknownUnlocks { get; set; }
+        public Unlock[]? UnknownUnlocks { get; set; }
 
         /// <summary>
         /// Unlocks granted at a specific level
         /// </summary>
-        public LevelUnlocks[] LevelUnlocks { get; set; }
+        public LevelUnlocks[]? LevelUnlocks { get; set; }
 
         /// <summary>
         /// Loot Box specific unlocks
         /// </summary>
-        public LootBoxUnlocks[] LootBoxesUnlocks { get; set; }
+        public LootBoxUnlocks[]? LootBoxesUnlocks { get; set; }
 
         public ProgressionUnlocks(STUHero hero) {
             var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(hero.m_heroProgression);
@@ -36,7 +37,7 @@ namespace DataTool.DataModels {
             Init(unlocks);
         }
 
-        private void Init(STUProgressionUnlocks progressionUnlocks) {
+        private void Init(STUProgressionUnlocks? progressionUnlocks) {
             if (progressionUnlocks == null) return;
 
             if (progressionUnlocks.m_lootBoxesUnlocks != null) {
@@ -100,7 +101,7 @@ namespace DataTool.DataModels {
         public Enum_BABC4175 LootBoxType { get; set; }
 
         public LootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks) {
-            LootBoxType = lootBoxUnlocks.m_lootboxType;
+            LootBoxType = lootBoxUnlocks.m_lootBoxType;
             Unlocks = Unlock.GetArray(lootBoxUnlocks.m_unlocks);
         }
     }

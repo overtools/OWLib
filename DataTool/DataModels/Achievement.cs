@@ -33,7 +33,7 @@ namespace DataTool.DataModels {
 
             //Trophy = achievement.m_trophy;
             //Category = achievement.m_category;
-            GamerScore = achievement.m_gamerScore;
+            GamerScore = achievement.m_628D48CC;
 
             if (achievement.m_unlock != 0) {
                 Reward = new Unlock(achievement.m_unlock).ToLiteUnlock();

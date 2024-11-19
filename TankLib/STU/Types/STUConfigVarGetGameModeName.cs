@@ -7,6 +7,6 @@ namespace TankLib.STU.Types
     public class STUConfigVarGetGameModeName : STUConfigVarStringBase
     {
         [STUField(0xEB4F2408, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STUConfigVar m_gamemode;
+        public STUConfigVar m_gameMode;
     }
 }

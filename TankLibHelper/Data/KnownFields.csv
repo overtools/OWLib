@@ -110,7 +110,7 @@ C9D22FAA, m_fixedDataFlow
 882D0868, m_fragments
 9AD6CC25, m_gameData
 92A85396, m_gameMessage
-EB4F2408, m_gamemode
+EB4F2408, m_gameMode
 950BBA06, m_gameplayEntity
 AB634626, m_gameplaySettings
 EDDF9466, m_gameRuleset
@@ -159,7 +159,7 @@ DA642982, m_loadoutOverrides
 3CFA3EE6, m_locale
 FC33191B, m_logicalButton
 9297ADB4, m_look
-B0EDB99C, m_lootbox
+B0EDB99C, m_lootBox
 50C6BC40, m_lootBoxCelebrationOverrides
 4E87690F, m_map
 29E8F0CC, m_mapCatalog
@@ -366,7 +366,6 @@ B0670378, m_rankedTiers
 BF482AA3, m_otherUnlocks
 473494FF, m_lootBoxesUnlocks
 03F27C01, m_lootBoxesCurrencyUnlocks
-628D48CC, m_gamerScore
 59D52DA5, m_trophy
 C3885423, m_rankedSeason
 2B8351DA, m_emoteBlendTreeSet
@@ -374,7 +373,7 @@ EDE36CB7, m_resourceKeyId
 A4A66AB6, m_rankTexture
 F24E4110, m_slot
 EF19F506, m_poseUnlock
-7AB4E3F8, m_lootboxType
+7AB4E3F8, m_lootBoxType
 4807C17A, m_entitlementUnlocks
 CFE57CEB, m_availableContentUnlocks
 BCC400FE, m_disableEffect
@@ -521,5 +520,5 @@ EED826CD, m_derivedStat
 C6599DEB, m_loadingScreenFlag
 9386E669, m_smallMapIcon
 1C706502, m_overrideName
-D608E9F3, m_supportedGamemodes
+D608E9F3, m_supportedGameModes
 86C1CFAB, m_loadingScreen

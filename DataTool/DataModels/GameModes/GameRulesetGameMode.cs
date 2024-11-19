@@ -29,7 +29,7 @@ namespace DataTool.DataModels.GameModes {
 
             GUID = (teResourceGUID) key;
             Description = GetString(ruleset.m_description);
-            GameMode = new GameMode(ruleset.m_gamemode);
+            GameMode = new GameMode(ruleset.m_gameMode);
             STU = ruleset;
 
             if (ruleset.m_teams != null)

@@ -4,11 +4,11 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2E1A0A0B, 104)]
+    [STU(0x2E1A0A0B, 120)]
     public class STUGameRulesetGameMode : STUInstance
     {
         [STUField(0xEB4F2408, 0)] // size: 16
-        public teStructuredDataAssetRef<STUGameMode> m_gamemode;
+        public teStructuredDataAssetRef<STUGameMode> m_gameMode;
 
         [STUField(0x3CE93B76, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_3CE93B76;
@@ -25,13 +25,16 @@ namespace TankLib.STU.Types
         [STUField(0xCA7E6EDC, 80)] // size: 16
         public teStructuredDataAssetRef<ulong> m_description;
 
-        [STUField(0x0DD0C65E, 96)] // size: 1
+        [STUField(0x1946261A, 96)] // size: 16
+        public teStructuredDataAssetRef<STU_C960DFC7>[] m_1946261A;
+
+        [STUField(0x0DD0C65E, 112)] // size: 1
         public byte m_0DD0C65E;
 
-        [STUField(0xE71ACC07, 97)] // size: 1
+        [STUField(0xE71ACC07, 113)] // size: 1
         public byte m_E71ACC07;
 
-        [STUField(0x1D5809A3, 98)] // size: 1
+        [STUField(0x1D5809A3, 114)] // size: 1
         public byte m_1D5809A3;
     }
 }

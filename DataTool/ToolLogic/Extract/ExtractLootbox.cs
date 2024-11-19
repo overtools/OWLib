@@ -23,7 +23,7 @@ namespace DataTool.ToolLogic.Extract {
                 STULootBox lootbox = GetInstance<STULootBox>(key);
                 if (lootbox == null) continue;
 
-                string name = LootBox.GetName(lootbox.m_lootboxType);
+                string name = LootBox.GetName(lootbox.m_lootBoxType);
 
                 Combo.ComboInfo info = Combo.Find(null, lootbox.m_baseEntity); // 003
                 Combo.Find(info, lootbox.m_chestEntity); // 003

@@ -7,6 +7,6 @@ namespace TankLib.STU.Types
     public class STUConfigVarGameMode : STU_E4324757
     {
         [STUField(0xEB4F2408, 32)] // size: 16
-        public teStructuredDataAssetRef<STUGameMode> m_gamemode;
+        public teStructuredDataAssetRef<STUGameMode> m_gameMode;
     }
 }

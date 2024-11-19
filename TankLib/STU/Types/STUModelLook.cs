@@ -31,7 +31,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUMaterialEffect> m_7B5D8241 = 0x0;
 
         [STUField(0xC45F5F6F, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
-        public STUModelHardpoint[] m_hardPoints;
+        public STUModelHardPoint[] m_hardPoints;
 
         [STUField(0x312C5F1A, 152, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_D75EA2E1[] m_materialEffects;
@@ -41,5 +41,8 @@ namespace TankLib.STU.Types
 
         [STUField(0x7465A325, 184)] // size: 1
         public byte m_7465A325 = 0x0;
+
+        [STUField(0x46884170, 185)] // size: 1
+        public byte m_46884170 = 0x0;
     }
 }

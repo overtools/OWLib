@@ -79,6 +79,7 @@ namespace DataTool.DataModels {
         /// Whether this is a "normal" Unlock like a skin, emote, voiceline, pose, icon, etc and not something like a Lootbox or Currency.
         /// </summary>
         internal bool IsTraditionalUnlock { get; set; }
+
         internal STU_3021DDED STU { get; set; }
 
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
@@ -143,19 +144,25 @@ namespace DataTool.DataModels {
                     break;
                 case STUUnlock_LootBox stu:
                     Rarity = stu.m_2F922165;
-                    LootBoxType = stu.m_lootboxType;
+                    LootBoxType = stu.m_lootBoxType;
                     break;
                 case STUUnlock_SkinTheme stu:
                     SkinThemeGUID = stu.m_skinTheme;
                     break;
-                case STU_C3C6FD9E stu:
+                case STU_C3C6FD9E stu: // hero unlock
                     HeroGUID = stu.m_hero;
                     break;
-                case STU_514C0F6B stu:
+                case STU_514C0F6B stu: // virtual currency unlock (ow coins, etc)
                     Amount = (int) stu.m_amount;
                     break;
-                case STU_7A1A4764 stu:
+                case STU_7A1A4764 stu: // battle pass xp
                     Amount = stu.m_E0A45C1B;
+                    break;
+                case STU_80C1169E stu: // battle pass tier skip
+                    Amount = stu.m_D10618D1;
+                    break;
+                case STU_FA317B7D stu: // name backing
+                    Amount = stu.m_level;
                     break;
             }
 
@@ -177,8 +184,7 @@ namespace DataTool.DataModels {
         /// </summary>
         /// <param name="stu">the unlock stu to get the type for</param>
         public static UnlockType GetUnlockType(STUInstance stu) {
-            var unlockType = stu switch
-            {
+            var unlockType = stu switch {
                 STUUnlock_SkinTheme _ => UnlockType.Skin,
                 STUUnlock_AvatarPortrait _ => UnlockType.Icon,
                 STU_A458D547 _ => UnlockType.Souvenir, // has to be before emote because it inherits from it
@@ -197,15 +203,16 @@ namespace DataTool.DataModels {
                 STU_C3C6FD9E _ => UnlockType.Hero,
                 STU_7A1A4764 _ => UnlockType.BattlePassXP,
                 STU_DB1B05B5 _ => UnlockType.NameCard,
-                STU_514C0F6B _ => UnlockType.OverwatchCoins,
+                STU_514C0F6B _ => UnlockType.VirtualCurrency,
                 STU_52AB57E9 _ => UnlockType.PlayerTitle,
                 STU_AD84E2AA _ => UnlockType.BattlePass,
                 STU_184D5944 _ => UnlockType.SeasonXPBoost,
-                STU_1EB22BDB _ => UnlockType.Unknown,
                 STU_80C1169E _ => UnlockType.BattlePassTierSkip,
                 STU_3F17D547 _ => UnlockType.SkinComponent,
                 STU_A85D31BF _ => UnlockType.StoryMission,
                 STU_2448F3AA _ => UnlockType.WeaponSkin,
+                STU_FA317B7D _ => UnlockType.NameBacking,
+                STU_1EB22BDB _ => UnlockType.Unknown,
                 _ => UnlockType.Unknown
             };
 
@@ -222,13 +229,16 @@ namespace DataTool.DataModels {
         /// <param name="guids">GUID collection</param>
         /// <returns>Array of <see cref="Unlock"/></returns>
         public static Unlock[] GetArray(IEnumerable<ulong> guids) {
-            if (guids == null) return new Unlock[0];
-            List<Unlock> unlocks = new List<Unlock>();
+            if (guids == null) {
+                return [];
+            }
+
+            var unlocks = new List<Unlock>();
             foreach (ulong guid in guids) {
-                STU_3021DDED stu = GetInstance<STU_3021DDED>(guid);
+                var stu = GetInstance<STU_3021DDED>(guid);
                 if (stu == null) continue;
-                Unlock unlock = new Unlock(stu, guid);
-                unlocks.Add(unlock);
+
+                unlocks.Add(new Unlock(stu, guid));
             }
 
             return unlocks.ToArray();
@@ -286,7 +296,7 @@ namespace DataTool.DataModels {
         Currency, // legacy credits
         CompetitiveCurrency, // competitive points
         OWLToken,
-        OverwatchCoins,
+        VirtualCurrency,
         SeasonXPBoost,
         WeaponCharm,
         PlayerTitle,
@@ -299,5 +309,6 @@ namespace DataTool.DataModels {
         BattlePassTierSkip,
         StoryMission,
         WeaponSkin, // ow2 weapon skin
+        NameBacking,
     }
 }

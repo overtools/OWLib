@@ -18,8 +18,8 @@ namespace DataTool.DataModels {
 
         private void Init(STULootBox lootBox) {
             NameFormat = GetString(lootBox.m_name);
-            Type = GetName(lootBox.m_lootboxType);
-            LootBoxType = lootBox.m_lootboxType;
+            Type = GetName(lootBox.m_lootBoxType);
+            LootBoxType = lootBox.m_lootBoxType;
 
             HidePucks = lootBox.m_hidePucks == 1;
 

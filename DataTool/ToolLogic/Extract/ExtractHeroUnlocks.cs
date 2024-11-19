@@ -191,8 +191,7 @@ namespace DataTool.ToolLogic.Extract {
                 {
                     Combo.ComboInfo guiInfo = new Combo.ComboInfo();
 
-                    hero.STU.m_8203BFE1 ??= Array.Empty<STU_1A496D3C>(); // todo: fix the gosh darn stu
-                    foreach (STU_1A496D3C tex in hero.STU.m_8203BFE1) {
+                    foreach (STU_1A496D3C tex in hero.STU.m_8203BFE1 ?? []) {
                         Combo.Find(guiInfo, tex.m_texture);
                         guiInfo.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
                     }

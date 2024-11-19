@@ -23,7 +23,7 @@ namespace DataTool.DataModels.GameModes {
             if (stu == null) return;
 
             GUID = (teResourceGUID) key;
-            GameMode = stu.m_gamemode == null ? null : new GameRulesetGameMode(stu.m_gamemode);
+            GameMode = stu.m_gameMode == null ? null : new GameRulesetGameMode(stu.m_gameMode);
             WorkshopRules = stu.m_26E97DBB?.Select(x => IO.GetString(x)).ToArray();
             WorkshopScript = stu.m_2690B60B;
         }

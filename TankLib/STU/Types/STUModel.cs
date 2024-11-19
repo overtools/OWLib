@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x871BD3D0, 432)]
+    [STU(0x871BD3D0, 440)]
     public class STUModel : STUInstance
     {
         [STUField(0xC4A1DCA0, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 96
@@ -23,7 +23,7 @@ namespace TankLib.STU.Types
         public STU_F0E34581[] m_FD232466;
 
         [STUField(0xC45F5F6F, 264, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
-        public STUModelHardpoint[] m_hardPoints;
+        public STUModelHardPoint[] m_hardPoints;
 
         [STUField(0xCB4D298D, 280, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_2DD96D6D[] m_CB4D298D;
@@ -58,16 +58,22 @@ namespace TankLib.STU.Types
         [STUField(0x87916047, 424)] // size: 4
         public Enum_790E517D m_87916047 = Enum_790E517D.x001C5783;
 
-        [STUField(0xD64F7813, 428)] // size: 1
+        [STUField(0x53BD772C, 428)] // size: 4
+        public Enum_8D0A88A1 m_53BD772C = Enum_8D0A88A1.xEBF835DF;
+
+        [STUField(0xD64F7813, 432)] // size: 1
         public byte m_D64F7813;
 
-        [STUField(0xADC54E57, 429)] // size: 1
+        [STUField(0xADC54E57, 433)] // size: 1
         public byte m_ADC54E57;
 
-        [STUField(0x81AF6609, 430)] // size: 1
+        [STUField(0x81AF6609, 434)] // size: 1
         public Enum_950F7205 m_usageCategory = Enum_950F7205.xE8ACB95D;
 
-        [STUField(0x646E63C6, 431)] // size: 1
+        [STUField(0xBAA57E7B, 435)] // size: 1
+        public byte m_BAA57E7B;
+
+        [STUField(0x646E63C6, 436)] // size: 1
         public byte m_646E63C6 = 0x0;
     }
 }

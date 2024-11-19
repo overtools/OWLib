@@ -233,7 +233,7 @@ namespace TankLib.ExportFormats {
 
 
                 if (stu?.StructuredData.m_hardPoints != null) {
-                    foreach (STUModelHardpoint hardPoint in stu.StructuredData.m_hardPoints) {
+                    foreach (STUModelHardPoint hardPoint in stu.StructuredData.m_hardPoints) {
                         writer.Write(IdToString("hardpoint", teResourceGUID.Index(hardPoint.m_EDF0511C)));
                         writer.Write(IdToString("bone", teResourceGUID.Index(hardPoint.m_FF592924)));
 

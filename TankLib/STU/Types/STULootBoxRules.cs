@@ -14,7 +14,7 @@ namespace TankLib.STU.Types
         public STULootBoxRarityRules[] m_currencyRarityRules;
 
         [STUField(0x7AB4E3F8, 32)] // size: 4
-        public Enum_BABC4175 m_lootboxType;
+        public Enum_BABC4175 m_lootBoxType;
 
         [STUField(0x24391F9B, 36)] // size: 4
         public int m_24391F9B;

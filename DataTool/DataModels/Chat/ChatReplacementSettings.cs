@@ -26,7 +26,7 @@ namespace DataTool.DataModels.Chat {
 
             if (chatReplacement.m_123179A6 != null) {
                 var triggersStu = GetInstance<STU_E55DA1F4>(chatReplacement.m_123179A6);
-                Triggers = triggersStu.m_F627FDCA.Select(x => x.Value);
+                Triggers = triggersStu?.m_F627FDCA?.Select(x => x.Value);
             }
         }
     }
@@ -42,12 +42,12 @@ namespace DataTool.DataModels.Chat {
     }
 
     public class ChatReplacementReplacementOverride {
-        public Enum_0089A8AE[] UnkEnum { get; set; }
+        public Enum_0089A8AE[] Locales { get; set; }
         public byte? UnkByte { get; set; }
         public IEnumerable<string> Something { get; set; }
 
         public ChatReplacementReplacementOverride(STU_7772912A overrideSettings) {
-            UnkEnum = overrideSettings.m_B861351F;
+            Locales = overrideSettings.m_B861351F;
 
             if (overrideSettings is STU_AAE257E9 punctuationOverride) {
                 UnkByte = punctuationOverride.m_1AA03F6C;

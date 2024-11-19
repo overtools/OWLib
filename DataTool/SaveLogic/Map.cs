@@ -345,8 +345,8 @@ namespace DataTool.SaveLogic {
                 FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_smallMapIcon);
                 FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_loadingScreenFlag);
 
-                if (mapHeader.m_supportedGamemodes != null) {
-                    foreach (teResourceGUID gamemodeGUID in mapHeader.m_supportedGamemodes) {
+                if (mapHeader.m_supportedGameModes != null) {
+                    foreach (teResourceGUID gamemodeGUID in mapHeader.m_supportedGameModes) {
                         STUGameMode gameMode = GetInstance<STUGameMode>(gamemodeGUID);
                         if (gameMode == null) continue;
 
@@ -387,7 +387,7 @@ namespace DataTool.SaveLogic {
         }
 
         public static string GetVariantName(STU_71B2D30A variantModeInfo, STU_7FB10A24 variantResultingMap) {
-            var gameMode = GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
+            var gameMode = GetInstance<STUGameMode>(variantModeInfo.m_gameMode);
             var gameModeName = GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
             if (gameModeName == "Calypso HeroMode") gameModeName = "HeroMode";
 

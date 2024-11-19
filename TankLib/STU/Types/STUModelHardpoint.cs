@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types
 {
     [STU(0xBE9DDFDF, 88)]
-    public class STUModelHardpoint : STU_F0E34581
+    public class STUModelHardPoint : STU_F0E34581
     {
     }
 }

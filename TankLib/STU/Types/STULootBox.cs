@@ -41,7 +41,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STU_A7F15A16>[] m_3DFAC8CA;
 
         [STUField(0x7AB4E3F8, 184)] // size: 4
-        public Enum_BABC4175 m_lootboxType;
+        public Enum_BABC4175 m_lootBoxType;
 
         [STUField(0x45C33D76, 188)] // size: 1
         public byte m_45C33D76;

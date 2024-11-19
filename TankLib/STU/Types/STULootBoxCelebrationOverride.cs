@@ -10,6 +10,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUIdentifier> m_celebrationType;
 
         [STUField(0xB0EDB99C, 16)] // size: 16
-        public teStructuredDataAssetRef<STUUnlock> m_lootbox;
+        public teStructuredDataAssetRef<STUUnlock> m_lootBox;
     }
 }

@@ -65,7 +65,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUMapLayer>[] m_layers;
 
         [STUField(0xD608E9F3, 488)] // size: 16
-        public teStructuredDataAssetRef<STUGameMode>[] m_supportedGamemodes;
+        public teStructuredDataAssetRef<STUGameMode>[] m_supportedGameModes;
 
         [STUField(0xF0535DCF, 504, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_63ABE55E[] m_reflectionData;
@@ -97,19 +97,22 @@ namespace TankLib.STU.Types
         [STUField(0xA8BF9196, 584)] // size: 1
         public byte m_A8BF9196;
 
-        [STUField(0x593F5545, 585)] // size: 1
+        [STUField(0x4974BEA3, 585)] // size: 1
+        public byte m_4974BEA3;
+
+        [STUField(0x593F5545, 586)] // size: 1
         public byte m_593F5545;
 
-        [STUField(0x5FB9732D, 586)] // size: 1
+        [STUField(0x5FB9732D, 587)] // size: 1
         public byte m_5FB9732D;
 
-        [STUField(0x61550F4E, 587)] // size: 1
+        [STUField(0x61550F4E, 588)] // size: 1
         public byte m_61550F4E = 0x1;
 
-        [STUField(0x7BF9245C, 588)] // size: 1
+        [STUField(0x7BF9245C, 589)] // size: 1
         public byte m_7BF9245C = 0x1;
 
-        [STUField(0x13D8A0DD, 589)] // size: 1
+        [STUField(0x13D8A0DD, 590)] // size: 1
         public byte m_13D8A0DD;
     }
 }

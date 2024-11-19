@@ -20,7 +20,7 @@ namespace TankLib.STU.Types
         public STUMapCelebrationOverride[] m_celebrationOverrides;
 
         [STUField(0xD608E9F3, 192)] // size: 16
-        public teStructuredDataAssetRef<STUGameMode>[] m_supportedGamemodes;
+        public teStructuredDataAssetRef<STUGameMode>[] m_supportedGameModes;
 
         [STUField(0xC0CA4671, 208, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_71B2D30A[] m_C0CA4671;

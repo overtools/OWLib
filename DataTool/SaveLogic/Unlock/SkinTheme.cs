@@ -174,8 +174,7 @@ namespace DataTool.SaveLogic.Unlock {
                 info.SetTextureFileType(skinTheme.m_ECCC4A5D, "png");
             }
 
-            hero.m_8203BFE1 ??= Array.Empty<STU_1A496D3C>(); // todo: fix the gosh darn stu
-            foreach (STU_1A496D3C tex in hero.m_8203BFE1) { // find GUI
+            foreach (STU_1A496D3C tex in hero.m_8203BFE1 ?? []) { // find GUI
                 FindLogic.Combo.Find(info, tex.m_texture, replacements);
                 info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
                 info.SetTextureProcessIcon(tex.m_texture);

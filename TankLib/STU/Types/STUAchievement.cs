@@ -46,7 +46,7 @@ namespace TankLib.STU.Types
         public int m_value;
 
         [STUField(0x628D48CC, 184)] // size: 4
-        public int m_gamerScore;
+        public int m_628D48CC;
 
         [STUField(0x5351832E, 188)] // size: 4
         public int m_5351832E = -1;
