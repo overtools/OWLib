@@ -69,6 +69,8 @@ namespace DataTool.SaveLogic.Unlock {
             FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
 
+            FindOWClassicContent(info, hero, replacements);
+
             var animContext = new FindLogic.Combo.ComboContext {
                 Entity = hero.m_gameplayEntity
             };
@@ -79,6 +81,26 @@ namespace DataTool.SaveLogic.Unlock {
             FindLogic.Combo.Find(info, hero.m_CFC554DC, replacements, animContext); // pve knocked down / interact
 
             return replacements;
+        }
+        
+        private static void FindOWClassicContent(FindLogic.Combo.ComboInfo info, STUHero hero, Dictionary<ulong, ulong> skinReplacements) {
+            // todo: this is quite expensive
+            // we are literally processing everything twice..
+            var processExistingOld = info.m_processExistingEntities;
+            info.m_processExistingEntities = true;
+            // we also need to be careful that running this doesn't cause base-skin assets to be saved
+            
+            var owClassicReplacements = GetReplacements(0x0B2800000000004A);
+            foreach (var skinReplacement in skinReplacements) {
+                // if skin overrides something and so does ow classic, we want the thing from the skin... i guess
+                owClassicReplacements[skinReplacement.Key] = skinReplacement.Value;
+            }
+            
+            // attempt to find assets that are part of ow classic
+            FindLogic.Combo.Find(info, hero.m_gameplayEntity, owClassicReplacements); // this (hopefully) includes gameplay things,
+            FindLogic.Combo.Find(info, hero.m_322C521A, owClassicReplacements); // and old hero select anims
+
+            info.m_processExistingEntities = processExistingOld;
         }
 
         public static void Save(ICLIFlags flags, string directory, teResourceGUID skinGUID, STUHero hero) {

@@ -481,13 +481,6 @@ namespace DataTool.FindLogic {
                     STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(guid);
                     if (entityDefinition == null) break;
 
-                    EntityAsset entityInfo;
-                    info.m_entities.TryGetValue(guid, out entityInfo);
-                    if (entityInfo == null) {
-                        entityInfo = new EntityAsset(guid);
-                        info.m_entities[guid] = entityInfo;
-                    }
-
                     ComboContext entityContext = context.Clone();
                     entityContext.Entity = guid;
 
@@ -497,6 +490,12 @@ namespace DataTool.FindLogic {
                         }
 
                         info.m_entitiesByIdentifier[context.ChildEntityIdentifier].Add(guid);
+                    }
+                    
+                    info.m_entities.TryGetValue(guid, out var entityInfo);
+                    if (entityInfo == null) {
+                        entityInfo = new EntityAsset(guid);
+                        info.m_entities[guid] = entityInfo;
                     }
 
                     if (entityDefinition.m_childEntityData != null) {
@@ -897,6 +896,12 @@ namespace DataTool.FindLogic {
 
                     foreach (STUAnimBlendTreeSet_BlendTreeItem blendTreeItem in blendTreeSet.m_blendTreeItems) {
                         Find(info, blendTreeItem.m_C0214513, replacements, context);
+
+                        if (blendTreeItem.m_F6E6D4B1?.m_5AD927D3 != null) {
+                            foreach (var anim in blendTreeItem.m_F6E6D4B1.m_5AD927D3) {
+                                Find(info, anim, replacements, context);
+                            }
+                        }
 
                         if (blendTreeItem.m_gameData is STU_7D00A73D animGameDataUnk1) {
                             if (animGameDataUnk1.m_animDatas != null) {
