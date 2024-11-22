@@ -345,6 +345,11 @@ namespace DataTool.ToolLogic.Extract {
                 Log($"\tExtracting souvenir {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
+            
+            if (ShouldDo(unlock, config, tags, UnlockType.CompetitiveSignature)) {
+                Log($"\tExtracting signature {unlock.Name}");
+                CompSignature.Save(flags, thisPath, unlock);
+            }
 
             if (ShouldDo(unlock, config, tags, UnlockType.WeaponSkin)) {
                 if (unlock.STU.m_rarity == STUUnlockRarity.Common) {

@@ -211,7 +211,7 @@ namespace DataTool.DataModels {
                 STU_3F17D547 _ => UnlockType.SkinComponent,
                 STU_A85D31BF _ => UnlockType.StoryMission,
                 STU_2448F3AA _ => UnlockType.WeaponSkin,
-                STU_FA317B7D _ => UnlockType.NameBacking,
+                STU_FA317B7D _ => UnlockType.CompetitiveSignature,
                 STU_1EB22BDB _ => UnlockType.Unknown,
                 _ => UnlockType.Unknown
             };
@@ -309,6 +309,6 @@ namespace DataTool.DataModels {
         BattlePassTierSkip,
         StoryMission,
         WeaponSkin, // ow2 weapon skin
-        NameBacking,
+        CompetitiveSignature,
     }
 }
