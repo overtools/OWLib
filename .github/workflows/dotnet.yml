@@ -13,14 +13,14 @@ jobs:
                 with:
                     fetch-depth: 0
                     submodules: 'recursive'
-            -   name: Install .NET 8
+            -   name: Install .NET 9
                 uses: actions/setup-dotnet@v4
             -   name: Mutate Run Number
                 run: |
                   $num = (997+$($Env:GITHUB_RUN_NUMBER))
                   echo "GITHUB_RUN_NUMBER_DELTA=$num" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
             -   name: Restore project
-                run: dotnet restore OverwatchToolchain.sln --verbosity m -r win-x64 -p:TargetFramework=net8.0
+                run: dotnet restore OverwatchToolchain.sln --verbosity m -r win-x64 -p:TargetFramework=net9.0
             -   name: Build Release
                 run: dotnet publish --configuration ReleasePublish -r win-x64 -o dist/Release --self-contained true
                 # --self-contained for https://github.com/dotnet/sdk/issues/29642

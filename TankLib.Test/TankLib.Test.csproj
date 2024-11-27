@@ -3,7 +3,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Version>1.0.0.0</Version>
     <IsPublishable>false</IsPublishable>
     <DeployOnBuild>false</DeployOnBuild>
