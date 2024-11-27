@@ -415,8 +415,8 @@ namespace DataTool.SaveLogic {
                     0x0430000000000254 => "Halloween",
                     
                     // i don't think this is intentional..
-                    0x043000000000024B => "Overwatch Classic",
-                    0x0430000000000282 => "Kingmaker",
+                    0x043000000000024B => "Overwatch Classic", // gibraltar..
+                    0x0430000000000282 => "Kingmaker", // basically all maps..
                     _ => variantModeInfo.m_celebration.ToString()
                 };
                 variantName += $" - {celebrationName}";
