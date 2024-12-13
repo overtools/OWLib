@@ -622,6 +622,7 @@ D740,01C,Season10,1
 D745,01C,Season11,1
 D748,01C,Season12,1
 D749,01C,Season13,1
+E810,01C,Season14,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -709,6 +710,8 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 1293,09F,Menu/WoW Art,1
 12A4,09F,Menu/MHA Art,1
 12A5,09F,Menu/Spellbinder Art,1
+12C6,09F,Menu/Hazard Art,1
+12C7,09F,Menu/Reinhardt Mythic,1
 ; Celebrations,,,
 2168,01C,Christmas,1
 2498,01C,LunarNewYear,1
