@@ -715,7 +715,7 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 12CA,09F,Menu/Avatar Collab Art,1
 12EA,09F,Menu/China Art,1
 ; Celebrations,,,
-2168,01C,Christmas,1
+2168,01C,Winter,1
 2498,01C,LunarNewYear,1
 237C,01C,LunarNewYear,1
 2497,01C,NewYearResolution,1
@@ -724,6 +724,15 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 2658,01C,StPatricksDay,1
 2659,01C,Easter,1
 212E,01C,Halloween,1
+; Map Variant Celebrations,,,
+14C,0C3,Winter,1 ; after 2.14
+1E9,0C3,Winter (2023),1 ; before 2.14
+254,0C3,Halloween,1
+; (Unintended) Map Variant Celebrations,,,
+211,0C3,April Fools,1 ; busan
+24B,0C3,Overwatch Classic(release),1 ; gibraltar..
+282,0C3,Kingmaker,1 ; basically all maps..
+29F,0C3,6v6Min1,1 ; basically all maps..
 ; NPC VoiceSet names,,,
 1C2,05F,Sojourn,1
 22F,05F,Zeus,1

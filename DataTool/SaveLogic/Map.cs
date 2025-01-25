@@ -410,15 +410,7 @@ namespace DataTool.SaveLogic {
             }
 
             if (variantModeInfo.m_celebration != 0) {
-                var celebrationName = variantModeInfo.m_celebration.GUID.GUID switch {
-                    0x04300000000001E9 => "Winter",
-                    0x0430000000000254 => "Halloween",
-                    
-                    // i don't think this is intentional..
-                    0x043000000000024B => "Overwatch Classic", // gibraltar..
-                    0x0430000000000282 => "Kingmaker", // basically all maps..
-                    _ => variantModeInfo.m_celebration.ToString()
-                };
+                var celebrationName = GetGUIDName(variantModeInfo.m_celebration);
                 variantName += $" - {celebrationName}";
             }
 
