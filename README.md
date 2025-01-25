@@ -108,4 +108,4 @@ There is also a variety of flags you can use that can change how some of the ext
 ## Disclaimer
 This project is not affiliated with Blizzard Entertainment, Inc.<br>
 All trademarks referenced herein are the properties of their respective owners.<br>
-2022 Blizzard Entertainment, Inc. All rights reserved.
+2025 Blizzard Entertainment, Inc. All rights reserved.
