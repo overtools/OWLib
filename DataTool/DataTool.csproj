@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Version>2.14.1.0</Version>
         <Configurations>Debug;Release;ReleasePublish;DebugPublish</Configurations>
