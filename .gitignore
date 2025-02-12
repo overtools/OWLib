@@ -247,9 +247,6 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
-# JetBrains Rider
-.idea/
-
 *.sln.iml
 !/DataTool/ToolLogic/List/Debug/
 !/DataTool/ToolLogic/Extract/Debug/
