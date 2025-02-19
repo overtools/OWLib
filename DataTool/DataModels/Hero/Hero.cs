@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using TankLib;
 using TankLib.Math;
+using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
@@ -51,10 +52,19 @@ namespace DataTool.DataModels.Hero {
             SupportsAi = hero.m_906C3711 > 0;
             IsHero = hero.m_64DC571F > 0;
 
+            Loadouts = new List<LoadoutLite>();
+
             if (hero.m_heroLoadout != null) {
-                Loadouts = new List<LoadoutLite>();
                 foreach (var loadoutGUID in hero.m_heroLoadout) {
                     var loadout = new Loadout(loadoutGUID);
+                    if (loadout.GUID == 0) continue;
+                    Loadouts.Add(loadout.ToLite());
+                }
+            }
+
+            if (hero.m_B25192D9 != null) {
+                foreach (teStructuredDataAssetRef<STU_42B75C40> perk in hero.m_B25192D9) {
+                    var loadout = new Loadout(GetInstance<STU_42B75C40>(perk).m_loadout);
                     if (loadout.GUID == 0) continue;
                     Loadouts.Add(loadout.ToLite());
                 }
