@@ -54,7 +54,6 @@ namespace DataTool.DataModels.Hero {
             IsHero = hero.m_64DC571F > 0;
 
             
-
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<LoadoutLite>();
                 foreach (var loadoutGUID in hero.m_heroLoadout) {
