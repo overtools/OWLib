@@ -4,37 +4,49 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2E1A0A0B, 120)]
+    [STU(0x2E1A0A0B, 232)]
     public class STUGameRulesetGameMode : STUInstance
     {
-        [STUField(0xEB4F2408, 0)] // size: 16
+        [STUField(0x34444C87, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        public STU_3ABE1167 m_34444C87;
+
+        [STUField(0xCC660C98, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        public STU_3ABE1167 m_CC660C98;
+
+        [STUField(0x969C4341, 48, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        public STU_3ABE1167 m_969C4341;
+
+        [STUField(0x4A84B428, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        public STU_3ABE1167 m_4A84B428;
+
+        [STUField(0xEB4F2408, 96)] // size: 16
         public teStructuredDataAssetRef<STUGameMode> m_gameMode;
 
-        [STUField(0x3CE93B76, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x3CE93B76, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_3CE93B76;
 
-        [STUField(0xAD4BF17F, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xAD4BF17F, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_AD4BF17F;
 
-        [STUField(0xD440A0F7, 48, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xD440A0F7, 144, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameRulesetTeam[] m_teams;
 
-        [STUField(0xDB2577DB, 64)] // size: 4
+        [STUField(0xDB2577DB, 160)] // size: 4
         public STUXPGainType[] m_DB2577DB;
 
-        [STUField(0xCA7E6EDC, 80)] // size: 16
+        [STUField(0xCA7E6EDC, 176)] // size: 16
         public teStructuredDataAssetRef<ulong> m_description;
 
-        [STUField(0x1946261A, 96)] // size: 16
+        [STUField(0x29ADD4C0, 192)] // size: 16
+        public teStructuredDataAssetRef<STU_4A71DAAD>[] m_29ADD4C0;
+
+        [STUField(0x1946261A, 208)] // size: 16
         public teStructuredDataAssetRef<STU_C960DFC7>[] m_1946261A;
 
-        [STUField(0x0DD0C65E, 112)] // size: 1
+        [STUField(0x0DD0C65E, 224)] // size: 1
         public byte m_0DD0C65E;
 
-        [STUField(0xE71ACC07, 113)] // size: 1
-        public byte m_E71ACC07;
-
-        [STUField(0x1D5809A3, 114)] // size: 1
+        [STUField(0x1D5809A3, 225)] // size: 1
         public byte m_1D5809A3;
     }
 }

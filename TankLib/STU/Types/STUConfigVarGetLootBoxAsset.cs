@@ -14,6 +14,6 @@ namespace TankLib.STU.Types
         public STUConfigVar m_lootBoxType;
 
         [STUField(0x0619C597, 32)] // size: 4
-        public Enum_2551B350 m_type;
+        public Enum_00627333 m_type;
     }
 }

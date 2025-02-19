@@ -18,7 +18,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUVoiceStimulus> m_5DCD82C0;
 
         [STUField(0xB25192D9, 80)] // size: 16
-        public teStructuredDataAssetRef<STU_BDDF370E>[] m_B25192D9;
+        public teStructuredDataAssetRef<STU_42B75C40>[] m_B25192D9;
 
         [STUField(0xE04197AF, 96)] // size: 16
         public teStructuredDataAssetRef<STUGameRulesetSchema>[] m_gameRulesetSchemas;
