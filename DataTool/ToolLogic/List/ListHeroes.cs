@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -36,6 +36,14 @@ namespace DataTool.ToolLogic.List {
                     if (hero.Loadouts != null) {
                         Log($"{indent + 1}Loadouts:");
                         foreach (var loadout in hero.Loadouts) {
+                            Log($"{indent + 2}{loadout.Name}: {loadout.Category}");
+                            Log($"{indent + 3}{loadout.Description}");
+                        }
+                    }
+
+                    if (hero.Perks != null) {
+                        Log($"{indent + 1}Perks:");
+                        foreach (var loadout in hero.Perks) {
                             Log($"{indent + 2}{loadout.Name}: {loadout.Category}");
                             Log($"{indent + 3}{loadout.Description}");
                         }

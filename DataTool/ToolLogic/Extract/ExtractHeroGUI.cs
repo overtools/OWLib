@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using DataTool.DataModels.Hero;
 using DataTool.Flag;
@@ -65,6 +65,18 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Abilities"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions {
+                        FileTypeOverride = "png"
+                    });
+                }
+
+                if (hero.Perks != null) {
+                    var heroLoadoutCombo = new FindLogic.Combo.ComboInfo();
+                    foreach (var heroLoadout in hero.Perks) {
+                        FindLogic.Combo.Find(heroLoadoutCombo, heroLoadout.TextureGUID);
+                        heroLoadoutCombo.SetTextureName(heroLoadout.TextureGUID, heroLoadout.Name);
+                    }
+
+                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Perks"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions {
                         FileTypeOverride = "png"
                     });
                 }
