@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TankLib;
 using TankLib.Math;
-using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
@@ -22,9 +21,9 @@ namespace DataTool.DataModels.Hero {
         public teColorRGBA GalleryColor { get; set; }
         public bool IsHero { get; set; }
         public bool SupportsAi { get; set; }
-        public List<LoadoutLite> Loadouts { get; set; }
-        public List<LoadoutLite> Perks { get; set; }
-        public List<HeroImage> Images { get; set; }
+        public List<LoadoutLite> Loadouts { get; set; } = [];
+        public List<LoadoutLite> Perks { get; set; } = [];
+        public List<HeroImage> Images { get; set; } = [];
 
         internal STUHero STU { get; set; }
 
@@ -53,20 +52,18 @@ namespace DataTool.DataModels.Hero {
             SupportsAi = hero.m_906C3711 > 0;
             IsHero = hero.m_64DC571F > 0;
 
-            
             if (hero.m_heroLoadout != null) {
-                Loadouts = new List<LoadoutLite>();
-                foreach (var loadoutGUID in hero.m_heroLoadout) {
-                    var loadout = new Loadout(loadoutGUID);
+                foreach (var loadoutGuid in hero.m_heroLoadout) {
+                    var loadout = new Loadout(loadoutGuid);
                     if (loadout.GUID == 0) continue;
                     Loadouts.Add(loadout.ToLite());
                 }
             }
 
             if (hero.m_B25192D9 != null) {
-                Perks = new List<LoadoutLite>();
-                foreach (teStructuredDataAssetRef<STU_42B75C40> perk in hero.m_B25192D9) {
-                    var loadout = new Loadout(GetInstance<STU_42B75C40>(perk).m_loadout);
+                foreach (var perkGuid in hero.m_B25192D9) {
+                    var perk = GetInstance<STU_42B75C40>(perkGuid);
+                    var loadout = new Loadout(perk?.m_loadout);
                     if (loadout.GUID == 0) continue;
                     Perks.Add(loadout.ToLite());
                 }
@@ -74,7 +71,6 @@ namespace DataTool.DataModels.Hero {
 
             // Contains array of various hero images, hero gallery portraits, small hero select icons, etc.
             if (hero.m_8203BFE1 != null) {
-                Images = new List<HeroImage>();
                 foreach (var imageSet in hero.m_8203BFE1) {
                     Images.Add(new HeroImage {
                         Id = imageSet.m_id,
