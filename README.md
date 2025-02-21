@@ -38,7 +38,7 @@ Many of the list commands support JSON output.<br>
 To do this you must provide the `--json` flag as well as an `--out` flag to specify where to save the JSON file.<br>
 Example:
 ```
-DataTool.exe "C:\Games\Overwatch" list-heroes --json --out "C:\Games\Extracts\Heroes.json"
+DataTool.exe "C:\Games\Overwatch" list-heroes --json --out="C:\Games\Extracts\Heroes.json"
 ```
 
 ### Example Extract Commands
