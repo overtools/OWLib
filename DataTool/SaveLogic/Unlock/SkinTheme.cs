@@ -90,7 +90,12 @@ namespace DataTool.SaveLogic.Unlock {
             info.m_processExistingEntities = true;
             // we also need to be careful that running this doesn't cause base-skin assets to be saved
             
-            var owClassicReplacements = GetReplacements(0x0B2800000000004A);
+            // note: this should be updated to point at the latest ow classic mode
+            // (as it'll have the most original hero select anims)
+            // (... although i guess it could make us miss some older anims? but searching all would be very expensive)
+            var owClassicReplacements = GetReplacements(0x0B28000000000050);
+            // 0x0B2800000000004A - release
+            // 0x0B28000000000050 - moth
             foreach (var skinReplacement in skinReplacements) {
                 // if skin overrides something and so does ow classic, we want the thing from the skin... i guess
                 owClassicReplacements[skinReplacement.Key] = skinReplacement.Value;
