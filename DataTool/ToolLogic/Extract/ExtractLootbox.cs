@@ -33,8 +33,8 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.Find(info, lootbox.m_baseModelLook); // 01A
                 Combo.Find(info, lootbox.m_modelLook);
 
-                Combo.Find(info, 0x400000000001456); // coin chest, todo
-                // 00000000315A.00C in 000000001456.003 (288230376151716950)
+                // puck - references coin chest and all the other preview entities
+                Combo.Find(info, 0x04000000000013F8);
 
                 if (lootbox.m_shopCards != null) {
                     foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
