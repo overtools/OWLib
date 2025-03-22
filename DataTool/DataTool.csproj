@@ -5,18 +5,13 @@
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Version>2.15.0.0</Version>
-        <Configurations>Debug;Release;ReleasePublish;DebugPublish</Configurations>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' OR '$(Configuration)' == 'DebugPublish' ">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <ApplicationIcon>Static\DataToolDebug.ico</ApplicationIcon>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)' == 'ReleasePublish' ">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <ApplicationIcon>Static\DataTool.ico</ApplicationIcon>
         <Optimize>true</Optimize>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'DebugPublish' OR '$(Configuration)' == 'ReleasePublish' ">
-        <SelfContained>true</SelfContained>
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />

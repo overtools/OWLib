@@ -22,7 +22,7 @@ jobs:
             -   name: Restore project
                 run: dotnet restore OverwatchToolchain.sln --verbosity m -r win-x64 -p:TargetFramework=net9.0
             -   name: Build Release
-                run: dotnet publish --configuration ReleasePublish -r win-x64 -o dist/Release --self-contained true
+                run: dotnet publish -c Release -r win-x64 -o dist/Release --self-contained true
                 # --self-contained for https://github.com/dotnet/sdk/issues/29642
             -   name: Upload Release
                 uses: actions/upload-artifact@v4
@@ -30,7 +30,7 @@ jobs:
                     name: toolchain-release
                     path: dist/Release
             -   name: Build Debug
-                run: dotnet publish --configuration DebugPublish -r win-x64 -o dist/Debug --self-contained true
+                run: dotnet publish -c Debug -r win-x64 -o dist/Debug --self-contained true
             -   name: Upload Debug
                 uses: actions/upload-artifact@v4
                 with:

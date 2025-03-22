@@ -1,0 +1,32 @@
+<Solution>
+  <Folder Name="/Library/">
+    <Project Path="revorbstd/RevorbStd.csproj"/>
+    <Project Path="TACTLib/TACTLib/TACTLib.csproj"/>
+  </Folder>
+  <Folder Name="/Repository/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="types.txt" />
+  </Folder>
+  <Folder Name="/Repository/Format/">
+    <File Path="owm-formats/common.txt" />
+    <File Path="owm-formats/owanimclip.txt" />
+    <File Path="owm-formats/owentity.txt" />
+    <File Path="owm-formats/owmap.txt" />
+    <File Path="owm-formats/owmat.txt" />
+    <File Path="owm-formats/owmdl.txt" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="CASCEncDump/CASCEncDump.csproj"/>
+    <Project Path="DataTool/DataTool.csproj" />
+    <Project Path="ReplayMp4Tool/ReplayMp4Tool.csproj"/>
+    <Project Path="TankLibHelper/TankLibHelper.csproj"/>
+    <Project Path="TankPackage/TankPackage.csproj"/>
+    <Project Path="TankTonka/TankTonka.csproj"/>
+    <Project Path="TankView/TankView.csproj"/>
+  </Folder>
+  <Project Path="TankLib.Test/TankLib.Test.csproj"/>
+  <Project Path="TankLib/TankLib.csproj"/>
+</Solution>
