@@ -1,9 +1,8 @@
 ﻿using System;
 using DataTool.Flag;
-using JetBrains.Annotations;
 
 namespace DataTool.ToolLogic.List {
-    [Serializable, UsedImplicitly]
+    [Serializable]
     [FlagInfo(Name = "List", Description = "Flags for listing data. These generally apply to list-* and dump-* commands.")]
     public class ListFlags : IToolFlags {
         [CLIFlag(Default = false, Flag = "json", Help = "Output JSON to stderr", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using JetBrains.Annotations;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -58,10 +57,10 @@ namespace DataTool.DataModels {
     }
 
     public class VoiceLineInstance {
-        [CanBeNull] public teResourceGUID[] VoiceSounds { get; set; }
-        [CanBeNull] public teResourceGUID[] Conversations { get; set; }
+        public teResourceGUID[]? VoiceSounds { get; set; }
+        public teResourceGUID[]? Conversations { get; set; }
 
-        [CanBeNull] internal STUCriteriaContainer Conditions;
+        internal STUCriteriaContainer? Conditions;
         internal STUVoiceLineInstance STU;
 
         public VoiceLineInstance(STUVoiceLineInstance instance) {

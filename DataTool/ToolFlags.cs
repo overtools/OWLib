@@ -1,9 +1,8 @@
 ﻿using System;
 using DataTool.Flag;
-using JetBrains.Annotations;
 
 namespace DataTool {
-    [Serializable, UsedImplicitly]
+    [Serializable]
     public class ToolFlags : IToolFlags {
         [CLIFlag(Flag = "h", Default = false, Help = "Print this help text", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         [Alias("help")]

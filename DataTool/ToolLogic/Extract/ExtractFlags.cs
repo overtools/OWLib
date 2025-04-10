@@ -1,9 +1,8 @@
 ﻿using System;
 using DataTool.Flag;
-using JetBrains.Annotations;
 
 namespace DataTool.ToolLogic.Extract {
-    [Serializable, UsedImplicitly]
+    [Serializable]
     [FlagInfo(Name = "Extract", Description = "Flags for extracting data. These apply to all extract-* modes.")]
     public class ExtractFlags : IToolFlags {
         [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path to save data", Positional = 2, Required = true)]

@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.Helper;
-using JetBrains.Annotations;
 using TankLib;
 using TankView.Helper;
 using TankView.Properties;
@@ -48,7 +47,7 @@ namespace TankView.ViewModel {
             }
         }
 
-        private void UpdateControl([CanBeNull] GUIDEntry value) {
+        private void UpdateControl(GUIDEntry value) {
             if (PreviewControl is IDisposable disposable) {
                 disposable.Dispose();
             }
