@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using AssetRipper.TextureDecoder.Bc;
 using AssetRipper.TextureDecoder.Rgb;
 using AssetRipper.TextureDecoder.Rgb.Formats;
@@ -33,9 +34,28 @@ namespace DataTool.ConvertLogic {
             }
 
             public T R { get; set; } = r;
-            public T G { get; set; } = r;
-            public T B { get; set; } = r;
-            public T A { get; set; }
+
+            public T G {
+                get => R;
+                set { }
+            }
+
+            public T B {
+                get => R;
+                set { }
+            }
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+            internal static T GetMaximumValueSafe<T>() where T : unmanaged, INumberBase<T>, IMinMaxValue<T>
+            {
+                return !(typeof (T) == typeof (Half)) && !(typeof (T) == typeof (float)) && !(typeof (T) == typeof (NFloat)) && !(typeof (T) == typeof (double)) && !(typeof (T) == typeof (Decimal)) ? T.MaxValue : T.One;
+            }
+
+            public T A {
+                get => GetMaximumValueSafe<T>();
+                set { }
+            }
 
             public static ColorR<T> Black => new(T.MinValue);
 
@@ -77,6 +97,7 @@ namespace DataTool.ConvertLogic {
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
                         if (grayscale) {
+                            var t = Unsafe.SizeOf<GrayscaleR<Half>>();
                             RgbConverter.Convert<GrayscaleR<Half>, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                         } else {
                             RgbConverter.Convert<ColorR<Half>, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
