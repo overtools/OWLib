@@ -19,10 +19,6 @@ namespace DataTool {
         [CLIFlag(Default = true, Flag = "online", Help = "Allow downloading of corrupted files", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool Online;
 
-        [CLIFlag(Default = false, Flag = "quiet", Help = "Suppress majority of output messages", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        [Alias("q")]
-        public bool Quiet;
-
         [CLIFlag(Default = false, Flag = "deduplicate-textures", Help = "Re-use textures from other models", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         [Alias("0")]
         public bool Deduplicate;

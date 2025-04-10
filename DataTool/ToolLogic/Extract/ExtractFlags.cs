@@ -14,9 +14,6 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = "owanimclip", NeedsValue = true, Flag = "convert-animations-type", Help = "Animation output type", Valid = new[] {"owanimclip", "seanim"})]
         public string ConvertAnimationsType;
 
-        [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool ConvertTexturesLossless;
-
         [CLIFlag(Default = false, Flag = "extract-refpose", Help = "Extract skeleton refposes", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ExtractRefpose;
 
