@@ -21,8 +21,9 @@ public static class WeaponSkin {
 
             var wasDeduping = Program.Flags.Deduplicate;
             if (!wasDeduping) {
-                Logger.Warn("\t\tTemporarily enabling texture deduplication");
+                Logger.Warn("\t\tTemporarily enabling texture de-duplication (required for mythic skins)");
             }
+
             Program.Flags.Deduplicate = true;
 
             SaveMythicWeaponSkin(flags, directory, hero, weaponSkinGUID);
@@ -107,17 +108,17 @@ public static class WeaponSkin {
     private static void FindEffects(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> replacements) {
         // for weapon skins we don't save the whole hero, only preview weapon entities
         // because of this, no effects are saved automatically
-        
+
         // instead, manually locate effect replacements
         // (which means we will only save replaced things, not every sound from the hero)
-        
+
         foreach (KeyValuePair<ulong, ulong> replacement in replacements) {
             uint type = teResourceGUID.Type(replacement.Value);
             if (type != 0xD && type != 0x8F) {
                 // effect, animation effect
                 continue;
             }
-            
+
             FindLogic.Combo.Find(info, replacement.Value);
         }
     }

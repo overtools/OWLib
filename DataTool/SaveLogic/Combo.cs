@@ -176,7 +176,7 @@ namespace DataTool.SaveLogic {
                 priority = parsedAnimation.Header.Priority;
                 group = parsedAnimation.Header.Group;
             } catch (Exception) {
-                Logger.Warn("Combo", $"Unable to parse animation {animationInfo.GetName()}");
+                Logger.Warn("Combo", $"Unable to parse animation {animationInfo.GetName()} (can be ignored)");
             }
 
             string animationDirectory = Path.Combine(path, "Animations", priority.ToString(), group.ToString());

@@ -21,8 +21,9 @@ namespace DataTool.SaveLogic.Unlock {
         public static void SaveMythicSkin(ICLIFlags flags, string directory, teResourceGUID mythicSkinGUID, STU_EF85B312 mythicSkin, STUHero hero) {
             var wasDeduping = Program.Flags.Deduplicate;
             if (!wasDeduping) {
-                Logger.Warn("\t\tTemporarily enabling texture deduplication");
+                Logger.Warn("\t\tTemporarily enabling texture de-duplication (required for mythic skins)");
             }
+
             Program.Flags.Deduplicate = true;
             Logger.Log("\t\tFinding");
 
