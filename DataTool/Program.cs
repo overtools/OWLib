@@ -143,7 +143,11 @@ namespace DataTool {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch.");
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "DataTool must be updated to support every new build of the game. This tool update may not be available straight away.");
                     throw;
-                } catch (FileNotFoundException) {
+                } catch (IOException ex) when ((uint) ex.HResult == 0x80070020) {
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "Core", "Error reading game files! Is Overwatch is running? Close Overwatch and Battle.net before running the tool.");
+                    throw;
+                }
+                catch (FileNotFoundException) {
                     // file not found exceptions thrown by TACTLib should already include good exception info, we don't need to log anything here
                     throw;
                 } catch {
@@ -154,11 +158,6 @@ namespace DataTool {
 
                     throw;
                 }
-
-                //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
-                //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
-                //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
-                //}
 
                 InitKeys();
                 InitMisc();
