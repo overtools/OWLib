@@ -33,7 +33,6 @@ namespace DataTool.ToolLogic.List {
                     if (!string.IsNullOrEmpty(data.VariantName)) Log($"{iD + 1}VariantName: {data.VariantName}");
                     if (!string.IsNullOrEmpty(data.Description)) Log($"{iD + 1}Desc1: {data.Description}");
                     if (!string.IsNullOrEmpty(data.Description2)) Log($"{iD + 1}Desc2: {data.Description2}");
-                    Log($"{iD + 1}Status: {data.State}");
                     Log($"{iD + 1}Type: {data.MapType}");
 
                     if (data.StateA != null || data.StateB != null) {

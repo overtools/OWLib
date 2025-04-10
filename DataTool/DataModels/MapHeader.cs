@@ -19,7 +19,6 @@ namespace DataTool.DataModels {
         public string VariantName { get; set; }
         public teResourceGUID MapGUID { get; set; }
         public IEnumerable<GameModeLite> GameModes { get; set; }
-        public Enum_668FA6B6 State { get; set; }
         public STUMapType MapType { get; set; }
         public teResourceGUID Thumbnail { get; set; }
         public teResourceGUID Image { get; set; }
@@ -48,7 +47,6 @@ namespace DataTool.DataModels {
             StateA = GetCleanString(mapHeader.m_8EBADA44);
             StateB = GetCleanString(mapHeader.m_5AFE2F61);
             MapGUID = mapHeader.m_map;
-            State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;
             Thumbnail = mapHeader.m_0342E00E?.m_smallMapIcon;
             Image = mapHeader.m_0342E00E?.m_loadingScreen;
