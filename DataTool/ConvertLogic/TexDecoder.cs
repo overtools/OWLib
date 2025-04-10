@@ -97,7 +97,6 @@ namespace DataTool.ConvertLogic {
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
                         if (grayscale) {
-                            var t = Unsafe.SizeOf<GrayscaleR<Half>>();
                             RgbConverter.Convert<GrayscaleR<Half>, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                         } else {
                             RgbConverter.Convert<ColorR<Half>, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
