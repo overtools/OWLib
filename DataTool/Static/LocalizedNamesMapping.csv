@@ -23,6 +23,7 @@ A,75,widow
 231,75,flompy
 231,75,kirikou
 291,75,liveweaver
+32A,75,freya
 ; Normal Hero Localization Mapping,,
 ;deDE,,
 2,75,reaper
@@ -64,6 +65,7 @@ DD,75,mei
 291,75,lifeweaver
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,hazard
 365,75,juno
@@ -107,6 +109,7 @@ DD,75,mei
 291,75,lifeweaver
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,hazard
 365,75,juno
@@ -150,6 +153,7 @@ DD,75,mei
 291,75,lifeweaver
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,hazard
 365,75,juno
@@ -193,6 +197,7 @@ DD,75,mei
 291,75,lifeweaver
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,hazard
 365,75,juno
@@ -236,6 +241,7 @@ DD,75,mei
 291,75,vital
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,danger
 365,75,juno
@@ -279,6 +285,7 @@ DD,75,mei
 291,75,lifeweaver
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,hazard
 365,75,juno
@@ -322,6 +329,7 @@ DD,75,メイ
 291,75,ライフウィーバー
 30A,75,マウガ
 31C,75,イラリー
+32A,75,フレイヤ
 32B,75,ベンチャー
 362,75,ハザード
 365,75,ジュノ
@@ -365,6 +373,7 @@ DD,75,메이
 291,75,라이프위버
 30A,75,마우가
 31C,75,일리아리
+32A,75,프레야
 32B,75,벤처
 362,75,해저드
 365,75,주노
@@ -408,6 +417,7 @@ DD,75,mei
 291,75,życiodawca
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,ryzyk
 365,75,juno
@@ -451,6 +461,7 @@ DD,75,mei
 291,75,lifeweaver
 30A,75,mauga
 31C,75,illari
+32A,75,freja
 32B,75,venture
 362,75,hazard
 365,75,juno
@@ -494,6 +505,7 @@ DD,75,мэй
 291,75,ткач жизни
 30A,75,мауга
 31C,75,иллари
+32A,75,фрейя
 32B,75,авентюра
 362,75,азарт
 365,75,юнона
@@ -537,6 +549,7 @@ DD,75,เหมย
 291,75,ไลฟ์วีเวอร์
 30A,75,มาวกา
 31C,75,อิลลารี
+32A,75,เฟรยา
 32B,75,เวนเจอร์
 362,75,ฮาซาร์ด
 365,75,จูโน
@@ -559,6 +572,7 @@ DD,75,เหมย
 206,75,echo
 236,75,junker queen
 28D,75,ramattra
+32A,75,freja
 362,75,hazard
 ;zhCN,,
 2,75,死神
@@ -600,6 +614,7 @@ DD,75,美
 291,75,生命之梭
 30A,75,毛加
 31C,75,伊拉锐
+32A,75,弗蕾娅
 32B,75,探奇
 362,75,骇灾
 365,75,朱诺
@@ -643,6 +658,7 @@ DD,75,小美
 291,75,織命
 30A,75,莫加
 31C,75,伊拉里
+32A,75,弗蕾亞
 32B,75,無畏
 362,75,災害
 365,75,朱諾
