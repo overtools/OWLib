@@ -811,3 +811,9 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 1C2,05F,Sojourn,1
 22F,05F,Zeus,1
 238,05F,Roadhog,1
+; Loot Box Names
+007,17B,Loot Box (S15),1
+01E,17B,Legendary Loot Box (S15),1
+021,17B,Epic Loot Box (S16),1
+026,17B,Loot Box (S16),1
+027,17B,Legendary Loot Box (S16),1
