@@ -2,6 +2,7 @@ using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.ToolLogic.List;
+using TankLib;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-talents", Description = "Extract talents", CustomFlags = typeof(ExtractFlags))]
@@ -17,9 +18,11 @@ namespace DataTool.ToolLogic.Extract {
             const string folderName = "Talents";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
-            foreach (var pair in ListTalents.GetData()) {
-                Combo.Find(info, pair.Value.TextureGUID);
-                info.SetTextureName(pair.Value.TextureGUID, pair.Value.Name);
+            foreach (var talent in ListTalents.GetData().Values) {
+                Combo.Find(info, talent.TextureGUID);
+
+                var uniqueFilename = $"{talent.Name}.{teResourceGUID.Index(talent.GUID):X}";
+                info.SetTextureName(talent.TextureGUID, uniqueFilename);
             }
 
             var context = new SaveLogic.Combo.SaveContext(info);
