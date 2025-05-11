@@ -241,6 +241,8 @@ namespace DataTool {
         }
 
         public static void InitStorage(bool online = false) { // turnin offline off again, can cause perf issues with bundle hack
+            var languageIsAutoDetected = Flags.Language == null && Flags.SpeechLanguage == null;
+            
             // Attempt to load language via registry or from Steam, if they were already provided via flags then this won't do anything
             if (!Flags.NoLanguageRegistry) {
                 TryFetchLocaleFromSteamInstall(); // fetch from steam first
@@ -248,6 +250,12 @@ namespace DataTool {
             }
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
+
+            // todo: workaround for "detecting" chinese-only installs (bnet china)
+            // only active when a language flag isn't manually passed
+            if (languageIsAutoDetected && Flags.Language == "zhCN" && Flags.SpeechLanguage == "zhCN") {
+                Flags.RCN = true;
+            }
 
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
