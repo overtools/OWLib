@@ -47,7 +47,7 @@ namespace DataTool.ToolLogic.Dump {
                 WritePool($"{lootBoxName}_All", completePool);
 
                 var atLeastOnePool = LoadPool(lootBox.m_AAECB0F9);
-                WritePool($"{lootBoxName}_AtLestOne", atLeastOnePool);
+                WritePool($"{lootBoxName}_AtLeastOne", atLeastOnePool);
             }
         }
 
