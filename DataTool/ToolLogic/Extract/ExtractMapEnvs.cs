@@ -64,7 +64,7 @@ namespace DataTool.ToolLogic.Extract {
                         mapStream.Position = lightingDataOffset + envScenarioOffset;
 
                         for (int j = 0; j < envScenarioCount; j++) {
-                            mapStream.Position += 40; // 5x u64
+                            mapStream.Position += 48; // 6x u64
                             ulong envState = reader.ReadUInt64();
                             STU_CD1ED5FE envStateInst = GetInstance<STU_CD1ED5FE>(envState);
 
