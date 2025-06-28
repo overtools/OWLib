@@ -241,8 +241,6 @@ namespace DataTool {
         }
 
         public static void InitStorage(bool online = false) { // turnin offline off again, can cause perf issues with bundle hack
-            var languageIsAutoDetected = Flags.Language == null && Flags.SpeechLanguage == null;
-            
             // Attempt to load language via registry or from Steam, if they were already provided via flags then this won't do anything
             if (!Flags.NoLanguageRegistry) {
                 TryFetchLocaleFromSteamInstall(); // fetch from steam first
@@ -251,9 +249,11 @@ namespace DataTool {
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
-            // todo: workaround for "detecting" chinese-only installs (bnet china)
-            // only active when a language flag isn't manually passed
-            if (languageIsAutoDetected && Flags.Language == "zhCN" && Flags.SpeechLanguage == "zhCN") {
+            // todo: workaround for "detecting" RCN-only installs (bnet china)
+            // initially they were chinese-locale only, but now it supports all.
+            // it still only features only RCN manifests, no RDEV
+            if (File.Exists(Path.Combine(Flags.OverwatchDirectory, "NeacLoader.exe")) || 
+                File.Exists(Path.Combine(Flags.OverwatchDirectory, "_retail_", "NeacLoader.exe"))) {
                 Flags.RCN = true;
             }
 
