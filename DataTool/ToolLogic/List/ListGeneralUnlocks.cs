@@ -10,7 +10,7 @@ namespace DataTool.ToolLogic.List {
     public class ListGeneralUnlocks : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (ListFlags) toolFlags;
-            var unlocks = GetUnlocks();
+            var unlocks = GetPlayerProgression();
 
             if (flags.JSON) {
                 if (flags.Flatten) {
@@ -39,7 +39,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public PlayerProgression GetUnlocks() {
+        public static PlayerProgression GetPlayerProgression() {
             foreach (ulong key in TrackedFiles[0x54]) {
                 STUGenericSettings_PlayerProgression playerProgression = GetInstance<STUGenericSettings_PlayerProgression>(key);
                 if (playerProgression == null) continue;

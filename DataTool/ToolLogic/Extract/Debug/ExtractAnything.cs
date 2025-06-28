@@ -21,15 +21,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 return;
             }
             
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
-
             Combo.ComboInfo findInfo = new Combo.ComboInfo();
-            
             foreach (var queryKey in query.Keys) {
                 if (!TryParseQuery(queryKey, out var queryGUID)) {
                     Logger.Error(null, "Unable to parse query: \"{0}\"", queryKey);
@@ -38,10 +30,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
                 Combo.Find(findInfo, queryGUID);
             }
-
+            
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
+            var outputPath = Path.Combine(flags.OutputPath, "Anything");
+            
             // todo: can create duplicates
             // e.g input is voice set, will save all sounds loose + whole voice set
-            var outputPath = Path.Combine(basePath, "Anything");
             var saveContext = new SaveLogic.Combo.SaveContext(findInfo);
             SaveLogic.Combo.Save(toolFlags, outputPath, saveContext);
             SaveLogic.Combo.SaveLooseTextures(toolFlags, outputPath, saveContext);

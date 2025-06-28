@@ -94,7 +94,9 @@ namespace DataTool.ToolLogic.Extract {
             new CosmeticType(UnlockType.WeaponSkin, "Weapon Skin") {
                 Aliases = ["weaponvariant", "weapon"]
             },
-            new CosmeticType(UnlockType.NameCard, "Name Card(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)"),
+            new CosmeticType(UnlockType.NameCard, "Name Card(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)") {
+                Aliases = ["name-card"]
+            },
             new CosmeticType(UnlockType.WeaponCharm, "Weapon Charm(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)") {
                 Aliases = ["charm"]
             },
