@@ -7,7 +7,7 @@ using TankLib;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-movies", Description = "Extract movies", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-movies", Aliases = ["extract-debug-movies"], Description = "Extract movies", CustomFlags = typeof(ExtractFlags))]
     public class ExtractMovies : ITool {
         public void Parse(ICLIFlags toolFlags) {
             ExtractMOVI(toolFlags);
@@ -62,7 +62,4 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
     }
-
-    [Tool("extract-debug-movies", Description = "Legacy redirect to extract-movies", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
-    public class ExtractDebugMovies : ExtractMovies { }
 }

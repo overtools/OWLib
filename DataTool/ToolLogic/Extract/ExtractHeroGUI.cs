@@ -9,7 +9,7 @@ using TankLib.Helpers;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-icons", Aliases = new [] { "extract-hero-gui" }, Description = "Extract hero GUI images", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-hero-icons", Aliases = ["extract-hero-gui"], Description = "Extract hero GUI images", CustomFlags = typeof(ExtractFlags))]
     public class ExrtactHeroGUI : ITool {
         private const string Container = "HeroIcons";
 

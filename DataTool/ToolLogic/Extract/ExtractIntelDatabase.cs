@@ -12,7 +12,7 @@ using static DataTool.Program;
 using Combo = DataTool.FindLogic.Combo;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-intel-database", Aliases = new [] { "extract-intel-db" }, Description = "Extracts assets from the Intel Database", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-intel-database", Aliases = ["extract-intel-db", "extract-lore-codex"], Description = "Extracts assets from the Intel Database", CustomFlags = typeof(ExtractFlags))]
     public class ExtractIntelDatabase : ITool {
         private const string Container = "IntelDatabase";
 
