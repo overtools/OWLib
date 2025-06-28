@@ -3,34 +3,31 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x65DD9C84, 40)]
+    [STU(0x65DD9C84, 28)]
     public class STUAnimGameData_AnimationData : STUInstance
     {
-        [STUField(0x584DEF6E, 0)] // size: 8
-        public ulong m_584DEF6E;
+        [STUField(0xDB11C2C0, 0)] // size: 4
+        public uint m_animationID;
 
-        [STUField(0x9FCB2C8A, 8)] // size: 8
-        public ulong m_9FCB2C8A;
+        [STUField(0xED5A243E, 4)] // size: 4
+        public uint m_ED5A243E;
 
-        [STUField(0xD8514AD9, 16)] // size: 4
-        public float m_D8514AD9;
+        [STUField(0x8B8F43EE, 8)] // size: 4
+        public float m_8B8F43EE;
 
-        [STUField(0x38158126, 20)] // size: 4
-        public float m_movementSpeed;
-
-        [STUField(0xF81F4386, 24)] // size: 4
+        [STUField(0xF81F4386, 12)] // size: 4
         public float m_startTime;
 
-        [STUField(0x8E406744, 28)] // size: 4
+        [STUField(0x8E406744, 16)] // size: 4
         public float m_8E406744;
 
-        [STUField(0xAE4326C3, 32)] // size: 4
-        public float m_AE4326C3;
+        [STUField(0x14E67C73, 20)] // size: 4
+        public float m_14E67C73;
 
-        [STUField(0x7EEFB57A, 36)] // size: 2
+        [STUField(0x7EEFB57A, 24)] // size: 2
         public ushort m_flags;
 
-        [STUField(0xAE2D8911, 38)] // size: 2
+        [STUField(0xAE2D8911, 26)] // size: 2
         public ushort m_index;
     }
 }

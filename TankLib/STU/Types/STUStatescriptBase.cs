@@ -4,37 +4,40 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC2DC60F6, 128)]
+    [STU(0xC2DC60F6, 88)]
     public class STUStatescriptBase : STUGraphNode
     {
-        [STUField(0xBF5B22B7, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xBF5B22B7, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUStatescriptRemoteSyncVar[] m_BF5B22B7;
 
-        [STUField(0x8BF03679, 88, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x8BF03679, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUStatescriptRemoteSyncVar[] m_8BF03679;
 
-        [STUField(0xA2287776, 104)] // size: 4
+        [STUField(0x049CA107, 48)] // size: 16
+        public teString m_049CA107;
+
+        [STUField(0xA2287776, 64)] // size: 4
         public Enum_46B5ADCA m_A2287776 = Enum_46B5ADCA.x1F0B0C4D;
 
-        [STUField(0x871A8203, 108)] // size: 4
+        [STUField(0x871A8203, 68)] // size: 4
         public int m_871A8203;
 
-        [STUField(0x602E1F8F, 112)] // size: 4
+        [STUField(0x602E1F8F, 72)] // size: 4
         public int m_602E1F8F;
 
-        [STUField(0xAED90719, 116)] // size: 4
+        [STUField(0xAED90719, 76)] // size: 4
         public Enum_CEBBB217 m_AED90719;
 
-        [STUField(0x2BBEEAB8, 120)] // size: 1
+        [STUField(0x2BBEEAB8, 80)] // size: 1
         public byte m_2BBEEAB8;
 
-        [STUField(0xADEB6E05, 121)] // size: 1
+        [STUField(0xADEB6E05, 81)] // size: 1
         public byte m_ADEB6E05;
 
-        [STUField(0xE1B0C07F, 122)] // size: 1
+        [STUField(0xE1B0C07F, 82)] // size: 1
         public byte m_clientOnly;
 
-        [STUField(0x9A861B79, 123)] // size: 1
+        [STUField(0x9A861B79, 83)] // size: 1
         public byte m_serverOnly;
     }
 }

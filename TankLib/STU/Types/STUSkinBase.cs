@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB7EEA3BE, 104)]
+    [STU(0xB7EEA3BE, 112)]
     public class STUSkinBase : STU_21276722
     {
         [STUField(0xAA8E1BB0, 32)] // size: 16
@@ -20,5 +20,8 @@ namespace TankLib.STU.Types
 
         [STUField(0x16051DC7, 96)] // size: 8
         public ulong m_16051DC7;
+
+        [STUField(0x1A2D4669, 104)] // size: 1
+        public byte m_1A2D4669;
     }
 }

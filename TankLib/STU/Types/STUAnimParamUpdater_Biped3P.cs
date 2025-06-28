@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9260236F, 184)]
+    [STU(0x9260236F, 192)]
     public class STUAnimParamUpdater_Biped3P : STU_72C48DD7
     {
         [STUField(0xD5AF8608, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
@@ -27,31 +27,34 @@ namespace TankLib.STU.Types
         [STUField(0x8D83146B, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_48739F6A m_8D83146B;
 
-        [STUField(0x37258175, 152)] // size: 4
+        [STUField(0x255B9220, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STU_99C5E9FC m_255B9220;
+
+        [STUField(0x37258175, 160)] // size: 4
         public float m_37258175;
 
-        [STUField(0x8F2AC198, 156)] // size: 4
+        [STUField(0x8F2AC198, 164)] // size: 4
         public float m_8F2AC198;
 
-        [STUField(0x169C987A, 160)] // size: 4
+        [STUField(0x169C987A, 168)] // size: 4
         public float m_169C987A;
 
-        [STUField(0x08B119ED, 164)] // size: 4
+        [STUField(0x08B119ED, 172)] // size: 4
         public float m_08B119ED;
 
-        [STUField(0x5F21028B, 168)] // size: 4
+        [STUField(0x5F21028B, 176)] // size: 4
         public float m_5F21028B;
 
-        [STUField(0xC16BBDFD, 172)] // size: 4
+        [STUField(0xC16BBDFD, 180)] // size: 4
         public float m_C16BBDFD;
 
-        [STUField(0x0F5BE15D, 176)] // size: 4
+        [STUField(0x0F5BE15D, 184)] // size: 4
         public float m_0F5BE15D = 12f;
 
-        [STUField(0x2430F8CB, 180)] // size: 1
+        [STUField(0x2430F8CB, 188)] // size: 1
         public byte m_2430F8CB;
 
-        [STUField(0xB5CF1111, 181)] // size: 1
+        [STUField(0xB5CF1111, 189)] // size: 1
         public byte m_B5CF1111;
     }
 }

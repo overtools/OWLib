@@ -4,73 +4,73 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xCB6035BA, 592)]
+    [STU(0xCB6035BA, 536)]
     public class STUAnimNode_Animation : STUAnimNode_Base
     {
-        [STUField(0xED247E81, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
+        [STUField(0xED247E81, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_ED247E81;
 
-        [STUField(0x3F5B86A4, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
+        [STUField(0x3F5B86A4, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_215BE8F3 m_animation;
 
-        [STUField(0x65033558, 160, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
+        [STUField(0x65033558, 104, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_C1C7CF4E m_animSlotID;
 
-        [STUField(0xC4EF5D15, 192, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
+        [STUField(0xC4EF5D15, 136, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_51A9D9C7 m_synchGroup;
 
-        [STUField(0x562445C2, 224, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
+        [STUField(0x562445C2, 168, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_51A9D9C7 m_562445C2;
 
-        [STUField(0xD6877DAC, 256, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0xD6877DAC, 200, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_D6877DAC;
 
-        [STUField(0x8A0E5071, 280, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x8A0E5071, 224, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_8A0E5071;
 
-        [STUField(0x08BBFD30, 304, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x08BBFD30, 248, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_08BBFD30;
 
-        [STUField(0xE382431C, 328, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0xE382431C, 272, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_F7E4CDAC m_E382431C;
 
-        [STUField(0xEE49D811, 352, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0xEE49D811, 296, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_EE49D811;
 
-        [STUField(0x9317B197, 376, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x9317B197, 320, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_9317B197;
 
-        [STUField(0xA3081C7F, 400, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0xA3081C7F, 344, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_A3081C7F;
 
-        [STUField(0x73038249, 424, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x73038249, 368, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_73038249;
 
-        [STUField(0x302DAC17, 448, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x302DAC17, 392, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_302DAC17;
 
-        [STUField(0x11012D0E, 472, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x11012D0E, 416, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_11012D0E;
 
-        [STUField(0x3E3C159E, 496, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x3E3C159E, 440, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_3E3C159E;
 
-        [STUField(0xBCC400FE, 520, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0xBCC400FE, 464, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_disableEffect;
 
-        [STUField(0xC14EEC71, 544, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xC14EEC71, 488, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimNode_AnimationTrackOverride[] m_animTrackOverrides;
 
-        [STUField(0x881F239A, 560, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x881F239A, 504, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_B9FE55F9 m_881F239A;
 
-        [STUField(0xE68FF23C, 568, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xE68FF23C, 512, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2A90F751 m_E68FF23C;
 
-        [STUField(0x29AFF063, 576, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x29AFF063, 520, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_5861C542 m_29AFF063;
 
-        [STUField(0xB774CFA6, 584)] // size: 4
+        [STUField(0xB774CFA6, 528)] // size: 4
         public Enum_9250F4C2 m_B774CFA6;
     }
 }

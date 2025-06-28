@@ -3,22 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9D28963F, 40)]
+    [STU(0x9D28963F, 112)]
     public class STUFirstPersonComponent : STUEntityComponent
     {
-        [STUField(0xA83C2C26, 8)] // size: 16
+        [STUField(0xA02DD607, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
+        public STU_E43E9C08 m_A02DD607;
+
+        [STUField(0xA83C2C26, 64)] // size: 16
         public teStructuredDataAssetRef<STUEntityDefinition> m_entity;
 
-        [STUField(0x4B75D84E, 24)] // size: 4
+        [STUField(0xF486DCF2, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 12
+        public STU_6AE5A305 m_F486DCF2;
+
+        [STUField(0x4B75D84E, 92)] // size: 4
         public float m_4B75D84E;
 
-        [STUField(0xE29993A5, 28)] // size: 4
+        [STUField(0xE29993A5, 96)] // size: 4
         public float m_E29993A5 = 1.55f;
 
-        [STUField(0x816B830F, 32)] // size: 4
+        [STUField(0x816B830F, 100)] // size: 4
         public float m_816B830F = 1.15f;
 
-        [STUField(0xCF5055F1, 36)] // size: 4
+        [STUField(0xCF5055F1, 104)] // size: 4
         public float m_CF5055F1 = 1f;
     }
 }

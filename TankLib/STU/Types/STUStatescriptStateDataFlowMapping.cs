@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x23A661BD, 256)]
+    [STU(0x23A661BD, 216)]
     public class STUStatescriptStateDataFlowMapping : STUStatescriptState
     {
-        [STUField(0x5A6D4FBD, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x5A6D4FBD, 192, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_5A6D4FBD;
 
-        [STUField(0xF92402E9, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xF92402E9, 200, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_answer;
 
-        [STUField(0xA83C2C26, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xA83C2C26, 208, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptDataFlowEntity m_entity;
     }
 }

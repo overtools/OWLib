@@ -37,11 +37,11 @@ namespace TankLib.STU.Types
         [STUField(0xCA7E6EDC, 176)] // size: 16
         public teStructuredDataAssetRef<ulong> m_description;
 
-        [STUField(0x29ADD4C0, 192)] // size: 16
-        public teStructuredDataAssetRef<STU_4A71DAAD>[] m_29ADD4C0;
+        [STUField(0x2D563E30, 192)] // size: 16
+        public teStructuredDataAssetRef<ulong> m_2D563E30;
 
-        [STUField(0x1946261A, 208)] // size: 16
-        public teStructuredDataAssetRef<STU_C960DFC7>[] m_1946261A;
+        [STUField(0xE3188F59, 208)] // size: 16
+        public teStructuredDataAssetRef<ulong> m_E3188F59;
 
         [STUField(0x0DD0C65E, 224)] // size: 1
         public byte m_0DD0C65E;

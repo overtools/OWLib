@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x871BD3D0, 440)]
+    [STU(0x871BD3D0, 456)]
     public class STUModel : STUInstance
     {
         [STUField(0xC4A1DCA0, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 96
@@ -49,31 +49,34 @@ namespace TankLib.STU.Types
         [STUField(0xC67B4D05, 392)] // size: 16
         public ulong[] m_C67B4D05;
 
-        [STUField(0x7E48C526, 408, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x43CEF9BB, 408)] // size: 16
+        public teStructuredDataAssetRef<STU_5CA5A90D> m_43CEF9BB;
+
+        [STUField(0x7E48C526, 424, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUBreakable m_breakable;
 
-        [STUField(0x78985272, 416, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x78985272, 432, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_BBBFC3C9 m_78985272;
 
-        [STUField(0x87916047, 424)] // size: 4
+        [STUField(0x87916047, 440)] // size: 4
         public Enum_790E517D m_87916047 = Enum_790E517D.x001C5783;
 
-        [STUField(0x53BD772C, 428)] // size: 4
+        [STUField(0x53BD772C, 444)] // size: 4
         public Enum_8D0A88A1 m_53BD772C = Enum_8D0A88A1.xEBF835DF;
 
-        [STUField(0xD64F7813, 432)] // size: 1
+        [STUField(0xD64F7813, 448)] // size: 1
         public byte m_D64F7813;
 
-        [STUField(0xADC54E57, 433)] // size: 1
+        [STUField(0xADC54E57, 449)] // size: 1
         public byte m_ADC54E57;
 
-        [STUField(0x81AF6609, 434)] // size: 1
+        [STUField(0x81AF6609, 450)] // size: 1
         public Enum_950F7205 m_usageCategory = Enum_950F7205.xE8ACB95D;
 
-        [STUField(0xBAA57E7B, 435)] // size: 1
+        [STUField(0xBAA57E7B, 451)] // size: 1
         public byte m_BAA57E7B;
 
-        [STUField(0x646E63C6, 436)] // size: 1
+        [STUField(0x646E63C6, 452)] // size: 1
         public byte m_646E63C6 = 0x0;
     }
 }

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x67866D38, 160)]
+    [STU(0x67866D38, 152)]
     public class STUAnimBlendTree : STUInstance
     {
         [STUField(0x85CC326B, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
@@ -27,16 +27,16 @@ namespace TankLib.STU.Types
         [STUField(0x123205BA, 104, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendDriverParam[] m_123205BA;
 
-        [STUField(0x280669CE, 120, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
-        public STU_7C51F8CA[] m_280669CE;
-
-        [STUField(0xA4712A0A, 136)] // size: 8
+        [STUField(0xA4712A0A, 120)] // size: 8
         public ulong m_treeCRC;
 
-        [STUField(0x191CEC72, 144)] // size: 8
+        [STUField(0x191CEC72, 128)] // size: 8
         public ulong m_191CEC72;
 
-        [STUField(0xD6497916, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xD6497916, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_CB30C7C3 m_rootNode;
+
+        [STUField(0x0F3E5BB1, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STU_A774CC95 m_0F3E5BB1;
     }
 }
