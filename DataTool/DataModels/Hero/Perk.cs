@@ -1,9 +1,8 @@
-using DataTool.DataModels.Hero;
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
 
-namespace DataTool.DataModels {
+namespace DataTool.DataModels.Hero {
     public class Perk {
         public teResourceGUID GUID { get; set; }
         public Loadout Loadout { get; set; }
