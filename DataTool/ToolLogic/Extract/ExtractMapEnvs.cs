@@ -15,7 +15,7 @@ using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-map-envs", Description = "Extract map environment data", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractMapEnvs : QueryParser, ITool {
+    public class ExtractMapEnvs : ITool {
         public void Parse(ICLIFlags toolFlags) {
             SaveMaps(toolFlags);
         }

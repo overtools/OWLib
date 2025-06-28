@@ -5,6 +5,7 @@ using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.ToolLogic.Util;
 using TACTLib.Container;
 using TankLib;
 using TankLib.Helpers;
@@ -20,9 +21,10 @@ namespace DataTool.ToolLogic.Extract {
     }
 
     [Tool("extract-hero-voice-better", IsSensitive = true, Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
-    class ExtractHeroVoiceBetter : QueryParser, ITool {
-        public Dictionary<string, string> QueryNameOverrides => null;
+    class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType>();
+        public Dictionary<string, string> QueryNameOverrides => null;
+        public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
         protected virtual string Container => "BetterHeroVoice";
         private static readonly HashSet<ulong> SoundIdCache = new HashSet<ulong>();
 

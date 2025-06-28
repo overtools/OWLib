@@ -5,6 +5,7 @@ using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.Helpers;
 using TankLib.STU.Types;
@@ -13,9 +14,10 @@ using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
     [ExtractTool("extract-conversations", "extract-hero-convo", Description = "Extracts heroes voice conversations")]
-    public class ExtractHeroConversations : QueryParser, ITool {
+    public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
         public Dictionary<string, string> QueryNameOverrides => null;
         public List<QueryType> QueryTypes => new List<QueryType>();
+        public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
         public void Parse(ICLIFlags toolFlags) {
             var flags = (ExtractFlags) toolFlags;
