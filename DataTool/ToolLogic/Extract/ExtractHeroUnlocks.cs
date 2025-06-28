@@ -94,13 +94,13 @@ namespace DataTool.ToolLogic.Extract {
             new CosmeticType(UnlockType.WeaponSkin, "Weapon Skin") {
                 Aliases = ["weaponvariant", "weapon"]
             },
-            new CosmeticType(UnlockType.NameCard, "Name Card(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)") {
+            new CosmeticType(UnlockType.NameCard, "Name Card. !! USE extract-name-cards INSTEAD") {
                 Aliases = ["name-card"]
             },
-            new CosmeticType(UnlockType.WeaponCharm, "Weapon Charm(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)") {
+            new CosmeticType(UnlockType.WeaponCharm, "Weapon Charm. !! USE extract-charms INSTEAD") {
                 Aliases = ["charm"]
             },
-            new CosmeticType(UnlockType.Souvenir, "Souvenir(HERO SPECIFIC ONLY, MOST ARE NOT. USE extract-general)")
+            new CosmeticType(UnlockType.Souvenir, "Souvenir. !! USE extract-souvenirs INSTEAD")
         };
 
         public void Parse(ICLIFlags toolFlags) {
