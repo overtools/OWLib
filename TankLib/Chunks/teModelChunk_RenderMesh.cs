@@ -51,17 +51,19 @@ namespace TankLib.Chunks {
             public uint IndicesToDraw; // 74 -> 100. word -> dword
             public ushort VerticesToDraw; // 76 -> 104
             public ushort BoneIdOffset; // 78 -> 106
+            public SubmeshFlags Flags; // 89 -> 117 probably -> 108(2.17)
 
-            public byte IndexBuffer; // 80 -> 108
+            public byte IndexBuffer; // 80 -> 108 -> 110(2.17)
             public fixed byte OtherIndexBuffers[7];
 
             public byte VertexBuffer; // 88 -> 116
-            public SubmeshFlags Flags; // 89 -> 117 probably
             public byte Material; // 90 -> 118
             public sbyte LOD;  // 91 -1 = all -> 119
 
-            public uint m_120; // n/a -> 120
+            public byte m_120; // n/a -> 120
             public byte m_128; // n/a -> 128
+
+            private uint m_padFor128Bytes;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -135,7 +137,7 @@ namespace TankLib.Chunks {
         }
 
         [Flags]
-        public enum SubmeshFlags : byte {  // todo: i'm not 100% sure about these
+        public enum SubmeshFlags : ushort {  // todo: i'm not 100% sure about these
             Unk1 = 1,  // ?? nothing
             NonStatic = 2,  // moveable or animated
             Opaque = 4,
