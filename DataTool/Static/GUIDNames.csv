@@ -617,6 +617,9 @@ FFB,078,Voicelines,1 ; 1.62
 18B8,078,Voicelines,1 ; s16 - gundam
 18B9,078,Voicelines,1 ; s16 - gundam
 18C2,078,Voicelines,1 ; s16
+1904,078,Voicelines,1 ; s16 - street fighter
+1905,078,Voicelines,1 ; s16 - street fighter
+1921,078,Voicelines,1 ; s17
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
@@ -687,6 +690,7 @@ D749,01C,Season13,1
 E810,01C,Season14,1
 EC03,01C,Season15,1
 EC0F,01C,Season16,1
+EC11,01C,Season17,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -789,6 +793,7 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 1347,09F,Menu/Freja Art 2,1
 1348,09F,Menu/Gundam Collab Art 2,1
 134A,09F,Menu/Mercy Merciful Magitech Mythic Weapon,1
+1378,09F,Menu/S17 Mythics Art,1
 ; Celebrations,,,
 2168,01C,Winter,1
 2498,01C,LunarNewYear,1
