@@ -203,6 +203,8 @@ namespace TankLib {
             public int UnkA;
             public int UnkB;
             public int UnkC;
+            public int UnkD;
+            public int UnkE;
         }
 
         public Structure Header;

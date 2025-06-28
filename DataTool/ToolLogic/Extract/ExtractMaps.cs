@@ -13,7 +13,7 @@ using Map = DataTool.SaveLogic.Map;
 using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-maps", Description = "Extract maps", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-maps", Aliases = ["extract-map"], Description = "Extract maps", CustomFlags = typeof(ExtractFlags))]
     public class ExtractMaps : QueryParser, ITool, IQueryParser {
         public string DynamicChoicesKey => UtilDynamicChoices.VALID_MAP_NAMES;
 
@@ -92,6 +92,8 @@ namespace DataTool.ToolLogic.Extract {
             ["rio"] = "paraíso",
             ["esperanca"] = "esperança",
             ["portugal"] = "esperança",
+            ["atlis"] = "aatlis",
+            ["atlas"] = "aatlis",
         };
 
         public Dictionary<string, string> QueryNameOverrides => MapMapping;
