@@ -491,7 +491,7 @@ namespace DataTool.FindLogic {
 
                         info.m_entitiesByIdentifier[context.ChildEntityIdentifier].Add(guid);
                     }
-                    
+
                     info.m_entities.TryGetValue(guid, out var entityInfo);
                     if (entityInfo == null) {
                         entityInfo = new EntityAsset(guid);
@@ -905,8 +905,10 @@ namespace DataTool.FindLogic {
 
                         if (blendTreeItem.m_gameData is STU_7D00A73D animGameDataUnk1) {
                             if (animGameDataUnk1.m_animDatas != null) {
-                                foreach (STUAnimGameData_AnimationData gameDataAnimationData in animGameDataUnk1.m_animDatas) {
-                                    Find(info, gameDataAnimationData.m_9FCB2C8A, replacements, context);
+                                foreach (STUAnimGameData_AnimationData animData in animGameDataUnk1.m_animDatas) {
+                                    if (animData.m_ED5A243E == 0) continue;
+                                    var animIdentifierId = new teResourceGUID(animData.m_ED5A243E).WithType(0x1C);
+                                    Find(info, animIdentifierId, replacements, context);
                                 }
                             }
                         }

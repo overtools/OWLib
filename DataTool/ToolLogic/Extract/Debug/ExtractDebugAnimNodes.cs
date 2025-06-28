@@ -156,7 +156,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
 
             root.nodes.Add(new GraphNode {
-                x = animNode.m_pos.X, y = animNode.m_pos.Y,
+                // removed?
+                //x = animNode.m_pos.X,
+                //y = animNode.m_pos.Y,
                 uuid = animNode.m_uniqueID.ToString(), @class = "MaxObject", name = name
             });
         }
