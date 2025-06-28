@@ -561,8 +561,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveAllStrings(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (FindLogic.Combo.DisplayTextAsset stringInfo in info.m_displayText.Values) {
+        public static void SaveAllStrings(ICLIFlags flags, string path, SaveContext context) {
+            foreach (FindLogic.Combo.DisplayTextAsset stringInfo in context.m_info.m_displayText.Values) {
                 if (stringInfo.m_text == null) continue;
                 string file = Path.Combine(path, stringInfo.GetName()) + ".txt";
                 CreateDirectoryFromFile(file);

@@ -103,7 +103,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), context);
             SaveLogic.Combo.SaveAllVoiceSoundFiles(flags, Path.Combine(basePath, container, "VoiceSounds"), context);
             SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, container, "LooseTex"), context);
-            SaveLogic.Combo.SaveAllStrings(flags, Path.Combine(basePath, container, "Strings"), info);
+            SaveLogic.Combo.SaveAllStrings(flags, Path.Combine(basePath, container, "Strings"), context);
         }
     }
 }
