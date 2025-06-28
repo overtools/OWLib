@@ -34,8 +34,8 @@ namespace DataTool.ToolLogic.List {
             var @return = new Dictionary<teResourceGUID, Loadout>();
 
             foreach (teResourceGUID key in TrackedFiles[0x9E]) {
-                var loadout = new Loadout(key);
-                if (loadout.GUID == 0) continue;
+                var loadout = Loadout.Load(key);
+                if (loadout == null) continue;
                 @return.Add(key, loadout);
             }
 

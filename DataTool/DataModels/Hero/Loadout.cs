@@ -19,11 +19,6 @@ namespace DataTool.DataModels.Hero {
         public bool IsHiddenAbility { get; set; }
         public bool IsSecondaryWeapon { get; set; }
 
-        public Loadout(ulong key) {
-            STULoadout stu = STUHelper.GetInstance<STULoadout>(key);
-            Init(stu, key);
-        }
-
         public Loadout(STULoadout stu, ulong key = default) {
             Init(stu, key);
         }
@@ -52,6 +47,13 @@ namespace DataTool.DataModels.Hero {
 
         public LoadoutLite ToLite() {
             return new LoadoutLite(this);
+        }
+
+        public static Loadout Load(ulong guid) {
+            STULoadout stu = STUHelper.GetInstance<STULoadout>(guid);
+            if (stu == null) return null;
+
+            return new Loadout(stu, guid);
         }
     }
 

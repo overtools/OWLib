@@ -54,18 +54,17 @@ namespace DataTool.DataModels.Hero {
 
             if (hero.m_heroLoadout != null) {
                 foreach (var loadoutGuid in hero.m_heroLoadout) {
-                    var loadout = new Loadout(loadoutGuid);
-                    if (loadout.GUID == 0) continue;
+                    var loadout = Loadout.Load(loadoutGuid);
+                    if (loadout == null) continue;
                     Loadouts.Add(loadout.ToLite());
                 }
             }
 
             if (hero.m_B25192D9 != null) {
                 foreach (var perkGuid in hero.m_B25192D9) {
-                    var perk = GetInstance<STU_42B75C40>(perkGuid);
-                    var loadout = new Loadout(perk?.m_loadout);
-                    if (loadout.GUID == 0) continue;
-                    Perks.Add(loadout.ToLite());
+                    var perk = Perk.Load(perkGuid);
+                    if (perk?.Loadout == null) continue;
+                    Perks.Add(perk.Loadout.ToLite());
                 }
             }
 

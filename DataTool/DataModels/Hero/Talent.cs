@@ -9,24 +9,27 @@ namespace DataTool.DataModels.Hero {
         public string Description { get; set; }
         public teResourceGUID TextureGUID { get; set; }
 
-        public Talent(ulong key) {
-            STU_BDDF370E stu = STUHelper.GetInstance<STU_BDDF370E>(key);
-            Init(stu, key);
-        }
-
         public Talent(STU_BDDF370E stu, ulong key = default) {
             Init(stu, key);
         }
 
         public void Init(STU_BDDF370E talent, ulong key = default) {
-            if (talent == null) return;
-
             GUID = (teResourceGUID) key;
             TextureGUID = talent.m_544A6A4F;
 
             Name = IO.GetString(talent.m_name)?.TrimEnd();
             // todo: why do the names end in spaces.. it causes a double-space with the chat box in-game
             Description = IO.GetString(talent.m_description);
+        }
+
+        public static Talent Load(ulong guid) {
+            STU_DF0481B0 baseType = STUHelper.GetInstance<STU_DF0481B0>(guid);
+            if (baseType is not STU_BDDF370E talent) {
+                // is a perk (or null)
+                return null;
+            }
+
+            return new Talent(talent, guid);
         }
     }
 }

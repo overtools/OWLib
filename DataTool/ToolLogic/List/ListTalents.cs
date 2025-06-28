@@ -30,11 +30,10 @@ namespace DataTool.ToolLogic.List {
         public static Dictionary<teResourceGUID, Talent> GetData() {
             var map = new Dictionary<teResourceGUID, Talent>();
 
-            foreach (teResourceGUID key in Program.TrackedFiles[0x134]) {
-                var talent = new Talent(key);
-                if (talent.GUID == 0) continue;
-                if (talent.Name == null) continue;
-                map.Add(key, talent);
+            foreach (teResourceGUID guid in Program.TrackedFiles[0x134]) {
+                var talent = Talent.Load(guid);
+                if (talent == null) continue;
+                map.Add(guid, talent);
             }
 
             return map;

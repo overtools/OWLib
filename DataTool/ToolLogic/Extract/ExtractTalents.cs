@@ -19,6 +19,8 @@ namespace DataTool.ToolLogic.Extract {
             
             Combo.ComboInfo info = new Combo.ComboInfo();
             foreach (var talent in ListTalents.GetData().Values) {
+                if (talent.Name == null) continue;
+                
                 Combo.Find(info, talent.TextureGUID);
 
                 var uniqueFilename = $"{talent.Name}.{teResourceGUID.Index(talent.GUID):X}";
