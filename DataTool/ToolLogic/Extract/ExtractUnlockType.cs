@@ -6,7 +6,11 @@ using DataTool.Flag;
 using DataTool.ToolLogic.List;
 
 namespace DataTool.ToolLogic.Extract {
-    public abstract class ExtractUnlockType : ITool {
+    public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
+        public List<QueryType> QueryTypes { get; } = []; // synthetic only
+        public Dictionary<string, string> QueryNameOverrides => null;
+        public string DynamicChoicesKey => ""; // not supported
+        
         public abstract UnlockType GetUnlockType();
         public abstract string GetFolderName();
         
@@ -14,11 +18,25 @@ namespace DataTool.ToolLogic.Extract {
             var flags = (ExtractFlags) toolFlags;
             flags.EnsureOutputDirectory();
             
-            var fakeArg = new ParsedArg(new CosmeticType(GetUnlockType(), "doesntmatter")) {
-                Allowed = ["*"] // everything please
-            };
-            var fakeConfig = new Dictionary<string, ParsedArg> {
-                {CosmeticType.UnlockTypeToName(GetUnlockType()), fakeArg}
+            var unlockType = GetUnlockType();
+            var unlockTypeName = CosmeticType.UnlockTypeToName(unlockType);
+            var fakeQueryType = new CosmeticType(unlockType, "doesntmatter");
+            var fullArg = new ParsedArg(fakeQueryType);
+            
+            // turn the query into the format that ExtractUnlocks expects
+            // (it's used to dealing with heroes)
+            var parsedQuery = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            if (parsedQuery != null) {
+                foreach (var passedName in parsedQuery.Keys) {
+                    fullArg.Allowed.Add(passedName);
+                }
+            } else {
+                // no specific name query, allow everything
+                fullArg.Allowed.Add("*");
+            }
+
+            var fullConfig = new Dictionary<string, ParsedArg> {
+                { unlockTypeName, fullArg }
             };
 
             var allUnlocksRaw = ListAllUnlocks.GetData();
@@ -28,7 +46,7 @@ namespace DataTool.ToolLogic.Extract {
             // /Charms/WeaponCharm/{event}/{name}
             // but i think its nice to keep the folder name consistent with the mode name
             string path = Path.Combine(flags.OutputPath, GetFolderName());
-            ExtractHeroUnlocks.SaveUnlocks(toolFlags, allUnlocks, path, null, fakeConfig, null, null, null);
+            ExtractHeroUnlocks.SaveUnlocks(toolFlags, allUnlocks, path, null, fullConfig, null, null, null);
         }
     }
     
