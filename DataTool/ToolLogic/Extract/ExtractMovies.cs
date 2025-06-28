@@ -6,9 +6,9 @@ using DataTool.SaveLogic;
 using TankLib;
 using static DataTool.Helper.IO;
 
-namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-movies", Description = "Extract movies (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
-    public class ExtractDebugMovies : ITool {
+namespace DataTool.ToolLogic.Extract {
+    [Tool("extract-movies", Description = "Extract movies", CustomFlags = typeof(ExtractFlags))]
+    public class ExtractMovies : ITool {
         public void Parse(ICLIFlags toolFlags) {
             ExtractMOVI(toolFlags);
         }
@@ -26,9 +26,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
             public ulong ExtraAudio;
         }
 
-        private static string FFMPEG = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "ffmpeg.exe"));
-        private static bool HAS_FFMPEG = File.Exists(FFMPEG);
-
         public void ExtractMOVI(ICLIFlags toolFlags) {
             string basePath;
             ExtractFlags flags = toolFlags as ExtractFlags;
@@ -37,7 +34,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string container = "DebugMovies";
+            const string container = "Movies";
 
             foreach (ulong key in Program.TrackedFiles[0xB6]) {
                 SaveVideoFile(flags, key, Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12")));
@@ -65,4 +62,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
         }
     }
+
+    [Tool("extract-debug-movies", Description = "Legacy redirect to extract-movies", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    public class ExtractDebugMovies : ExtractMovies { }
 }

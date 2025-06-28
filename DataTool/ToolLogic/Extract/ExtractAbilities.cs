@@ -34,7 +34,7 @@ namespace DataTool.ToolLogic.Extract {
                 var context = new SaveLogic.Combo.SaveContext(info);
                 SaveLogic.Combo.SaveLooseTextures(flags, directory, context);
 
-                ExtractDebugMovies.SaveVideoFile(flags, loadout.m_infoMovie, directory);
+                ExtractMovies.SaveVideoFile(flags, loadout.m_infoMovie, directory);
             }
         }
     }
