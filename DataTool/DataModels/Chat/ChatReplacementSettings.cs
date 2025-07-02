@@ -20,7 +20,7 @@ namespace DataTool.DataModels.Chat {
 
             GlobalReplacements = chatReplacement.m_A7DC8A2F?.Select(x => GetString(x));
             HeroReplacements = chatReplacement.m_B0199D5E?.Select(x => GetString(x));
-            Heroes = chatReplacement.m_E9443298?.Select(x => new DataModels.Hero.Hero(x).Name);
+            Heroes = chatReplacement.m_E9443298?.Select(x => Hero.Hero.GetName(x));
 
             ReplacementOverrides = chatReplacement.m_C6A72790?.Select(x => new ChatReplacementReplacementOverrides(x));
 

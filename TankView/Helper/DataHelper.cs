@@ -173,7 +173,7 @@ namespace TankView.Helper {
             if (value == null || value.GUID == 0)
                 return null;
 
-            return new Hero(value.GUID);
+            return Hero.Load(value.GUID);
         }
 
         internal static Conversation GetConversation(GUIDEntry value) {

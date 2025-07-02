@@ -165,8 +165,8 @@ namespace DataTool.ToolLogic.Extract {
                 string heroName = null;
                 switch (stu) {
                     case STU_D75C45C2 heroStu: {
-                        var hero = new Hero(heroStu.m_hero);
-                        if (hero.GUID == 0 || stu?.m_1B3F1138 == null) {
+                        var hero = Hero.Load(heroStu.m_hero);
+                        if (hero == null || stu?.m_1B3F1138 == null) {
                             continue;
                         }
 

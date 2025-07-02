@@ -1,3 +1,4 @@
+#nullable enable
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
@@ -5,8 +6,8 @@ using TankLib.STU.Types;
 namespace DataTool.DataModels.Hero {
     public class Talent {
         public teResourceGUID GUID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public teResourceGUID TextureGUID { get; set; }
 
         public Talent(STU_BDDF370E stu, ulong key = default) {
@@ -22,8 +23,8 @@ namespace DataTool.DataModels.Hero {
             Description = IO.GetString(talent.m_description);
         }
 
-        public static Talent Load(ulong guid) {
-            STU_DF0481B0 baseType = STUHelper.GetInstance<STU_DF0481B0>(guid);
+        public static Talent? Load(ulong guid) {
+            var baseType = STUHelper.GetInstance<STU_DF0481B0>(guid);
             if (baseType is not STU_BDDF370E talent) {
                 // is a perk (or null)
                 return null;

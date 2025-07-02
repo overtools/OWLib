@@ -22,7 +22,7 @@ namespace DataTool.DataModels.GameModes {
 
             switch (team.m_availableHeroes) {
                 case STU_C45DE560 stu:
-                    AvailableHeroes = stu.m_heroes?.Select(x => new Hero.Hero(x).Name).ToArray();
+                    AvailableHeroes = stu.m_heroes?.Select(x => Hero.Hero.GetName(x)).ToArray();
                     break;
             }
 

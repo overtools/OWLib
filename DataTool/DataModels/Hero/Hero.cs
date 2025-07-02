@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Diagnostics;
 using TankLib;
@@ -11,9 +12,9 @@ namespace DataTool.DataModels.Hero {
     [DebuggerDisplay("[{GUID.ToStringShort()}] {Name}")]
     public class Hero {
         public teResourceGUID GUID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Class { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? Class { get; set; }
         public Enum_0C014B4A Gender { get; set; }
         public STUHeroSize Size { get; set; }
         public string Color { get; set; }
@@ -26,11 +27,6 @@ namespace DataTool.DataModels.Hero {
         public List<HeroImage> Images { get; set; } = [];
 
         internal STUHero STU { get; set; }
-
-        public Hero(ulong key) {
-            STUHero stu = GetInstance<STUHero>(key);
-            Init(stu, key);
-        }
 
         public Hero(STUHero stu, ulong key = default) {
             Init(stu, key);
@@ -79,18 +75,25 @@ namespace DataTool.DataModels.Hero {
             }
         }
 
+        public static Hero? Load(ulong guid) {
+            var stu = GetInstance<STUHero>(guid);
+            if (stu == null) return null;
+
+            return new Hero(stu, guid);
+        }
+
         public ProgressionUnlocks GetUnlocks() {
             return new ProgressionUnlocks(STU);
         }
 
-        public static string GetName(ulong key) {
+        public static string? GetName(ulong key) {
             var stu = GetInstance<STUHero>(key);
             if (stu == null) return null;
 
             return GetCleanName(stu);
         }
 
-        public static string GetCleanName(STUHero hero) {
+        public static string? GetCleanName(STUHero hero) {
             return GetCleanString(hero.m_0EDCE350);
         }
 

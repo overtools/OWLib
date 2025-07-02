@@ -85,7 +85,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (loreEntry is STU_13DB827F chatLogLoreEntry) {
                     foreach (var entry in chatLogLoreEntry.m_F8453BC4) {
-                        var heroName = new Hero(entry.m_78468866)?.Name;
+                        var heroName = Hero.GetName(entry.m_78468866);
                         var message = IO.GetString(entry.m_F59A0BC1);
                         sb.AppendLine($"{heroName}: {message}");
                         sb.AppendLine();

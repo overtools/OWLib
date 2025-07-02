@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#nullable enable
+using System.Linq;
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
@@ -8,22 +9,22 @@ using static DataTool.Helper.IO;
 namespace DataTool.DataModels.Hero {
     public class Loadout {
         public teResourceGUID GUID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public LoadoutCategory Category { get; set; }
-        public string Button { get; set; }
-        public string ButtonUnk { get; set; }
-        public string[] DescriptionButtons { get; set; }
+        public string? Button { get; set; }
+        public string? ButtonUnk { get; set; }
+        public string[]? DescriptionButtons { get; set; }
         public teResourceGUID MovieGUID { get; set; }
         public teResourceGUID TextureGUID { get; set; }
         public bool IsHiddenAbility { get; set; }
         public bool IsSecondaryWeapon { get; set; }
 
-        public Loadout(STULoadout stu, ulong key = default) {
+        public Loadout(STULoadout? stu, ulong key = default) {
             Init(stu, key);
         }
 
-        public void Init(STULoadout loadout, ulong key = default) {
+        public void Init(STULoadout? loadout, ulong key = default) {
             if (loadout == null) return;
 
             GUID = (teResourceGUID) key;
@@ -49,8 +50,8 @@ namespace DataTool.DataModels.Hero {
             return new LoadoutLite(this);
         }
 
-        public static Loadout Load(ulong guid) {
-            STULoadout stu = STUHelper.GetInstance<STULoadout>(guid);
+        public static Loadout? Load(ulong guid) {
+            var stu = STUHelper.GetInstance<STULoadout>(guid);
             if (stu == null) return null;
 
             return new Loadout(stu, guid);
@@ -58,8 +59,8 @@ namespace DataTool.DataModels.Hero {
     }
 
     public class LoadoutLite {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public LoadoutCategory Category { get; set; }
         public teResourceGUID MovieGUID { get; set; }
         public teResourceGUID TextureGUID { get; set; }
