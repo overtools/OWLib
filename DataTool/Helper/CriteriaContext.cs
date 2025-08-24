@@ -256,7 +256,7 @@ namespace DataTool.Helper {
                 m_writer = writer;
                 m_active = condition != 0;
                 if (m_active) {
-                    writer.Write($"{op} (");
+                    m_writer.Write($"{op} (");
                 }
             }
             

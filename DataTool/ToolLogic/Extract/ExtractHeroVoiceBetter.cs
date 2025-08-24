@@ -209,6 +209,20 @@ namespace DataTool.ToolLogic.Extract {
                             hero03FDir = Path.Combine(stack.ToArray());
                         }
 
+                        string criteriaDesc = null;
+                        if (voiceLineInstance.m_criteria != null && context.m_criteriaContext != null) {
+                            var stringWriter = new StringWriter();
+                            var indentedWriter = new IndentedTextWriter(stringWriter);
+                            
+                            //indentedWriter.WriteLine(GetSubtitleString(voiceLineInstance.Subtitle));
+                            //indentedWriter.Indent++;
+                            context.m_criteriaContext.BuildCriteriaDescription(indentedWriter, voiceLineInstance.m_criteria);
+                            //indentedWriter.Indent--;
+                            //Console.Out.Write(stringWriter.ToString());
+
+                            criteriaDesc = stringWriter.ToString();
+                        }
+
                         // 99% of voiceline instances only have a single sound file however there are cases where some NPCs have multiple
                         // the Junkenstein Narrator is an example, the lines are the same however they are spoken differently.
                         foreach (var soundFile in voiceLineInstance.SoundFiles) {
@@ -227,16 +241,8 @@ namespace DataTool.ToolLogic.Extract {
                             SoundIdCache.Add(soundFile);
                             //SaveLogic.Combo.SaveSoundFile(flags, path, saveContext, soundFile, true, filename);
                             SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename, soundFile);
-                        }
-
-                        if (voiceLineInstance.m_criteria != null && context.m_criteriaContext != null) {
-                            var stringWriter = new StringWriter();
-                            var indentedWriter = new IndentedTextWriter(stringWriter);
-                            indentedWriter.WriteLine(GetSubtitleString(voiceLineInstance.Subtitle));
-                            indentedWriter.Indent++;
-                            context.m_criteriaContext.BuildCriteriaDescription(indentedWriter, voiceLineInstance.m_criteria);
-                            Console.Out.Write(stringWriter.ToString());
-                            indentedWriter.Indent--;
+                            
+                            WriteFile(criteriaDesc, Path.Combine(path, $"{soundFileGuid}-criteria.txt"));
                         }
 
                         // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems
