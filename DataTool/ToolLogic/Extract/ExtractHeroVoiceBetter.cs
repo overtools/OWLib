@@ -1,4 +1,5 @@
-﻿using System.CodeDom.Compiler;
+﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -149,11 +150,16 @@ namespace DataTool.ToolLogic.Extract {
                 return GetNoTypeGUIDName(guid);
             }
 
-            private static string GetNoTypeGUIDName(ulong guid) {
+            public string GetTagName(ulong guid) 
+            {
+                return GetNoTypeGUIDName(guid, "Tag");
+            }
+
+            private static string GetNoTypeGUIDName(ulong guid, string specifier="") {
                 var manualName = GetNullableGUIDName(guid);
                 if (manualName != null) return manualName;
 
-                return $"Unknown {teResourceGUID.Index(guid):X}";
+                return $"Unknown{specifier}{teResourceGUID.Index(guid):X}";
             }
         }
 
@@ -281,8 +287,11 @@ namespace DataTool.ToolLogic.Extract {
                         if (voiceLineInstance.m_criteria != null && context.m_criteriaContext != null) {
                             var stringWriter = new StringWriter();
                             var indentedWriter = new IndentedTextWriter(stringWriter);
+                            indentedWriter.WriteLine(IO.GetSubtitleString(voiceLineInstance.Subtitle));
+                            indentedWriter.Indent++;
                             BuildCriteriaDescription(indentedWriter, voiceLineInstance.m_criteria, context.m_criteriaContext);
-                            //Console.Out.Write(stringWriter.ToString());
+                            Console.Out.Write(stringWriter.ToString());
+                            indentedWriter.Indent--;
                         }
 
                         // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems
@@ -320,10 +329,22 @@ namespace DataTool.ToolLogic.Extract {
                     writer.WriteLine("Error: null criteria");
                     break;
                 case STUCriteria_Statescript statescript:
-                    writer.WriteLine($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}");
+                    writer.WriteLine($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}. bool: {statescript.m_57D96E27 != 0}");
                     break;
-                case STU_D815520F somethingHero:
-                    writer.WriteLine($"Something Hero: {context.GetHeroName(somethingHero.m_8C8C5285)}. bool: {somethingHero.m_57D96E27 != 0}");
+                case STU_D815520F heroInteraction:
+                    // kill ines
+                    writer.WriteLine($"Hero Interaction: {context.GetHeroName(heroInteraction.m_8C8C5285)}. bool: {heroInteraction.m_57D96E27 != 0}");
+                    break;
+                case STU_3EAADDE8 interaction:
+                    // e.g "Look at us! The full might of Overwatch, reassembled and ready to rumble!"
+                    string target;
+                    if (interaction.m_hero != 0) 
+                    {
+                        target = context.GetHeroName(interaction.m_hero);
+                    } else {
+                        target = context.GetTagName(interaction.m_7D7C86A1);
+                    }
+                    writer.WriteLine($"Team Interaction: {target} bool: {interaction.m_990CFF1C != 0}");
                     break;
                 case STU_C37857A5 celebration:
                     writer.WriteLine($"Active Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
@@ -331,11 +352,18 @@ namespace DataTool.ToolLogic.Extract {
                 case STUCriteria_OnMap onMap: 
                     writer.WriteLine($"On Map: {context.GetMapName(onMap.m_map)}. Allow Event Variants: {(onMap.m_exactMap != 0 ? "false" : "true")}");
                     break;
-                // used by tracer:
-                // STU_A9B89EC9
-                // STU_0F78DDB0
-                // STU_20ABB515
-                // STU_3EAADDE8
+                case STU_0F78DDB0 pve1:
+                    writer.WriteLine($"Pve1: {pve1.m_216EA6DA}. bool: {pve1.m_89B967D3 != 0}");
+                    break;
+                case STU_20ABB515 pve2:
+                    writer.WriteLine($"Pve2: {pve2.m_4992CB75}");
+                    break;
+                case STU_A9B89EC9 pve3:
+                    // used for wotb
+                    // Bet you I find the next key!
+                    //    STU_A9B89EC9: 000000008253.01C
+                    writer.WriteLine($"STU_A9B89EC9: {pve3.m_98D3EC50.m_id}");
+                    break;
                 
                 case STU_7C69EA0F nestedContainer: {
                     writer.WriteLine($"Nested - {nestedContainer.m_amount}:");
