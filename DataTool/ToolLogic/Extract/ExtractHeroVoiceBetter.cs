@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -245,8 +246,10 @@ namespace DataTool.ToolLogic.Extract {
                         }
 
                         if (voiceLineInstance.m_criteria != null && context.m_criteriaContext != null) {
-                            var criteriaDescription = BuildCriteriaDescription(voiceLineInstance.m_criteria, context.m_criteriaContext);
-                            //Console.Out.WriteLine(criteriaDescription);
+                            var stringWriter = new StringWriter();
+                            var indentedWriter = new IndentedTextWriter(stringWriter);
+                            BuildCriteriaDescription(indentedWriter, voiceLineInstance.m_criteria, context.m_criteriaContext);
+                            //Console.Out.Write(stringWriter.ToString());
                         }
 
                         // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems
@@ -267,19 +270,27 @@ namespace DataTool.ToolLogic.Extract {
             return true;
         }
 
-        private static string BuildCriteriaDescription(STUCriteriaContainer container, CriteriaContext context) {
+        private static void BuildCriteriaDescription(IndentedTextWriter writer, STUCriteriaContainer container, CriteriaContext context) {
             if (container is not STU_32A19631 embedCriteria) {
                 // I don't think the asset ref version is used
                 // probably deleted by build pipeline
-                return "Error: non-embedded criteria";
+                writer.WriteLine("Error: non-embedded criteria");
+                return;
             }
 
             var criteria = embedCriteria.m_criteria;
             if (criteria == null) {
-                return "Error: null criteria";
+                writer.WriteLine("Error: null criteria");
+                return;
             }
 
-            return $"Unknown: {criteria.GetType().Name}";
+            if (criteria is STUCriteria_Statescript statescript) {
+                writer.WriteLine($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}");
+                return;
+            }
+
+
+            writer.WriteLine($"Unknown: {criteria.GetType().Name}");
         }
 
         private static void CalculatePathStack(ExtractFlags flags, string heroName, string unlockName, string groupName, List<string> stack) {
