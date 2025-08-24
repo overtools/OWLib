@@ -6,6 +6,7 @@ using System.Linq;
 using DataTool.DataModels;
 using DataTool.DataModels.GameModes;
 using DataTool.DataModels.Hero;
+using TACTLib;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -237,9 +238,17 @@ namespace DataTool.Helper {
                 default: {
                     writer.WriteLine($"Unknown: {criteria.GetType().Name}");
                     
+                    // todo:
+                    // Processing NPC Inarius - [CriteriaContext] Unknown Criteria: STUCriteria_PlayerLevel
+                    // (what)
+                    
                     // debug: exit on unknown found (you should turn off saving also)
                     // Console.Out.WriteLine(writer.InnerWriter.ToString());
                     // Environment.Exit(0);
+                    
+                    if (TankLib.Helpers.Logger.ShowDebug) {
+                        Logger.Warn(nameof(CriteriaContext), $"Unknown Criteria: {criteria.GetType().Name}");
+                    }
                     break;
                 }
             }
