@@ -166,7 +166,7 @@ namespace TankView.Helper {
             if (value == null || value.GUID == 0)
                 return null;
 
-            return new MapHeader(value.GUID);
+            return MapHeader.Load(value.GUID);
         }
 
         internal static Hero GetHero(GUIDEntry value) {

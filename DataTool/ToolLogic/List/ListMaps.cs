@@ -55,10 +55,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public static MapHeader GetMap(ulong key) {
-            var map = GetInstance<STUMapHeader>(key);
-            if (map == null) return null;
-
-            return new MapHeader(map, key);
+            return MapHeader.Load(key);
         }
 
         public static Dictionary<teResourceGUID, MapHeader> GetMaps() {

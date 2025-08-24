@@ -26,11 +26,6 @@ namespace DataTool.DataModels {
         public MapCelebrationVariant[] CelebrationVariants { get; set; }
         public MapVariation[] Variations { get; set; }
 
-        public MapHeader(ulong key) {
-            STUMapHeader stu = GetInstance<STUMapHeader>(key);
-            Init(stu, key);
-        }
-
         public MapHeader(STUMapHeader stu, ulong key = default) {
             Init(stu, key);
         }
@@ -101,13 +96,16 @@ namespace DataTool.DataModels {
             return $"{name}:{teResourceGUID.Index(MapGUID):X}";
         }
 
-        public static MapHeader LoadFromMap(ulong mapGuid) {
-            var mapHeaderGUID = (mapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
-            
+        public static MapHeader Load(ulong mapHeaderGUID) {
             var stu = GetInstance<STUMapHeader>(mapHeaderGUID);
             if (stu == null) return null;
 
             return new MapHeader(stu, mapHeaderGUID);
+        }
+
+        public static MapHeader LoadFromMap(ulong mapGuid) {
+            var mapHeaderGUID = (mapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            return Load(mapHeaderGUID);
         }
     }
 
