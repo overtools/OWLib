@@ -114,14 +114,11 @@ namespace ReplayMp4Tool {
                 var replayInfo = new Mp4Replay();
                 replayInfo.Parse(bytes);
 
-                var heroStu = STUHelper.GetInstance<STUHero>(replayInfo.Header.HeroGuid);
-                var hero = new Hero(heroStu);
-                var unlocks = new ProgressionUnlocks(heroStu);
+                var hero = Hero.Load(replayInfo.Header.HeroGuid);
+                var unlocks = hero.GetUnlocks();
                 var skins = unlocks.GetUnlocksOfType(UnlockType.Skin);
                 var skinTheme = skins.FirstOrDefault(skin => ((STUUnlock_SkinTheme) skin.GetSTU())?.m_skinTheme == replayInfo.Header.SkinGuid);
-
-                ulong mapHeaderGuid = (replayInfo.Header.MapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
-                var mapData = new MapHeader(mapHeaderGuid);
+                var mapData = MapHeader.LoadFromMap(replayInfo.Header.MapGuid);
 
                 var replay = new Replay {
                     Title = filename,

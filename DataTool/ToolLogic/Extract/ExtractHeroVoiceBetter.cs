@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
+using DataTool.DataModels.GameModes;
 using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.ToolLogic.List;
 using DataTool.ToolLogic.Util;
 using TACTLib.Container;
 using TankLib;
@@ -48,7 +48,7 @@ namespace DataTool.ToolLogic.Extract {
             var validHeroes = Helpers.GetHeroNamesMapping(heroesDict);
             var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
 
-            var criteriaContext = CreateCriteriaContext();
+            var criteriaContext = new CriteriaContext();
 
             foreach (var hero in heroes) {
                 // if we have a query, check if we should process this hero
@@ -109,82 +109,90 @@ namespace DataTool.ToolLogic.Extract {
                 }
             }
         }
-        
-        private static CriteriaContext CreateCriteriaContext() {
-            var ctx = new CriteriaContext();
-            
-            var heroes = Helpers.GetHeroes();
-            foreach (var hero in heroes) {
-                ctx.m_heroes.Add(hero.Key, hero.Value.Name);
-            }
-
-            var maps = ListMaps.GetMaps();
-            foreach (var map in maps) {
-                ctx.m_maps.Add(map.Value.MapGUID, map.Value.GetName());
-            }
-
-            return ctx;
-        }
 
         public class CriteriaContext {
-            public Dictionary<ulong, string> m_heroes = [];
-            public Dictionary<ulong, string> m_maps = [];
-            public Dictionary<ulong, string> m_gamemodes = [];
-            public Dictionary<ulong, string> m_missions = [];
+            private readonly Dictionary<ulong, string> m_heroes = [];
+            private readonly Dictionary<ulong, string> m_maps = [];
+            private readonly Dictionary<ulong, string> m_gameModes = [];
+            private readonly Dictionary<ulong, string> m_missions = [];
+            private readonly Dictionary<ulong, string> m_objectives = [];
+            private readonly Dictionary<ulong, string> m_talents = [];
 
             public string GetHeroName(ulong guid) {
                 if (m_heroes.TryGetValue(guid, out var name)) {
                     return name;
                 }
-                return GetNoTypeGUIDName(guid);
+
+                // todo: this loads a lot of non-required things
+                var hero = Hero.Load(guid);
+                name = hero?.Name ?? GetNoTypeGUIDName(guid);
+                
+                m_heroes.Add(guid, name);
+                return name;
             }
             
             public string GetMapName(ulong guid) {
                 if (m_maps.TryGetValue(guid, out var name)) {
                     return name;
                 }
-                return GetNoTypeGUIDName(guid);
+
+                // todo: this loads a lot of non-required things
+                var map = MapHeader.LoadFromMap(guid);
+                name = map?.GetName() ?? GetNoTypeGUIDName(guid);
+                
+                m_maps.Add(guid, name);
+                return name;
             }
 
             public string GetGameModeName(ulong guid) {
-                // todo: cache
-                var gameMode = GetInstance<STUGameMode>(guid);
+                if (m_gameModes.TryGetValue(guid, out var name)) {
+                    return name;
+                }
                 
-                var gameModeName = GetCleanString(gameMode?.m_displayName);
-                if (gameModeName != null) return gameModeName;
+                // todo: this loads a lot of non-required things
+                var gameMode = GameMode.Load(guid);
+                name = gameMode?.Name ?? GetNoTypeGUIDName(guid);
                 
-                return GetNoTypeGUIDName(guid);
+                m_gameModes.Add(guid, name);
+                return name;
             }
 
             public string GetMissionName(ulong guid) {
-                // todo: cache
+                if (m_missions.TryGetValue(guid, out var name)) {
+                    return name;
+                }
+                
                 var mission = GetInstance<STU_8B0E97DC>(guid);
+                name = GetCleanString(mission?.m_0EDCE350) ?? GetNoTypeGUIDName(guid);
                 
-                var missionName = GetCleanString(mission?.m_0EDCE350);
-                if (missionName != null) return missionName;
-                
-                return GetNoTypeGUIDName(guid);
+                m_missions.Add(guid, name);
+                return name;
             }
 
             public string GetObjectiveName(ulong guid) {
-                // todo: cache
-                var objective = GetInstance<STU_19A98AF4>(guid);
+                if (m_objectives.TryGetValue(guid, out var name)) {
+                    return name;
+                }
                 
                 // todo: these are not the user-facing names...
-                var objectiveName = GetCleanString(objective?.m_name);
-                if (objectiveName != null) return objectiveName;
+                var objective = GetInstance<STU_19A98AF4>(guid);
+                name = GetCleanString(objective?.m_name) ?? GetNoTypeGUIDName(guid);
                 
-                return GetNoTypeGUIDName(guid);
+                m_objectives.Add(guid, name);
+                return name;
             }
             
             public string GetTalentName(ulong guid) {
+                if (m_talents.TryGetValue(guid, out var name)) {
+                    return name;
+                }
+                
                 // todo: cache
                 var talent = Talent.Load(guid);
+                name = talent?.Name  ?? GetNoTypeGUIDName(guid);
                 
-                var talentName = talent?.Name;
-                if (talentName != null) return talentName;
-                
-                return GetNoTypeGUIDName(guid);
+                m_talents.Add(guid, name);
+                return name;
             }
             
             public string GetCelebrationName(ulong guid) 
@@ -197,11 +205,11 @@ namespace DataTool.ToolLogic.Extract {
                 return GetNoTypeGUIDName(guid);
             }
 
-            private static string GetNoTypeGUIDName(ulong guid, string specifier="") {
+            private static string GetNoTypeGUIDName(ulong guid) {
                 var manualName = GetNullableGUIDName(guid);
                 if (manualName != null) return manualName;
 
-                return $"Unknown{specifier}{teResourceGUID.Index(guid):X}";
+                return $"Unknown{teResourceGUID.Index(guid):X}";
             }
         }
 

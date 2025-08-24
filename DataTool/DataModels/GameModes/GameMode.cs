@@ -35,6 +35,13 @@ namespace DataTool.DataModels.GameModes {
         public GameModeLite ToLite() {
             return new GameModeLite(this);
         }
+        
+        public static GameMode Load(ulong guid) {
+            var stu = GetInstance<STUGameMode>(guid);
+            if (stu == null) return null;
+            
+            return new GameMode(stu, guid);
+        }
     }
 
     public class GameModeLite {

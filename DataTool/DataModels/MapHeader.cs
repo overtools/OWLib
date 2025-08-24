@@ -100,6 +100,15 @@ namespace DataTool.DataModels {
             string name = GetName();
             return $"{name}:{teResourceGUID.Index(MapGUID):X}";
         }
+
+        public static MapHeader LoadFromMap(ulong mapGuid) {
+            var mapHeaderGUID = (mapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            
+            var stu = GetInstance<STUMapHeader>(mapHeaderGUID);
+            if (stu == null) return null;
+
+            return new MapHeader(stu, mapHeaderGUID);
+        }
     }
 
     public record MapCelebrationVariant(teResourceGUID GUID, string Name, MapHeaderLite MapInfo);
