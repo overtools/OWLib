@@ -50,6 +50,7 @@ namespace DataTool.ToolLogic.Extract {
                 }
             }
 
+            var criteriaContext = new CriteriaContext();
             foreach (var guid in Program.TrackedFiles[0x5F]) {
                 if (heroVoiceSets.Contains(guid)) continue;
 
@@ -77,7 +78,16 @@ namespace DataTool.ToolLogic.Extract {
 
                 Logger.Log($"Processing NPC {npcName}");
                 var info = new Combo.ComboInfo();
-                ExtractHeroVoiceBetter.SaveVoiceSet(flags, outputPath, npcFileName, "Default", guid, ref info);
+                var context = new ExtractHeroVoiceBetter.SaveSetContext {
+                    m_flags = flags,
+                    m_basePath = outputPath,
+                    m_heroName = npcFileName,
+                    m_unlockName = "Default",
+                    m_voiceSetGUID = guid,
+                    m_info = info,
+                    m_criteriaContext = criteriaContext
+                };
+                ExtractHeroVoiceBetter.SaveVoiceSet(context);
             }
         }
     }

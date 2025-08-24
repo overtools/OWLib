@@ -47,7 +47,6 @@ namespace DataTool.ToolLogic.Extract {
             var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
 
             var criteriaContext = new CriteriaContext();
-
             foreach (var hero in heroes) {
                 // if we have a query, check if we should process this hero
                 if (parsedTypes != null) {
@@ -123,21 +122,6 @@ namespace DataTool.ToolLogic.Extract {
 
             public SaveSetContext() {
             }
-        }
-
-        public static bool SaveVoiceSet(ExtractFlags flags, string basePath, string heroName, string unlockName, ulong? voiceSetGuid, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null, bool ignoreGroups = false) {
-            info = new Combo.ComboInfo();
-            return SaveVoiceSet(new SaveSetContext {
-                m_flags = flags,
-                m_basePath = basePath,
-                m_heroName = heroName,
-                m_unlockName = unlockName,
-                m_voiceSetGUID = voiceSetGuid,
-                m_info = info,
-                m_baseInfo = baseCombo,
-                m_replacements = replacements,
-                m_ignoreGroups = ignoreGroups
-            });
         }
 
         public static bool SaveVoiceSet(SaveSetContext context) {
