@@ -57,9 +57,9 @@ namespace DataTool.ToolLogic.Extract {
 
                 Logger.Log($"Processing {heroName}");
 
-                Combo.ComboInfo baseInfo = default;
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(hero.STU.m_gameplayEntity)?.m_voiceDefinition;
 
+                Combo.ComboInfo baseInfo = default;
                 if (SaveVoiceSet(flags, outputPath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
                     var skins = new ProgressionUnlocks(hero.STU).GetUnlocksOfType(UnlockType.Skin);
 
@@ -70,26 +70,64 @@ namespace DataTool.ToolLogic.Extract {
                         }
 
                         Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
-                        Combo.ComboInfo info = default;
                         var skinThemeGUID = unlockSkinTheme.m_skinTheme;
                         var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
                         if (skinTheme == null) {
                             continue;
                         }
 
+                        Combo.ComboInfo info = default;
                         SaveVoiceSet(flags, outputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinThemeGUID));
                     }
                 }
             }
         }
 
+        public struct SaveSetContext {
+            public required ExtractFlags m_flags;
+            public required string m_basePath;
+            public required string m_heroName;
+            public required string m_unlockName;
+            public required ulong? voiceSetGUID;
+            public Combo.ComboInfo m_info;
+            public Combo.ComboInfo m_baseInfo = null;
+            public Dictionary<ulong, ulong> m_replacements = null;
+            public bool m_ignoreGroups = false;
+
+            public SaveSetContext() {
+            }
+        }
+
         public static bool SaveVoiceSet(ExtractFlags flags, string basePath, string heroName, string unlockName, ulong? voiceSetGuid, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null, bool ignoreGroups = false) {
-            if (voiceSetGuid == null) {
+            info = new Combo.ComboInfo();
+            return SaveVoiceSet(new SaveSetContext {
+                m_flags = flags,
+                m_basePath = basePath,
+                m_heroName = heroName,
+                m_unlockName = unlockName,
+                voiceSetGUID = voiceSetGuid,
+                m_info = info,
+                m_baseInfo = baseCombo,
+                m_replacements = replacements,
+                m_ignoreGroups = ignoreGroups
+            });
+        }
+
+        public static bool SaveVoiceSet(SaveSetContext context) {
+            if (context.voiceSetGUID == null) {
                 return false;
             }
 
-            info = new Combo.ComboInfo();
-            var saveContext = new SaveLogic.Combo.SaveContext(info);
+            var flags = context.m_flags;
+            var basePath = context.m_basePath;
+            var heroName = context.m_heroName;
+            var unlockName = context.m_unlockName;
+            var voiceSetGuid = context.voiceSetGUID;
+            var info = context.m_info;
+            var baseCombo = context.m_baseInfo;
+            var replacements = context.m_replacements;
+            var ignoreGroups = context.m_ignoreGroups;
+            
             Combo.Find(info, voiceSetGuid.Value, replacements);
 
             var skinnedVoiceSet = Combo.GetReplacement(voiceSetGuid.Value, replacements);
