@@ -47,8 +47,8 @@ namespace DataTool.DataModels {
             Image = mapHeader.m_0342E00E?.m_loadingScreen;
             FlagImage = mapHeader.m_0342E00E?.m_loadingScreenFlag;
             GameModes = mapHeader.m_supportedGameModes?
-                .Select(x => new GameMode(x).ToLite())
-                .Where(x => x.GUID != 0);
+                .Select(x => GameMode.Load(x)?.ToLite())
+                .Where(x => x != null);
 
             if (mapHeader.m_celebrationOverrides != null) {
                 CelebrationVariants = mapHeader.m_celebrationOverrides.Select(info => {

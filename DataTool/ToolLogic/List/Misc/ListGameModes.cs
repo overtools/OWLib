@@ -25,10 +25,10 @@ namespace DataTool.ToolLogic.List.Misc {
         public List<GameMode> GetGameModes() {
             var gameModes = new List<GameMode>();
             foreach (var key in TrackedFiles[0xC5]) {
-                var gamemode = new GameMode(key);
-                if (gamemode.GUID == 0) continue;
+                var gameMode = GameMode.Load(key);
+                if (gameMode == null) continue;
 
-                gameModes.Add(gamemode);
+                gameModes.Add(gameMode);
             }
 
             return gameModes;
