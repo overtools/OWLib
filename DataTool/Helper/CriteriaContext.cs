@@ -1,6 +1,8 @@
+#nullable enable
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.DataModels;
 using DataTool.DataModels.GameModes;
 using DataTool.DataModels.Hero;
@@ -74,9 +76,15 @@ namespace DataTool.Helper {
                 return name;
             }
             
-            // todo: these are not the user-facing names...
+            
             var objective = GetInstance<STU_19A98AF4>(guid);
-            name = GetCleanString(objective?.m_name) ?? GetNoTypeGUIDName(guid);
+            var userFacingNameEntry = objective?.m_99381822?.m_1EB5A024?
+                .SingleOrDefault(x => x.m_0D09D2D9 == 0x0D8000000000320E);
+            var usingFacingNameRef = userFacingNameEntry?.m_value as STUConfigVarUXDisplayText;
+            
+            name = GetCleanString(usingFacingNameRef?.m_displayText);
+            name ??= GetCleanString(objective?.m_name); // not a user-facing name, but the best we've got
+            name ??= GetNoTypeGUIDName(guid);
             
             m_objectives.Add(guid, name);
             return name;
