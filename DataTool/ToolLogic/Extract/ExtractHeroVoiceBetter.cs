@@ -144,6 +144,26 @@ namespace DataTool.ToolLogic.Extract {
                 }
                 return GetNoTypeGUIDName(guid);
             }
+
+            public string GetMissionName(ulong guid) {
+                // todo: cache on startup
+                var mission = GetInstance<STU_8B0E97DC>(guid);
+                
+                var missionName = GetCleanString(mission?.m_0EDCE350);
+                if (missionName != null) return missionName;
+                
+                return GetNoTypeGUIDName(guid);
+            }
+
+            public string GetObjectiveName(ulong guid) {
+                var objective = GetInstance<STU_19A98AF4>(guid);
+                
+                // todo: these are not the user-facing names...
+                var objectiveName = GetCleanString(objective?.m_name);
+                if (objectiveName != null) return objectiveName;
+                
+                return GetNoTypeGUIDName(guid);
+            }
             
             public string GetCelebrationName(ulong guid) 
             {
@@ -352,11 +372,11 @@ namespace DataTool.ToolLogic.Extract {
                 case STUCriteria_OnMap onMap: 
                     writer.WriteLine($"On Map: {context.GetMapName(onMap.m_map)}. Allow Event Variants: {(onMap.m_exactMap != 0 ? "false" : "true")}");
                     break;
-                case STU_0F78DDB0 pve1:
-                    writer.WriteLine($"Pve1: {pve1.m_216EA6DA}. bool: {pve1.m_89B967D3 != 0}");
+                case STU_0F78DDB0 onMission:
+                    writer.WriteLine($"On Mission: {context.GetMissionName(onMission.m_216EA6DA)}. bool: {onMission.m_89B967D3 != 0}");
                     break;
-                case STU_20ABB515 pve2:
-                    writer.WriteLine($"Pve2: {pve2.m_4992CB75}");
+                case STU_20ABB515 onObjective:
+                    writer.WriteLine($"On Mission Objective: {context.GetObjectiveName(onObjective.m_4992CB75)}");
                     break;
                 case STU_A9B89EC9 pve3:
                     // used for wotb
@@ -366,7 +386,7 @@ namespace DataTool.ToolLogic.Extract {
                     break;
                 
                 case STU_7C69EA0F nestedContainer: {
-                    writer.WriteLine($"Nested - {nestedContainer.m_amount}:");
+                    writer.WriteLine($"Nested - {nestedContainer.m_amount}/{nestedContainer.m_criteria.Length} Required:");
                     writer.Indent++;
                     foreach (var nested in nestedContainer.m_criteria) {
                         BuildCriteriaDescription(writer, nested, context);
