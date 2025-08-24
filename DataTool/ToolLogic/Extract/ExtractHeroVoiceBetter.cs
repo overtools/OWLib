@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -146,7 +147,7 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             public string GetGameModeName(ulong guid) {
-                // todo: cache on startup
+                // todo: cache
                 var gameMode = GetInstance<STUGameMode>(guid);
                 
                 var gameModeName = GetCleanString(gameMode?.m_displayName);
@@ -156,7 +157,7 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             public string GetMissionName(ulong guid) {
-                // todo: cache on startup
+                // todo: cache
                 var mission = GetInstance<STU_8B0E97DC>(guid);
                 
                 var missionName = GetCleanString(mission?.m_0EDCE350);
@@ -166,11 +167,22 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             public string GetObjectiveName(ulong guid) {
+                // todo: cache
                 var objective = GetInstance<STU_19A98AF4>(guid);
                 
                 // todo: these are not the user-facing names...
                 var objectiveName = GetCleanString(objective?.m_name);
                 if (objectiveName != null) return objectiveName;
+                
+                return GetNoTypeGUIDName(guid);
+            }
+            
+            public string GetTalentName(ulong guid) {
+                // todo: cache
+                var talent = Talent.Load(guid);
+                
+                var talentName = talent?.Name;
+                if (talentName != null) return talentName;
                 
                 return GetNoTypeGUIDName(guid);
             }
@@ -404,6 +416,7 @@ namespace DataTool.ToolLogic.Extract {
                 case STU_C37857A5 celebration:
                     writer.WriteLine($"Active Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
                     break;
+                
                 case STUCriteria_OnMap onMap: 
                     writer.WriteLine($"On Map: {context.GetMapName(onMap.m_map)}. Allow Event Variants: {(onMap.m_exactMap != 0 ? "false" : "true")}");
                     break;
@@ -424,16 +437,20 @@ namespace DataTool.ToolLogic.Extract {
                     // usually used with a mission criteria, even though objectives are mission specific
                     writer.WriteLine($"On Mission Objective: {context.GetObjectiveName(onObjective.m_4992CB75)}");
                     break;
+                
+                case STU_31297254 hasTalent: {
+                    // todo: NOT is unused, might be wrong
+                    using var _ = new ModifierScope(writer, hasTalent.m_8F034FB5, "NOT");
+                    
+                    writer.Write($"Has Talent: {context.GetTalentName(hasTalent.m_91A9D4CC)}");
+                    break;
+                }
+                
                 case STU_A9B89EC9 pve3:
                     // used for wotb
                     // Bet you I find the next key!
                     //    STU_A9B89EC9: 000000008253.01C
                     writer.WriteLine($"STU_A9B89EC9: {pve3.m_98D3EC50?.m_id}");
-                    break;
-                case STU_31297254 unk31297254:
-                    // todo: talent (or perk ig now.. surely not)
-                    // STU_31297254: 0000000002E8.134. bool: False
-                    writer.WriteLine($"STU_31297254: {unk31297254.m_91A9D4CC}. bool: {unk31297254.m_8F034FB5 != 0}");
                     break;
                 case STU_9665B416 unk9665B416:
                     writer.WriteLine($"STU_9665B416: {unk9665B416.m_EF135378?.m_id}");
