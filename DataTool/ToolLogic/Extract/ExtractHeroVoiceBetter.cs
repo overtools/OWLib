@@ -172,7 +172,7 @@ namespace DataTool.ToolLogic.Extract {
 
             public string GetTagName(ulong guid) 
             {
-                return GetNoTypeGUIDName(guid, "Tag");
+                return GetNoTypeGUIDName(guid);
             }
 
             private static string GetNoTypeGUIDName(ulong guid, string specifier="") {
@@ -348,33 +348,43 @@ namespace DataTool.ToolLogic.Extract {
                 case null:
                     writer.WriteLine("Error: null criteria");
                     break;
-                case STUCriteria_Statescript statescript:
-                    writer.WriteLine($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}. bool: {statescript.m_57D96E27 != 0}");
+                case STUCriteria_Statescript statescript: {
+                    using var _ = new ModifierScope(writer, statescript.m_57D96E27, "NOT");
+                    
+                    writer.Write($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}");
                     break;
-                case STU_D815520F heroInteraction:
-                    // kill ines
-                    writer.WriteLine($"Hero Interaction: {context.GetHeroName(heroInteraction.m_8C8C5285)}. bool: {heroInteraction.m_57D96E27 != 0}");
+                }
+                case STU_D815520F heroInteraction: {
+                    using var _ = new ModifierScope(writer, heroInteraction.m_57D96E27, "NOT");
+                    
+                    // kill lines
+                    writer.Write($"Hero Interaction: {context.GetHeroName(heroInteraction.m_8C8C5285)}");
                     break;
-                case STU_3EAADDE8 interaction:
+                }
+                case STU_3EAADDE8 teamInteraction: {
                     // e.g "Look at us! The full might of Overwatch, reassembled and ready to rumble!"
-                    string target;
-                    if (interaction.m_hero != 0) 
+                    using var _ = new ModifierScope(writer, teamInteraction.m_990CFF1C, "NOT");
+                    
+                    if (teamInteraction.m_hero != 0) 
                     {
-                        target = context.GetHeroName(interaction.m_hero);
+                        writer.Write($"Hero On Team: {context.GetHeroName(teamInteraction.m_hero)}");
                     } else {
-                        target = context.GetTagName(interaction.m_7D7C86A1);
+                        writer.Write($"Tag On Teammate: {context.GetTagName(teamInteraction.m_7D7C86A1)}");
                     }
-                    writer.WriteLine($"Team Interaction: {target} bool: {interaction.m_990CFF1C != 0}");
                     break;
+                }
                 case STU_C37857A5 celebration:
                     writer.WriteLine($"Active Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
                     break;
                 case STUCriteria_OnMap onMap: 
                     writer.WriteLine($"On Map: {context.GetMapName(onMap.m_map)}. Allow Event Variants: {(onMap.m_exactMap != 0 ? "false" : "true")}");
                     break;
-                case STU_0F78DDB0 onMission:
-                    writer.WriteLine($"On Mission: {context.GetMissionName(onMission.m_216EA6DA)}. bool: {onMission.m_89B967D3 != 0}");
+                case STU_0F78DDB0 onMission: {
+                    using var _ = new ModifierScope(writer, onMission.m_89B967D3, "NOT");
+                    
+                    writer.Write($"On Mission: {context.GetMissionName(onMission.m_216EA6DA)}");
                     break;
+                }
                 case STU_20ABB515 onObjective:
                     writer.WriteLine($"On Mission Objective: {context.GetObjectiveName(onObjective.m_4992CB75)}");
                     break;
@@ -398,6 +408,29 @@ namespace DataTool.ToolLogic.Extract {
                     writer.WriteLine($"Unknown: {criteria.GetType().Name}");
                     break;
                 }
+            }
+        }
+
+        private ref struct ModifierScope : IDisposable {
+            private readonly IndentedTextWriter m_writer;
+            private readonly bool m_active;
+            
+            public ModifierScope(IndentedTextWriter writer, byte condition, string op) {
+                // this would not work over an entire container for example... but doesn't seem needed
+                // also the only operator seems to be NOT
+                
+                m_writer = writer;
+                m_active = condition != 0;
+                if (m_active) {
+                    writer.Write($"{op} (");
+                }
+            }
+            
+            public void Dispose() {
+                if (m_active) {
+                    m_writer.Write(")");
+                }
+                m_writer.WriteLine();
             }
         }
 
