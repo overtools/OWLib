@@ -44,6 +44,8 @@ namespace DataTool.ToolLogic.Extract {
             var validHeroes = Helpers.GetHeroNamesMapping(heroesDict);
             var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
 
+            var criteriaContext = CreateCriteriaContext();
+
             foreach (var hero in heroes) {
                 // if we have a query, check if we should process this hero
                 if (parsedTypes != null) {
@@ -66,7 +68,8 @@ namespace DataTool.ToolLogic.Extract {
                     m_heroName = heroName,
                     m_unlockName = "Default",
                     m_voiceSetGUID = heroVoiceSetGuid,
-                    m_info = baseInfo
+                    m_info = baseInfo,
+                    m_criteriaContext = criteriaContext
                 };
 
                 if (!SaveVoiceSet(baseContext)) {
@@ -102,6 +105,23 @@ namespace DataTool.ToolLogic.Extract {
                 }
             }
         }
+        
+        private static CriteriaContext CreateCriteriaContext() {
+            var ctx = new CriteriaContext();
+            
+            var heroes = Helpers.GetHeroes();
+            foreach (var hero in heroes) {
+                ctx.m_heroes.Add(hero.Key, hero.Value.Name);
+            }
+
+            return ctx;
+        }
+
+        public class CriteriaContext {
+            public Dictionary<ulong, string> m_heroes = [];
+            public Dictionary<ulong, string> m_gamemodes = [];
+            public Dictionary<ulong, string> m_missions = [];
+        }
 
         public struct SaveSetContext {
             public required ExtractFlags m_flags;
@@ -113,6 +133,8 @@ namespace DataTool.ToolLogic.Extract {
             public Combo.ComboInfo m_baseInfo = null;
             public Dictionary<ulong, ulong> m_replacements = null;
             public bool m_ignoreGroups = false;
+            
+            public CriteriaContext m_criteriaContext;
 
             public SaveSetContext() {
             }
@@ -222,6 +244,11 @@ namespace DataTool.ToolLogic.Extract {
                             SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename, soundFile);
                         }
 
+                        if (voiceLineInstance.m_criteria != null && context.m_criteriaContext != null) {
+                            var criteriaDescription = BuildCriteriaDescription(voiceLineInstance.m_criteria, context.m_criteriaContext);
+                            //Console.Out.WriteLine(criteriaDescription);
+                        }
+
                         // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems
                         var stuSound = GetInstance<STUSound>(voiceLineInstance.ExternalSound);
                         if (stuSound?.m_C32C2195?.m_soundWEMFiles != null) {
@@ -238,6 +265,21 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             return true;
+        }
+
+        private static string BuildCriteriaDescription(STUCriteriaContainer container, CriteriaContext context) {
+            if (container is not STU_32A19631 embedCriteria) {
+                // I don't think the asset ref version is used
+                // probably deleted by build pipeline
+                return "Error: non-embedded criteria";
+            }
+
+            var criteria = embedCriteria.m_criteria;
+            if (criteria == null) {
+                return "Error: null criteria";
+            }
+
+            return $"Unknown: {criteria.GetType().Name}";
         }
 
         private static void CalculatePathStack(ExtractFlags flags, string heroName, string unlockName, string groupName, List<string> stack) {

@@ -210,6 +210,8 @@ namespace DataTool.FindLogic {
             public ulong Subtitle;
             public ulong SubtitleRuntime;
             public HashSet<ulong> SoundFiles;
+
+            public STUCriteriaContainer? m_criteria;
         }
 
         public class SoundFileAsset : ComboAsset {
@@ -1048,6 +1050,7 @@ namespace DataTool.FindLogic {
                             voiceLineInstanceInfo.ExternalSound = voiceLineInstance.m_voiceLineRuntime.m_externalSound;
                             voiceLineInstanceInfo.Conversations = voiceLineInstance.m_voiceLineRuntime.m_BD1B6F64?.Select(x => x.GUID.GUID).ToArray();
                             voiceLineInstanceInfo.SubtitleRuntime = voiceLineInstance.m_voiceLineRuntime.m_6148094F;
+                            voiceLineInstanceInfo.m_criteria = voiceLineInstance.m_voiceLineRuntime.m_criteria;
                             Find(info, voiceLineInstanceInfo.ExternalSound, replacements, context);
                             Find(info, voiceLineInstanceInfo.SubtitleRuntime, replacements, context);
                         } else {
