@@ -145,6 +145,16 @@ namespace DataTool.ToolLogic.Extract {
                 return GetNoTypeGUIDName(guid);
             }
 
+            public string GetGameModeName(ulong guid) {
+                // todo: cache on startup
+                var gameMode = GetInstance<STUGameMode>(guid);
+                
+                var gameModeName = GetCleanString(gameMode?.m_displayName);
+                if (gameModeName != null) return gameModeName;
+                
+                return GetNoTypeGUIDName(guid);
+            }
+
             public string GetMissionName(ulong guid) {
                 // todo: cache on startup
                 var mission = GetInstance<STU_8B0E97DC>(guid);
@@ -373,12 +383,28 @@ namespace DataTool.ToolLogic.Extract {
                     }
                     break;
                 }
+                case STUCriteria_Team team: {
+                    writer.WriteLine($"On Team Number: {team.m_team}. UnkBool: {team.m_EB5492C4 != 0}");
+                    break;
+                }
+                case STU_A95E4B99 gender: {
+                    // specializing lines for different pronouns
+                    writer.WriteLine($"Required Gender: {gender.m_gender}");
+                    break;
+                }
                 case STU_C37857A5 celebration:
                     writer.WriteLine($"Active Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
                     break;
                 case STUCriteria_OnMap onMap: 
                     writer.WriteLine($"On Map: {context.GetMapName(onMap.m_map)}. Allow Event Variants: {(onMap.m_exactMap != 0 ? "false" : "true")}");
                     break;
+                case STU_4A7A3740 onGameMode: {
+                    // NOT used by volleyball of all things, to override ult lines
+                    using var _ = new ModifierScope(writer, onGameMode.m_E9A758B4, "NOT");
+                    
+                    writer.Write($"On Game Mode: {context.GetGameModeName(onGameMode.m_gameMode)}");
+                    break;
+                }
                 case STU_0F78DDB0 onMission: {
                     using var _ = new ModifierScope(writer, onMission.m_89B967D3, "NOT");
                     
@@ -386,6 +412,7 @@ namespace DataTool.ToolLogic.Extract {
                     break;
                 }
                 case STU_20ABB515 onObjective:
+                    // usually used with a mission criteria, even though objectives are mission specific
                     writer.WriteLine($"On Mission Objective: {context.GetObjectiveName(onObjective.m_4992CB75)}");
                     break;
                 case STU_A9B89EC9 pve3:
@@ -406,6 +433,10 @@ namespace DataTool.ToolLogic.Extract {
                 }
                 default: {
                     writer.WriteLine($"Unknown: {criteria.GetType().Name}");
+                    
+                    // debug: exit on unknown found (you should turn off saving also)
+                    // Console.Out.WriteLine(writer.InnerWriter.ToString());
+                    // Environment.Exit(0);
                     break;
                 }
             }
