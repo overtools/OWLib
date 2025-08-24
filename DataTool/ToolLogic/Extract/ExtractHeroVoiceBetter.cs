@@ -59,26 +59,46 @@ namespace DataTool.ToolLogic.Extract {
 
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(hero.STU.m_gameplayEntity)?.m_voiceDefinition;
 
-                Combo.ComboInfo baseInfo = default;
-                if (SaveVoiceSet(flags, outputPath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
-                    var skins = new ProgressionUnlocks(hero.STU).GetUnlocksOfType(UnlockType.Skin);
+                Combo.ComboInfo baseInfo = new Combo.ComboInfo();
+                var baseContext = new SaveSetContext {
+                    m_flags = flags,
+                    m_basePath = outputPath,
+                    m_heroName = heroName,
+                    m_unlockName = "Default",
+                    m_voiceSetGUID = heroVoiceSetGuid,
+                    m_info = baseInfo
+                };
 
-                    foreach (var unlock in skins) {
-                        var unlockSkinTheme = unlock.STU as STUUnlock_SkinTheme;
-                        if (unlockSkinTheme?.m_0B1BA7C1 != 0) {
-                            continue; // no idea what this is
-                        }
+                if (!SaveVoiceSet(baseContext)) {
+                    // unknown failure
+                    continue;
+                }
+                
+                var skinUnlocks = new ProgressionUnlocks(hero.STU).GetUnlocksOfType(UnlockType.Skin);
 
-                        Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
-                        var skinThemeGUID = unlockSkinTheme.m_skinTheme;
-                        var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
-                        if (skinTheme == null) {
-                            continue;
-                        }
-
-                        Combo.ComboInfo info = default;
-                        SaveVoiceSet(flags, outputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinThemeGUID));
+                foreach (var unlock in skinUnlocks) {
+                    var unlockSkinTheme = unlock.STU as STUUnlock_SkinTheme;
+                    if (unlockSkinTheme?.m_0B1BA7C1 != 0) {
+                        // skip esports skins
+                        // they definitely won't have skin overrides
+                        continue;
                     }
+
+                    Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
+                    var skinThemeGUID = unlockSkinTheme.m_skinTheme;
+                    var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
+                    if (skinTheme == null) {
+                        continue;
+                    }
+
+                    Combo.ComboInfo info = new Combo.ComboInfo();
+                    var skinContext = baseContext with {
+                        m_info = info,
+                        m_baseInfo = baseContext.m_info,
+                        m_unlockName = GetValidFilename(unlock.GetName()),
+                        m_replacements = SkinTheme.GetReplacements(skinThemeGUID)
+                    };
+                    SaveVoiceSet(skinContext);
                 }
             }
         }
@@ -88,8 +108,8 @@ namespace DataTool.ToolLogic.Extract {
             public required string m_basePath;
             public required string m_heroName;
             public required string m_unlockName;
-            public required ulong? voiceSetGUID;
-            public Combo.ComboInfo m_info;
+            public required ulong? m_voiceSetGUID;
+            public required Combo.ComboInfo m_info;
             public Combo.ComboInfo m_baseInfo = null;
             public Dictionary<ulong, ulong> m_replacements = null;
             public bool m_ignoreGroups = false;
@@ -105,7 +125,7 @@ namespace DataTool.ToolLogic.Extract {
                 m_basePath = basePath,
                 m_heroName = heroName,
                 m_unlockName = unlockName,
-                voiceSetGUID = voiceSetGuid,
+                m_voiceSetGUID = voiceSetGuid,
                 m_info = info,
                 m_baseInfo = baseCombo,
                 m_replacements = replacements,
@@ -114,7 +134,7 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public static bool SaveVoiceSet(SaveSetContext context) {
-            if (context.voiceSetGUID == null) {
+            if (context.m_voiceSetGUID == null) {
                 return false;
             }
 
@@ -122,7 +142,7 @@ namespace DataTool.ToolLogic.Extract {
             var basePath = context.m_basePath;
             var heroName = context.m_heroName;
             var unlockName = context.m_unlockName;
-            var voiceSetGuid = context.voiceSetGUID;
+            var voiceSetGuid = context.m_voiceSetGUID;
             var info = context.m_info;
             var baseCombo = context.m_baseInfo;
             var replacements = context.m_replacements;
