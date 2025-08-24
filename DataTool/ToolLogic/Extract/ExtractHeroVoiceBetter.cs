@@ -371,27 +371,36 @@ namespace DataTool.ToolLogic.Extract {
                     writer.Write($"Hero Interaction: {context.GetHeroName(heroInteraction.m_8C8C5285)}");
                     break;
                 }
+                case STUCriteria_IsHero isHero:
+                    // also kill lines...
+                    // not clear what the difference is
+                    writer.Write($"Is Hero: {context.GetHeroName(isHero.m_hero)}");
+                    break;
+                
                 case STU_3EAADDE8 teamInteraction: {
                     // e.g "Look at us! The full might of Overwatch, reassembled and ready to rumble!"
                     using var _ = new ModifierScope(writer, teamInteraction.m_990CFF1C, "NOT");
                     
-                    if (teamInteraction.m_hero != 0) 
-                    {
+                    if (teamInteraction.m_hero != 0) {
                         writer.Write($"Hero On Team: {context.GetHeroName(teamInteraction.m_hero)}");
                     } else {
                         writer.Write($"Tag On Teammate: {context.GetTagName(teamInteraction.m_7D7C86A1)}");
                     }
                     break;
                 }
-                case STUCriteria_Team team: {
+                case STUCriteria_Team team:
                     writer.WriteLine($"On Team Number: {team.m_team}. UnkBool: {team.m_EB5492C4 != 0}");
                     break;
-                }
-                case STU_A95E4B99 gender: {
+                
+                case STU_A95E4B99 gender:
                     // specializing lines for different pronouns
                     writer.WriteLine($"Required Gender: {gender.m_gender}");
                     break;
-                }
+                case STU_C9F4617F gender2:
+                    // same thing...
+                    writer.WriteLine($"Required Gender: {gender2.m_gender}");
+                    break;
+                
                 case STU_C37857A5 celebration:
                     writer.WriteLine($"Active Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
                     break;
@@ -419,7 +428,18 @@ namespace DataTool.ToolLogic.Extract {
                     // used for wotb
                     // Bet you I find the next key!
                     //    STU_A9B89EC9: 000000008253.01C
-                    writer.WriteLine($"STU_A9B89EC9: {pve3.m_98D3EC50.m_id}");
+                    writer.WriteLine($"STU_A9B89EC9: {pve3.m_98D3EC50?.m_id}");
+                    break;
+                case STU_31297254 unk31297254:
+                    // todo: talent (or perk ig now.. surely not)
+                    // STU_31297254: 0000000002E8.134. bool: False
+                    writer.WriteLine($"STU_31297254: {unk31297254.m_91A9D4CC}. bool: {unk31297254.m_8F034FB5 != 0}");
+                    break;
+                case STU_9665B416 unk9665B416:
+                    writer.WriteLine($"STU_9665B416: {unk9665B416.m_EF135378?.m_id}");
+                    break;
+                case STU_E6EBD07B unkE6EBD07B:
+                    writer.WriteLine($"STU_E6EBD07B: {unkE6EBD07B.m_E755B82A?.m_id}");
                     break;
                 
                 case STU_7C69EA0F nestedContainer: {
