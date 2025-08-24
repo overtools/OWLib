@@ -61,7 +61,7 @@ namespace DataTool.ToolLogic.List {
             return new MapHeader(map, key);
         }
 
-        public Dictionary<teResourceGUID, MapHeader> GetMaps() {
+        public static Dictionary<teResourceGUID, MapHeader> GetMaps() {
             Dictionary<teResourceGUID, MapHeader> @return = new Dictionary<teResourceGUID, MapHeader>();
 
             foreach (teResourceGUID key in TrackedFiles[0x9F]) {

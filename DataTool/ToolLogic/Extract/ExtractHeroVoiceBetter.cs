@@ -6,6 +6,7 @@ using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.ToolLogic.List;
 using DataTool.ToolLogic.Util;
 using TACTLib.Container;
 using TankLib;
@@ -115,6 +116,11 @@ namespace DataTool.ToolLogic.Extract {
                 ctx.m_heroes.Add(hero.Key, hero.Value.Name);
             }
 
+            var maps = ListMaps.GetMaps();
+            foreach (var map in maps) {
+                ctx.m_maps.Add(map.Value.MapGUID, map.Value.GetName());
+            }
+
             return ctx;
         }
 
@@ -126,6 +132,13 @@ namespace DataTool.ToolLogic.Extract {
 
             public string GetHeroName(ulong guid) {
                 if (m_heroes.TryGetValue(guid, out var name)) {
+                    return name;
+                }
+                return GetNoTypeGUIDName(guid);
+            }
+            
+            public string GetMapName(ulong guid) {
+                if (m_maps.TryGetValue(guid, out var name)) {
                     return name;
                 }
                 return GetNoTypeGUIDName(guid);
@@ -313,8 +326,17 @@ namespace DataTool.ToolLogic.Extract {
                     writer.WriteLine($"Something Hero: {context.GetHeroName(somethingHero.m_8C8C5285)}. bool: {somethingHero.m_57D96E27 != 0}");
                     break;
                 case STU_C37857A5 celebration:
-                    writer.WriteLine($"Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
+                    writer.WriteLine($"Active Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
                     break;
+                case STUCriteria_OnMap onMap: 
+                    writer.WriteLine($"On Map: {context.GetMapName(onMap.m_map)}. Allow Event Variants: {(onMap.m_exactMap != 0 ? "false" : "true")}");
+                    break;
+                // used by tracer:
+                // STU_A9B89EC9
+                // STU_0F78DDB0
+                // STU_20ABB515
+                // STU_3EAADDE8
+                
                 case STU_7C69EA0F nestedContainer: {
                     writer.WriteLine($"Nested - {nestedContainer.m_amount}:");
                     writer.Indent++;
