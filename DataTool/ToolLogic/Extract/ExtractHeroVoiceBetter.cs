@@ -120,8 +120,28 @@ namespace DataTool.ToolLogic.Extract {
 
         public class CriteriaContext {
             public Dictionary<ulong, string> m_heroes = [];
+            public Dictionary<ulong, string> m_maps = [];
             public Dictionary<ulong, string> m_gamemodes = [];
             public Dictionary<ulong, string> m_missions = [];
+
+            public string GetHeroName(ulong guid) {
+                if (m_heroes.TryGetValue(guid, out var name)) {
+                    return name;
+                }
+                return GetNoTypeGUIDName(guid);
+            }
+            
+            public string GetCelebrationName(ulong guid) 
+            {
+                return GetNoTypeGUIDName(guid);
+            }
+
+            private static string GetNoTypeGUIDName(ulong guid) {
+                var manualName = GetNullableGUIDName(guid);
+                if (manualName != null) return manualName;
+
+                return $"Unknown {teResourceGUID.Index(guid):X}";
+            }
         }
 
         public struct SaveSetContext {
@@ -278,19 +298,37 @@ namespace DataTool.ToolLogic.Extract {
                 return;
             }
 
-            var criteria = embedCriteria.m_criteria;
-            if (criteria == null) {
-                writer.WriteLine("Error: null criteria");
-                return;
+            BuildCriteriaDescription(writer, embedCriteria.m_criteria, context);
+        }
+
+        private static void BuildCriteriaDescription(IndentedTextWriter writer, STUCriteria criteria, CriteriaContext context) {
+            switch (criteria) {
+                case null:
+                    writer.WriteLine("Error: null criteria");
+                    break;
+                case STUCriteria_Statescript statescript:
+                    writer.WriteLine($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}");
+                    break;
+                case STU_D815520F somethingHero:
+                    writer.WriteLine($"Something Hero: {context.GetHeroName(somethingHero.m_8C8C5285)}. bool: {somethingHero.m_57D96E27 != 0}");
+                    break;
+                case STU_C37857A5 celebration:
+                    writer.WriteLine($"Celebration: {context.GetCelebrationName(celebration.m_celebrationType)}");
+                    break;
+                case STU_7C69EA0F nestedContainer: {
+                    writer.WriteLine($"Nested - {nestedContainer.m_amount}:");
+                    writer.Indent++;
+                    foreach (var nested in nestedContainer.m_criteria) {
+                        BuildCriteriaDescription(writer, nested, context);
+                    }
+                    writer.Indent--;
+                    break;
+                }
+                default: {
+                    writer.WriteLine($"Unknown: {criteria.GetType().Name}");
+                    break;
+                }
             }
-
-            if (criteria is STUCriteria_Statescript statescript) {
-                writer.WriteLine($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}");
-                return;
-            }
-
-
-            writer.WriteLine($"Unknown: {criteria.GetType().Name}");
         }
 
         private static void CalculatePathStack(ExtractFlags flags, string heroName, string unlockName, string groupName, List<string> stack) {
