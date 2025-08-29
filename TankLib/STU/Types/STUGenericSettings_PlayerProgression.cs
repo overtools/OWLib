@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC881FD3B, 168)]
+    [STU(0xC881FD3B, 184)]
     public class STUGenericSettings_PlayerProgression : STUGenericSettings_Base
     {
         [STUField(0xBF482AA3, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
@@ -33,7 +33,10 @@ namespace TankLib.STU.Types
         [STUField(0x88922C14, 144)] // size: 16
         public ulong[] m_88922C14;
 
-        [STUField(0xE7377888, 160)] // size: 4
+        [STUField(0xE4006207, 160, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STU_D753E90A[] m_E4006207;
+
+        [STUField(0xE7377888, 176)] // size: 4
         public uint m_E7377888;
     }
 }
