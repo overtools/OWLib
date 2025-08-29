@@ -24,6 +24,7 @@ A,75,widow
 231,75,kirikou
 291,75,liveweaver
 32A,75,freya
+3C3,75,aqua
 ; Normal Hero Localization Mapping,,
 ;deDE,,
 2,75,reaper
@@ -69,6 +70,7 @@ DD,75,mei
 32B,75,venture
 362,75,hazard
 365,75,juno
+3C3,75,wuyang
 ;enUS,,
 2,75,reaper
 3,75,tracer
@@ -113,6 +115,7 @@ DD,75,mei
 32B,75,venture
 362,75,hazard
 365,75,juno
+3C3,75,wuyang
 ;esES,,
 2,75,reaper
 3,75,tracer
@@ -157,6 +160,7 @@ DD,75,mei
 32B,75,venture
 362,75,hazard
 365,75,juno
+3C3,75,wuyang
 ;esMX,,
 2,75,reaper
 3,75,tracer
@@ -201,6 +205,7 @@ DD,75,mei
 32B,75,venture
 362,75,hazard
 365,75,juno
+3C3,75,wuyang
 ;frFR,,
 2,75,faucheur
 3,75,tracer
@@ -245,6 +250,7 @@ DD,75,mei
 32B,75,venture
 362,75,danger
 365,75,juno
+3C3,75,wuyang
 ;itIT,,
 2,75,reaper
 3,75,tracer
@@ -289,6 +295,7 @@ DD,75,mei
 32B,75,venture
 362,75,hazard
 365,75,juno
+3C3,75,wuyang
 ;jaJP,,
 2,75,リーパー
 3,75,トレーサー
@@ -333,6 +340,7 @@ DD,75,メイ
 32B,75,ベンチャー
 362,75,ハザード
 365,75,ジュノ
+3C3,75,ウーヤン
 ;koKR,,
 2,75,리퍼
 3,75,트레이서
@@ -377,6 +385,7 @@ DD,75,메이
 32B,75,벤처
 362,75,해저드
 365,75,주노
+3C3,75,우양
 ;plPL,,
 2,75,żniwiarz
 3,75,smuga
@@ -421,6 +430,7 @@ DD,75,mei
 32B,75,venture
 362,75,ryzyk
 365,75,juno
+3C3,75,wuyang
 ;ptBR,,
 2,75,reaper
 3,75,tracer
@@ -465,6 +475,7 @@ DD,75,mei
 32B,75,venture
 362,75,hazard
 365,75,juno
+3C3,75,wuyang
 ;ruRU,,
 2,75,жнец
 3,75,трейсер
@@ -509,6 +520,7 @@ DD,75,мэй
 32B,75,авентюра
 362,75,азарт
 365,75,юнона
+3C3,75,У Ян
 ;thTH,,
 2,75,รีปเปอร์
 3,75,เทรเซอร์
@@ -553,6 +565,7 @@ DD,75,เหมย
 32B,75,เวนเจอร์
 362,75,ฮาซาร์ด
 365,75,จูโน
+3C3,75,อู๋ย่าง
 ;trTR,,
 2,75,reaper
 3,75,tracer
@@ -618,6 +631,7 @@ DD,75,美
 32B,75,探奇
 362,75,骇灾
 365,75,朱诺
+3C3,75,无漾
 ;zhTW,,
 2,75,死神
 3,75,閃光
@@ -662,3 +676,4 @@ DD,75,小美
 32B,75,無畏
 362,75,災害
 365,75,朱諾
+3C3,75,無漾

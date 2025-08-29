@@ -620,6 +620,15 @@ FFB,078,Voicelines,1 ; 1.62
 1904,078,Voicelines,1 ; s16 - street fighter
 1905,078,Voicelines,1 ; s16 - street fighter
 1921,078,Voicelines,1 ; s17
+1923,078,Voicelines,1 ; s17 - gi joe
+1924,078,Voicelines,1 ; s17 - gi joe
+1925,078,Voicelines,1 ; s17 - gi joe
+1926,078,Voicelines,1 ; s17 - gi joe
+1927,078,Voicelines,1 ; s17 - gi joe
+1929,078,Voicelines,1 ; s17 - gi joe
+192A,078,Voicelines,1 ; s17 - gi joe
+192B,078,Voicelines,1 ; s17 - gi joe
+194F,078,Voicelines,1 ; s18
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
@@ -691,6 +700,7 @@ E810,01C,Season14,1
 EC03,01C,Season15,1
 EC0F,01C,Season16,1
 EC11,01C,Season17,1
+EC12,01C,Season18,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -790,11 +800,15 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 132F,09F,Menu/Juno OWCS,1
 1331,09F,Menu/LE SSERAFIM Collab Art 2,1
 1346,09F,Menu/Stadium Art 2,1
-1347,09F,Menu/Freja Art 2,1
+1347,09F,Menu/Freja Art,1
 1348,09F,Menu/Gundam Collab Art 2,1
 134A,09F,Menu/Mercy Merciful Magitech Mythic Weapon,1
 1378,09F,Menu/S17 Mythics Art,1
 1379,09F,Menu/GI Joe Collab Art,1
+1389,09F,Menu/Nerf Collab Art,1
+139D,09F,Menu/Wuyang Art,1
+139F,09F,Menu/S17 Mythics 3D,1
+13A2,09F,Menu/S17 Mythics Art,1
 ; Celebrations,,,
 2168,01C,Winter,1
 2498,01C,LunarNewYear,1
