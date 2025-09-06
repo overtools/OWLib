@@ -5,49 +5,49 @@ using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-general-unlocks", Description = "List general unlocks", CustomFlags = typeof(ListFlags))]
-    public class ListGeneralUnlocks : JSONTool, ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            var flags = (ListFlags) toolFlags;
-            var unlocks = GetPlayerProgression();
+namespace DataTool.ToolLogic.List;
 
-            if (flags.JSON) {
-                if (flags.Flatten) {
-                    OutputJSON(unlocks.IterateUnlocks(), flags);
-                } else {
-                    OutputJSON(unlocks, flags);
-                }
+[Tool("list-general-unlocks", Description = "List general unlocks", CustomFlags = typeof(ListFlags))]
+public class ListGeneralUnlocks : JSONTool, ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        var flags = (ListFlags) toolFlags;
+        var unlocks = GetPlayerProgression();
 
-                return;
+        if (flags.JSON) {
+            if (flags.Flatten) {
+                OutputJSON(unlocks.IterateUnlocks(), flags);
+            } else {
+                OutputJSON(unlocks, flags);
             }
 
-            ListHeroUnlocks.DisplayUnlocks("Other", unlocks.OtherUnlocks);
+            return;
+        }
 
-            if (unlocks.LootBoxesUnlocks != null) {
-                foreach (LootBoxUnlocks lootBoxUnlocks in unlocks.LootBoxesUnlocks) {
-                    string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
+        ListHeroUnlocks.DisplayUnlocks("Other", unlocks.OtherUnlocks);
 
-                    ListHeroUnlocks.DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
-                }
-            }
+        if (unlocks.LootBoxesUnlocks != null) {
+            foreach (var lootBoxUnlocks in unlocks.LootBoxesUnlocks) {
+                string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
 
-            if (unlocks.AdditionalUnlocks != null) {
-                foreach (AdditionalUnlocks additionalUnlocks in unlocks.AdditionalUnlocks) {
-                    ListHeroUnlocks.DisplayUnlocks($"Level {additionalUnlocks.Level}", additionalUnlocks.Unlocks);
-                }
+                ListHeroUnlocks.DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
             }
         }
 
-        public static PlayerProgression GetPlayerProgression() {
-            foreach (ulong key in TrackedFiles[0x54]) {
-                STUGenericSettings_PlayerProgression playerProgression = GetInstance<STUGenericSettings_PlayerProgression>(key);
-                if (playerProgression == null) continue;
-
-                return new PlayerProgression(playerProgression);
+        if (unlocks.AdditionalUnlocks != null) {
+            foreach (var additionalUnlocks in unlocks.AdditionalUnlocks) {
+                ListHeroUnlocks.DisplayUnlocks($"Level {additionalUnlocks.Level}", additionalUnlocks.Unlocks);
             }
-
-            return null;
         }
+    }
+
+    public static PlayerProgression GetPlayerProgression() {
+        foreach (ulong key in TrackedFiles[0x54]) {
+            var playerProgression = GetInstance<STUGenericSettings_PlayerProgression>(key);
+            if (playerProgression == null) continue;
+
+            return new PlayerProgression(playerProgression);
+        }
+
+        return null;
     }
 }

@@ -3,32 +3,32 @@ using DataTool.Flag;
 using DataTool.Helper;
 using TankLib.STU.Types;
 
-namespace DataTool.SaveLogic.Unlock {
-    public static class NameCard {
-        public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
-            STU_DB1B05B5 nameCard = (STU_DB1B05B5) unlock.STU;
+namespace DataTool.SaveLogic.Unlock;
 
-            string name = IO.GetCleanString(nameCard.m_name);
+public static class NameCard {
+    public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
+        STU_DB1B05B5 nameCard = (STU_DB1B05B5) unlock.STU;
 
-            directory = Path.GetFullPath(Path.Combine(directory, ".."));
+        string name = IO.GetCleanString(nameCard.m_name);
 
-            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            var replacements = SkinTheme.GetReplacements(nameCard.m_skin);
+        directory = Path.GetFullPath(Path.Combine(directory, ".."));
 
-            // smaller version for the name plate ui
-            // if (nameCard.m_0CAFC9BA != null) {
-            //     FindLogic.Combo.Find(info, nameCard.m_0CAFC9BA);
-            //     info.SetTextureName(nameCard.m_0CAFC9BA, name);
-            // }
+        FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+        var replacements = SkinTheme.GetReplacements(nameCard.m_skin);
 
-            // larger version for the career page
-            if (nameCard.m_C5B31BBA != null) {
-                FindLogic.Combo.Find(info, nameCard.m_C5B31BBA, replacements);
-                info.SetTextureName(nameCard.m_C5B31BBA, name);
-            }
+        // smaller version for the name plate ui
+        // if (nameCard.m_0CAFC9BA != null) {
+        //     FindLogic.Combo.Find(info, nameCard.m_0CAFC9BA);
+        //     info.SetTextureName(nameCard.m_0CAFC9BA, name);
+        // }
 
-            var context = new Combo.SaveContext(info);
-            Combo.SaveLooseTextures(flags, Path.Combine(directory), context);
+        // larger version for the career page
+        if (nameCard.m_C5B31BBA != null) {
+            FindLogic.Combo.Find(info, nameCard.m_C5B31BBA, replacements);
+            info.SetTextureName(nameCard.m_C5B31BBA, name);
         }
+
+        var context = new Combo.SaveContext(info);
+        Combo.SaveLooseTextures(flags, Path.Combine(directory), context);
     }
 }

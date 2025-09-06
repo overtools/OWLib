@@ -14,157 +14,157 @@ using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.SpellCheckUtils;
 
-namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-voice-old", IsSensitive = true, Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
-        public List<QueryType> QueryTypes => new List<QueryType> {
-            new QueryType("soundRestriction") { HumanName = "Sound" },
-            new QueryType("groupRestriction") { HumanName = "Group" }
-        };
+namespace DataTool.ToolLogic.Extract;
 
-        public Dictionary<string, string> QueryNameOverrides => null;
+[Tool("extract-hero-voice-old", IsSensitive = true, Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
+public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
+    public List<QueryType> QueryTypes => new List<QueryType> {
+        new QueryType("soundRestriction") { HumanName = "Sound" },
+        new QueryType("groupRestriction") { HumanName = "Group" }
+    };
 
-        public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
+    public Dictionary<string, string> QueryNameOverrides => null;
 
-        public void Parse(ICLIFlags toolFlags) {
-            SaveHeroSounds(toolFlags);
+    public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
+
+    public void Parse(ICLIFlags toolFlags) {
+        SaveHeroSounds(toolFlags);
+    }
+
+    protected override void QueryHelp(List<QueryType> types) {
+        IndentHelper indent = new IndentHelper();
+
+        Logger.Log("Please specify what you want to extract:");
+        Logger.Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
+        Logger.Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
+
+        Logger.Log($"{indent + 1}All hero names are in your selected locale");
+
+        Logger.Log("\r\nTypes:");
+        foreach (QueryType argType in types) {
+            Logger.Log($"{indent + 1}{argType.Name}");
         }
 
-        protected override void QueryHelp(List<QueryType> types) {
-            IndentHelper indent = new IndentHelper();
+        Logger.Log("\r\nExample commands: ");
+        Logger.Log($"{indent + 1}\"Lúcio|soundRestriction=00000000B56B.0B2\"");
+        Logger.Log($"{indent + 1}\"Torbjörn|groupRestriction=0000000000CD.078\"");
+        Logger.Log($"{indent + 1}\"Moira\"");
+    }
 
-            Logger.Log("Please specify what you want to extract:");
-            Logger.Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Logger.Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
+    private const string Container = "HeroVoice";
 
-            Logger.Log($"{indent + 1}All hero names are in your selected locale");
+    private void SaveHeroSounds(ICLIFlags toolFlags) {
+        var flags = (ExtractFlags) toolFlags;
+        var basePath = flags.OutputPath;
+        flags.EnsureOutputDirectory();
 
-            Logger.Log("\r\nTypes:");
-            foreach (QueryType argType in types) {
-                Logger.Log($"{indent + 1}{argType.Name}");
-            }
-
-            Logger.Log("\r\nExample commands: ");
-            Logger.Log($"{indent + 1}\"Lúcio|soundRestriction=00000000B56B.0B2\"");
-            Logger.Log($"{indent + 1}\"Torbjörn|groupRestriction=0000000000CD.078\"");
-            Logger.Log($"{indent + 1}\"Moira\"");
+        if (flags.Positionals.Length < 4) {
+            QueryHelp(QueryTypes);
+            return;
         }
 
-        private const string Container = "HeroVoice";
+        var heroes = Helpers.GetHeroes();
+        var validHeroes = Helpers.GetHeroNamesMapping(heroes);
+        var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+        if (parsedTypes == null) return;
 
-        private void SaveHeroSounds(ICLIFlags toolFlags) {
-            var flags = (ExtractFlags) toolFlags;
-            var basePath = flags.OutputPath;
-            flags.EnsureOutputDirectory();
+        FillHeroSpellDict(SymSpell);
+        SpellCheckQuery(parsedTypes, SymSpell);
 
-            if (flags.Positionals.Length < 4) {
-                QueryHelp(QueryTypes);
-                return;
-            }
+        foreach (var (heroGuid, hero) in heroes) {
+            var heroStu = hero.STU;
+            if (heroStu == null) continue;
 
-            var heroes = Helpers.GetHeroes();
-            var validHeroes = Helpers.GetHeroNamesMapping(heroes);
-            var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
-            if (parsedTypes == null) return;
-
-            FillHeroSpellDict(SymSpell);
-            SpellCheckQuery(parsedTypes, SymSpell);
-
-            foreach (var (heroGuid, hero) in heroes) {
-                var heroStu = hero.STU;
-                if (heroStu == null) continue;
-
-                string heroNameActual = hero.Name ?? $"Unknown{teResourceGUID.Index(heroGuid)}";
+            string heroNameActual = hero.Name ?? $"Unknown{teResourceGUID.Index(heroGuid)}";
 
 
-                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
+            Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
 
-                if (config.Count == 0) continue;
+            if (config.Count == 0) continue;
 
-                Logger.Log($"Processing data for {heroNameActual}");
+            Logger.Log($"Processing data for {heroNameActual}");
 
-                STUVoiceSetComponent baseComponent = default;
-                Combo.ComboInfo baseInfo = default;
+            STUVoiceSetComponent baseComponent = default;
+            Combo.ComboInfo baseInfo = default;
 
-                string heroFileName = GetValidFilename(heroNameActual);
+            string heroFileName = GetValidFilename(heroNameActual);
 
-                if (SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroFileName, "Default", ref baseComponent, ref baseInfo)) {
-                    if (heroStu.m_heroProgression == 0) continue;
-                    var progression = new ProgressionUnlocks(heroStu);
+            if (SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroFileName, "Default", ref baseComponent, ref baseInfo)) {
+                if (heroStu.m_heroProgression == 0) continue;
+                var progression = new ProgressionUnlocks(heroStu);
 
-                    bool npc = progression.LootBoxesUnlocks == null;
+                bool npc = progression.LootBoxesUnlocks == null;
 
-                    foreach (Unlock itemInfo in progression.OtherUnlocks) {
-                        ProcessUnlock(itemInfo, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
+                foreach (Unlock itemInfo in progression.OtherUnlocks) {
+                    ProcessUnlock(itemInfo, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
+                }
+
+                if (npc) {
+                    foreach (var skin in heroStu.m_skinThemes)
+                        SaveSkin(flags, skin.m_5E9665E3, basePath, heroStu, heroFileName, GetFileName(skin.m_5E9665E3), baseComponent, baseInfo);
+
+                    continue;
+                }
+
+                foreach (var defaultUnlocks in progression.LevelUnlocks) {
+                    if (defaultUnlocks.Unlocks == null) continue; // wot??
+
+                    foreach (Unlock unlock in defaultUnlocks.Unlocks) {
+                        ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
                     }
+                }
 
-                    if (npc) {
-                        foreach (var skin in heroStu.m_skinThemes)
-                            SaveSkin(flags, skin.m_5E9665E3, basePath, heroStu, heroFileName, GetFileName(skin.m_5E9665E3), baseComponent, baseInfo);
+                foreach (var eventUnlocks in progression.LootBoxesUnlocks) {
+                    if (eventUnlocks?.Unlocks == null) continue;
 
-                        continue;
-                    }
-
-                    foreach (var defaultUnlocks in progression.LevelUnlocks) {
-                        if (defaultUnlocks.Unlocks == null) continue; // wot??
-
-                        foreach (Unlock unlock in defaultUnlocks.Unlocks) {
-                            ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
-                        }
-                    }
-
-                    foreach (var eventUnlocks in progression.LootBoxesUnlocks) {
-                        if (eventUnlocks?.Unlocks == null) continue;
-
-                        foreach (Unlock unlock in eventUnlocks.Unlocks) {
-                            ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
-                        }
+                    foreach (Unlock unlock in eventUnlocks.Unlocks) {
+                        ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
                     }
                 }
             }
         }
+    }
 
-        private static void ProcessUnlock(Unlock unlock, ICLIFlags flags, string basePath, string heroFileName, STUHero hero, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
-            if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
-            if (unlockSkinTheme.m_0B1BA7C1 != 0)
-                return;
+    private static void ProcessUnlock(Unlock unlock, ICLIFlags flags, string basePath, string heroFileName, STUHero hero, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
+        if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
+        if (unlockSkinTheme.m_0B1BA7C1 != 0)
+            return;
 
-            SaveSkin(flags, unlockSkinTheme.m_skinTheme, basePath, hero, heroFileName, unlock.Name, baseComponent, baseInfo);
+        SaveSkin(flags, unlockSkinTheme.m_skinTheme, basePath, hero, heroFileName, unlock.Name, baseComponent, baseInfo);
+    }
+
+    private static void SaveSkin(ICLIFlags flags, teResourceGUID skinGUID, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
+        STUSkinBase skin = GetInstance<STUSkinBase>(skinGUID);
+        if (skin == null)
+            return;
+
+        STUVoiceSetComponent component = default;
+        Combo.ComboInfo info = default;
+
+        SaveSet(flags, basePath, hero.m_gameplayEntity, heroFileName, GetValidFilename(name), ref component,
+                ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skinGUID));
+    }
+
+    private static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {
+        voiceSetComponent = GetInstance<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
+
+        if (voiceSetComponent?.m_voiceDefinition == null) {
+            Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
+            return false;
         }
 
-        private static void SaveSkin(ICLIFlags flags, teResourceGUID skinGUID, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
-            STUSkinBase skin = GetInstance<STUSkinBase>(skinGUID);
-            if (skin == null)
-                return;
-
-            STUVoiceSetComponent component = default;
-            Combo.ComboInfo info = default;
-
-            SaveSet(flags, basePath, hero.m_gameplayEntity, heroFileName, GetValidFilename(name), ref component,
-                    ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skinGUID));
-        }
-
-        private static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {
-            voiceSetComponent = GetInstance<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
-
-            if (voiceSetComponent?.m_voiceDefinition == null) {
-                Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
+        info = new Combo.ComboInfo();
+        Combo.Find(info, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements), replacements);
+        if (baseComponent != null && baseCombo != null) {
+            if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.m_voiceDefinition, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements)))
                 return false;
-            }
-
-            info = new Combo.ComboInfo();
-            Combo.Find(info, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements), replacements);
-            if (baseComponent != null && baseCombo != null) {
-                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.m_voiceDefinition, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements)))
-                    return false;
-            }
-
-            Logger.Log($"\tSaving {skin}");
-
-            var context = new SaveLogic.Combo.SaveContext(info);
-            SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), context, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));
-
-            return true;
         }
+
+        Logger.Log($"\tSaving {skin}");
+
+        var context = new SaveLogic.Combo.SaveContext(info);
+        SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), context, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));
+
+        return true;
     }
 }

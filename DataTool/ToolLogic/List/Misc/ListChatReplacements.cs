@@ -5,24 +5,24 @@ using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-chat-replacements", Description = "GG EZ -> It's past my bedtime", CustomFlags = typeof(ListFlags), IsSensitive = true)]
-    public class ListChatReplacements : JSONTool, ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            var flags = (ListFlags) toolFlags;
-            var data = GetData();
-            OutputJSON(data, flags);
+namespace DataTool.ToolLogic.List.Misc;
+
+[Tool("list-chat-replacements", Description = "GG EZ -> It's past my bedtime", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+public class ListChatReplacements : JSONTool, ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        var flags = (ListFlags) toolFlags;
+        var data = GetData();
+        OutputJSON(data, flags);
+    }
+
+    private static ChatReplacementsContainer GetData() {
+        foreach (ulong key in TrackedFiles[0x54]) {
+            var stu = GetInstance<STU_15A511F9>(key);
+            if (stu == null) continue;
+
+            return new ChatReplacementsContainer(stu, key);
         }
 
-        private static ChatReplacementsContainer GetData() {
-            foreach (ulong key in TrackedFiles[0x54]) {
-                var stu = GetInstance<STU_15A511F9>(key);
-                if (stu == null) continue;
-
-                return new ChatReplacementsContainer(stu, key);
-            }
-
-            return null;
-        }
+        return null;
     }
 }

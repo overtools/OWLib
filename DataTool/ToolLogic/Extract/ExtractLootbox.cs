@@ -6,47 +6,47 @@ using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-lootbox", Description = "Extract lootbox models", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractLootbox : ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            GetLootboxes(toolFlags);
-        }
+namespace DataTool.ToolLogic.Extract;
 
-        public const string Container = "LootBoxes";
+[Tool("extract-lootbox", Description = "Extract lootbox models", CustomFlags = typeof(ExtractFlags))]
+public class ExtractLootbox : ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        GetLootboxes(toolFlags);
+    }
 
-        public void GetLootboxes(ICLIFlags toolFlags) {
-            var flags = (ExtractFlags) toolFlags;
-            flags.EnsureOutputDirectory();
+    public const string Container = "LootBoxes";
 
-            foreach (ulong key in TrackedFiles[0xCF]) {
-                STULootBox lootbox = GetInstance<STULootBox>(key);
-                if (lootbox == null) continue;
+    public void GetLootboxes(ICLIFlags toolFlags) {
+        var flags = (ExtractFlags) toolFlags;
+        flags.EnsureOutputDirectory();
 
-                string name = LootBox.GetName(lootbox.m_lootBoxType);
+        foreach (ulong key in TrackedFiles[0xCF]) {
+            STULootBox lootbox = GetInstance<STULootBox>(key);
+            if (lootbox == null) continue;
 
-                Combo.ComboInfo info = Combo.Find(null, lootbox.m_baseEntity); // 003
-                Combo.Find(info, lootbox.m_chestEntity); // 003
-                Combo.Find(info, lootbox.m_idleEffect); // 00D
-                Combo.Find(info, lootbox.m_FEC3ED62); // 00D
-                Combo.Find(info, lootbox.m_FFE7768F); // 00D
-                Combo.Find(info, lootbox.m_baseModelLook); // 01A
-                Combo.Find(info, lootbox.m_modelLook);
+            string name = LootBox.GetName(lootbox.m_lootBoxType);
 
-                // puck - references coin chest and all the other preview entities
-                Combo.Find(info, 0x04000000000013F8);
+            Combo.ComboInfo info = Combo.Find(null, lootbox.m_baseEntity); // 003
+            Combo.Find(info, lootbox.m_chestEntity); // 003
+            Combo.Find(info, lootbox.m_idleEffect); // 00D
+            Combo.Find(info, lootbox.m_FEC3ED62); // 00D
+            Combo.Find(info, lootbox.m_FFE7768F); // 00D
+            Combo.Find(info, lootbox.m_baseModelLook); // 01A
+            Combo.Find(info, lootbox.m_modelLook);
 
-                if (lootbox.m_shopCards != null) {
-                    foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
-                        Combo.Find(info, lootboxShopCard.m_cardTexture); // 004
-                    }
+            // puck - references coin chest and all the other preview entities
+            Combo.Find(info, 0x04000000000013F8);
+
+            if (lootbox.m_shopCards != null) {
+                foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
+                    Combo.Find(info, lootboxShopCard.m_cardTexture); // 004
                 }
-
-                var context = new SaveLogic.Combo.SaveContext(info);
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(flags.OutputPath, Container, name, "ShopCards"), context);
-                SaveLogic.Combo.Save(flags, Path.Combine(flags.OutputPath, Container, name), context);
-                SaveScratchDatabase();
             }
+
+            var context = new SaveLogic.Combo.SaveContext(info);
+            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(flags.OutputPath, Container, name, "ShopCards"), context);
+            SaveLogic.Combo.Save(flags, Path.Combine(flags.OutputPath, Container, name), context);
+            SaveScratchDatabase();
         }
     }
 }

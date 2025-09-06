@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace DataTool.Flag {
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class AliasAttribute : Attribute {
-        public string Alias;
+namespace DataTool.Flag;
 
-        public AliasAttribute() { }
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+public class AliasAttribute : Attribute {
+    public string Alias;
 
-        public AliasAttribute(string alias) {
-            Alias = alias;
-        }
+    public AliasAttribute() { }
 
-        public new string ToString() {
-            return Alias;
-        }
+    public AliasAttribute(string alias) {
+        Alias = alias;
+    }
+
+    public new string ToString() {
+        return Alias;
     }
 }

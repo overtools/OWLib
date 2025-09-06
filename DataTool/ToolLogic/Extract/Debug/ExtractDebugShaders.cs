@@ -10,319 +10,319 @@ using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-shaders", Description = "Extract shaders for a material (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
-    public class ExtractDebugShaders : ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            GetShaders(toolFlags);
+namespace DataTool.ToolLogic.Extract.Debug;
+
+[Tool("extract-debug-shaders", Description = "Extract shaders for a material (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+public class ExtractDebugShaders : ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        GetShaders(toolFlags);
+    }
+
+    public void GetShaders(ICLIFlags toolFlags) {
+        const string container = "ShaderCode";
+        //const ulong materialGUID = 0xE00000000005860;  // 000000005860.008: Sombra - League - NYXL - Main
+        //const string matName = "Sombra - League - NYXL - Main";
+
+        //const ulong materialGUID = 0xE00000000006086;
+        //const string matName = "Orisa - Nature - Leaves";
+
+        //const ulong materialGUID = 0xE00000000002381;
+        //const string matName = "Maps - Tall bush";
+
+        //const ulong materialGUID = 0xE000000000008B2;
+        //const string matName = "Widow - Odette - Arm tassels";
+
+
+        // orisa owl
+        //const ulong materialGUID = 0xE00000000005809;  // 000000005809.008: Orisa - League - NYXL - Team Decals
+        //const string matName = "Orisa - League - NYXL - Team Decals";
+
+        //const ulong materialGUID = 0xE00000000005840;
+        //const string matName = "Orisa - League - NYXL - Main";
+
+        //const ulong materialGUID = 0xE000000000051CC;
+        //const string matName = "Orisa - League - NYXL - 51CC";
+
+        string basePath;
+        if (toolFlags is ExtractFlags flags) {
+            basePath = flags.OutputPath;
+        } else {
+            throw new Exception("no output path");
         }
 
-        public void GetShaders(ICLIFlags toolFlags) {
-            const string container = "ShaderCode";
-            //const ulong materialGUID = 0xE00000000005860;  // 000000005860.008: Sombra - League - NYXL - Main
-            //const string matName = "Sombra - League - NYXL - Main";
-
-            //const ulong materialGUID = 0xE00000000006086;
-            //const string matName = "Orisa - Nature - Leaves";
-
-            //const ulong materialGUID = 0xE00000000002381;
-            //const string matName = "Maps - Tall bush";
-
-            //const ulong materialGUID = 0xE000000000008B2;
-            //const string matName = "Widow - Odette - Arm tassels";
+        string path = Path.Combine(basePath, container);
 
 
-            // orisa owl
-            //const ulong materialGUID = 0xE00000000005809;  // 000000005809.008: Orisa - League - NYXL - Team Decals
-            //const string matName = "Orisa - League - NYXL - Team Decals";
+        IO.WriteFile(0x0C008000CAE5C31B, path); // failing tex. 0 payloads. but data
+        IO.WriteFile(0x0D00000000000F5B, path); // tracer model (idk which)
+        IO.WriteFile(0x0D0000000000302E, path); // tracer model 2 (idk which)
+        IO.WriteFile(0x0D00000000000413, path); // tracer model 3 (idk which)
+        IO.WriteFile(0x0D000000000002B1, path); // tracer model 4 (main)
+        IO.WriteFile(0x0D000000000006A0, path); // pharah main
 
-            //const ulong materialGUID = 0xE00000000005840;
-            //const string matName = "Orisa - League - NYXL - Main";
+        IO.WriteFile(0x0D0000000000DCA7, path); // sojurn main
+        IO.WriteFile(0x0D0000000000DCA8, path); // sojurn 1p
 
-            //const ulong materialGUID = 0xE000000000051CC;
-            //const string matName = "Orisa - League - NYXL - 51CC";
+        IO.WriteFile(0xD0000000000D748, path); // tracer new
+        IO.WriteFile(0xD0000020000D748, path); // tracer new lod
 
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+        IO.WriteFile(0x0E8800000000000F, path); // lod streaming model.... omnic waiter? donk
 
-            string path = Path.Combine(basePath, container);
+        FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+        FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips
+        FindLogic.Combo.Find(comboInfo, 0x0C0000000001B1D0); // more broken mips
+        FindLogic.Combo.Find(comboInfo, 0x0C0000000002C94F); // kanezaka cube
+        var context = new Combo.SaveContext(comboInfo);
+        Combo.SaveLooseTextures(flags, path, context);
 
+        //return;
 
-            IO.WriteFile(0x0C008000CAE5C31B, path); // failing tex. 0 payloads. but data
-            IO.WriteFile(0x0D00000000000F5B, path); // tracer model (idk which)
-            IO.WriteFile(0x0D0000000000302E, path); // tracer model 2 (idk which)
-            IO.WriteFile(0x0D00000000000413, path); // tracer model 3 (idk which)
-            IO.WriteFile(0x0D000000000002B1, path); // tracer model 4 (main)
-            IO.WriteFile(0x0D000000000006A0, path); // pharah main
+        //TestModelLook(0x98000000000682F); // Chateau - Lake
 
-            IO.WriteFile(0x0D0000000000DCA7, path); // sojurn main
-            IO.WriteFile(0x0D0000000000DCA8, path); // sojurn 1p
+        //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
+        //SaveMaterial(path, 0xE00000000004F45, "Chateau - Tower - Borders");
+        //SaveMaterial(path, 0xE00000000004D4B, "Chateau - Tower - Windows");
+        //SaveMaterial(path, 0xE00000000004F44, "Chateau - Tower - Tip");
+        //SaveMaterial(path, 0xE000000000003A5, "Rein - Shield - Main");
+        //SaveMaterial(path, 0xE00000000005840, "Orisa - League - NYXL - Main");
+        //SaveMaterial(path, 0xE00000000005809, "Orisa - League - NYXL - Team Decals");
+        //SaveMaterial(path, 0xE00000000005C70, "Moira - Blackwatch - Decals");
+        //SaveMaterial(path, 0xE0000000000562D, "Moira - Blackwatch - Face");
+        //SaveCompute(path);
 
-            IO.WriteFile(0xD0000000000D748, path); // tracer new
-            IO.WriteFile(0xD0000020000D748, path); // tracer new lod
+        // string allPath = Path.Combine(path, "All");
+        // foreach (ulong inst in TrackedFiles[0x86]) {
+        //     SaveShaderInstance(allPath, inst, teResourceGUID.AsString(inst));
+        // }
+        // return;
 
-            IO.WriteFile(0x0E8800000000000F, path); // lod streaming model.... omnic waiter? donk
+        SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
+        SaveMaterial(path, 0xE00000000004D29, "Chateau - Lake");
+        //SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
+        //SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
+        SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
+        SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
+        SaveMaterial(path, 0xE00000000000171, "Reaper - Classic - Main");
+        SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
 
-            FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips
-            FindLogic.Combo.Find(comboInfo, 0x0C0000000001B1D0); // more broken mips
-            FindLogic.Combo.Find(comboInfo, 0x0C0000000002C94F); // kanezaka cube
-            var context = new Combo.SaveContext(comboInfo);
-            Combo.SaveLooseTextures(flags, path, context);
+        //SavePostFX(path);
+        //SaveScreenQuad(path);
+        //Save088(path);
+    }
 
-            //return;
+    public void TestModelLook(ulong guid) {
+        STUModelLook modelLook = GetInstance<STUModelLook>(guid);
+    }
 
-            //TestModelLook(0x98000000000682F); // Chateau - Lake
+    public void Save088(string basePath) {
+        var path = Path.Combine(basePath, "088");
 
-            //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
-            //SaveMaterial(path, 0xE00000000004F45, "Chateau - Tower - Borders");
-            //SaveMaterial(path, 0xE00000000004D4B, "Chateau - Tower - Windows");
-            //SaveMaterial(path, 0xE00000000004F44, "Chateau - Tower - Tip");
-            //SaveMaterial(path, 0xE000000000003A5, "Rein - Shield - Main");
-            //SaveMaterial(path, 0xE00000000005840, "Orisa - League - NYXL - Main");
-            //SaveMaterial(path, 0xE00000000005809, "Orisa - League - NYXL - Team Decals");
-            //SaveMaterial(path, 0xE00000000005C70, "Moira - Blackwatch - Decals");
-            //SaveMaterial(path, 0xE0000000000562D, "Moira - Blackwatch - Face");
-            //SaveCompute(path);
+        //{
+        //    var path2 = Path.Combine(basePath, "xxShader}");
+        //    using (Stream stream = IO.OpenFile((teResourceGUID) 0xE100000000000xx)) {
+        //        teShaderGroup shaderGroup = new teShaderGroup(stream);
+        //        SaveShaderGroup(shaderGroup, path2);
+        //    }
+        //}
 
-            // string allPath = Path.Combine(path, "All");
-            // foreach (ulong inst in TrackedFiles[0x86]) {
-            //     SaveShaderInstance(allPath, inst, teResourceGUID.AsString(inst));
-            // }
-            // return;
-
-            SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
-            SaveMaterial(path, 0xE00000000004D29, "Chateau - Lake");
-            //SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
-            //SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
-            SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
-            SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
-            SaveMaterial(path, 0xE00000000000171, "Reaper - Classic - Main");
-            SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
-
-            //SavePostFX(path);
-            //SaveScreenQuad(path);
-            //Save088(path);
-        }
-
-        public void TestModelLook(ulong guid) {
-            STUModelLook modelLook = GetInstance<STUModelLook>(guid);
-        }
-
-        public void Save088(string basePath) {
-            var path = Path.Combine(basePath, "088");
-
-            //{
-            //    var path2 = Path.Combine(basePath, "xxShader}");
-            //    using (Stream stream = IO.OpenFile((teResourceGUID) 0xE100000000000xx)) {
-            //        teShaderGroup shaderGroup = new teShaderGroup(stream);
-            //        SaveShaderGroup(shaderGroup, path2);
-            //    }
-            //}
-
-            foreach (ulong guid in TrackedFiles[0x88]) {
-                using (Stream stream = IO.OpenFile(guid)) {
-                    teShaderGroup shaderGroup = new teShaderGroup(stream);
-
-                    string groupPath = Path.Combine(path, teResourceGUID.AsString(guid));
-
-                    SaveShaderGroup(shaderGroup, groupPath);
-                }
-            }
-        }
-
-        public void SaveScreenQuad(string basePath) {
-            var path = Path.Combine(basePath, "ScreenQuad");
-            using (Stream stream = IO.OpenFile((teResourceGUID) 0xE1000000000000C)) {
+        foreach (ulong guid in TrackedFiles[0x88]) {
+            using (Stream stream = IO.OpenFile(guid)) {
                 teShaderGroup shaderGroup = new teShaderGroup(stream);
 
-                SavePostShader(path, shaderGroup, 0xF1B0EC09, "s_pVShader");
-                SavePostShader(path, shaderGroup, 0x2183B37B, "s_pGeometryVShader");
-                SavePostShader(path, shaderGroup, 0xF203D3B5, "s_pDepthVShader");
-                SavePostShader(path, shaderGroup, 0xBD9B9307, "s_pLayerVShader"); // VERTEX, UNKNOWN_C????
+                string groupPath = Path.Combine(path, teResourceGUID.AsString(guid));
+
+                SaveShaderGroup(shaderGroup, groupPath);
             }
         }
+    }
 
-        public void SavePostFX(string basePath) {
-            var path = Path.Combine(basePath, "PostFX");
-            using (Stream stream = IO.OpenFile((teResourceGUID) 0xE10000000000044)) {
-                teShaderGroup shaderGroup = new teShaderGroup(stream);
+    public void SaveScreenQuad(string basePath) {
+        var path = Path.Combine(basePath, "ScreenQuad");
+        using (Stream stream = IO.OpenFile((teResourceGUID) 0xE1000000000000C)) {
+            teShaderGroup shaderGroup = new teShaderGroup(stream);
 
-                SavePostShader(path, shaderGroup, 0xF0A5D76B, "CopyPointSampledState");
-                SavePostShader(path, shaderGroup, 0x64DADF24, "OutlineFinalizeState");
-                SavePostShader(path, shaderGroup, 0xA2883CA8, "OutlineFinalizeApplyState");
-                SavePostShader(path, shaderGroup, 0x24F981CF, "RefractedOutlineFinalizeState[0]");
-                //SavePostShader(path, shaderGroup, 0x64DADF24, "RefractedOutlineFinalizeState[1]"); // same as m_outlineFinalizeState
-                SavePostShader(path, shaderGroup, 0x6E8A86F6, "RefractedOutlineFinalizeApplyState[0]");
-                //SavePostShader(path, shaderGroup, 0xA2883CA8, "RefractedOutlineFinalizeState[1]"); // same as m_outlineFinalizeApplyState
-                SavePostShader(path, shaderGroup, 0x2314B25F, "SolidColorState");
-                SavePostShader(path, shaderGroup, 0x23DEF50E, "HistogramState");
-                SavePostShader(path, shaderGroup, 0xF4F31C1E, "BrightPassStateLo");
-                SavePostShader(path, shaderGroup, 0x2418E502, "BrightPassStateHi");
-                SavePostShader(path, shaderGroup, 0x660AA4D1, "DownsampleState");
-                SavePostShader(path, shaderGroup, 0x7918E37C, "DownsampleStateCheckForNaN");
-                SavePostShader(path, shaderGroup, 0xE30F741A, "DownsampleLuminanceState");
-                SavePostShader(path, shaderGroup, 0xED42C442, "HorizontalBlurState");
-                SavePostShader(path, shaderGroup, 0x5D84E4EE, "VerticalBlurState");
-                SavePostShader(path, shaderGroup, 0x7BD41894, "OverlayAddState");
-                SavePostShader(path, shaderGroup, 0x26817C6F, "InvertZState");
-                SavePostShader(path, shaderGroup, 0x3C8225F1, "DOFTileIntermediateState");
-                SavePostShader(path, shaderGroup, 0x48ED2C1F, "DOFTileState");
-                SavePostShader(path, shaderGroup, 0xEC9BC9DB, "DOFTileFilterState");
-                SavePostShader(path, shaderGroup, 0x51305AFC, "DOFPresortState");
-                SavePostShader(path, shaderGroup, 0xF191CE9E, "DOFCircularFilterState");
-                SavePostShader(path, shaderGroup, 0xEA0B974D, "DOFMedianFilterState");
-                SavePostShader(path, shaderGroup, 0x36DF160E, "DOFUpsampleState");
-                SavePostShader(path, shaderGroup, 0xB3FE8DDE, "DOFUpsampleIntoGbufferState");
-                SavePostShader(path, shaderGroup, 0x79C90032, "TonemapState");
-                SavePostShader(path, shaderGroup, 0x895D656C, "GammaCorrectionState");
-                SavePostShader(path, shaderGroup, 0x9615383C, "ColorGradingState");
-                SavePostShader(path, shaderGroup, 0x14B25063, "ColorizationState");
-                SavePostShader(path, shaderGroup, 0x924CFDEA, "CombinedMainState");
-                SavePostShader(path, shaderGroup, 0xEB0B080A, "CombinedAllEnabledMainState");
-                SavePostShader(path, shaderGroup, 0x7540E081, "RadialBlurState");
-                SavePostShader(path, shaderGroup, 0x3460D76B, "FXAAState");
-                SavePostShader(path, shaderGroup, 0x739B7624, "HorizontalOutlineBlurState");
-                SavePostShader(path, shaderGroup, 0xC35D5688, "VerticalOutlineBlurState");
-                SavePostShader(path, shaderGroup, 0x2314B25F, "OutlineBlackState");
-                //SavePostShader(path, shaderGroup, 0x2314B25F, "OutlineClearToBlackState"); // same as m_outlineBlackState
+            SavePostShader(path, shaderGroup, 0xF1B0EC09, "s_pVShader");
+            SavePostShader(path, shaderGroup, 0x2183B37B, "s_pGeometryVShader");
+            SavePostShader(path, shaderGroup, 0xF203D3B5, "s_pDepthVShader");
+            SavePostShader(path, shaderGroup, 0xBD9B9307, "s_pLayerVShader"); // VERTEX, UNKNOWN_C????
+        }
+    }
 
-                SavePostShader(path, shaderGroup, 0xA5DBBF87, "PostUnkVertex1");
-                SavePostShader(path, shaderGroup, 0xC335DDAE, "PostUnkVertex2");
-            }
+    public void SavePostFX(string basePath) {
+        var path = Path.Combine(basePath, "PostFX");
+        using (Stream stream = IO.OpenFile((teResourceGUID) 0xE10000000000044)) {
+            teShaderGroup shaderGroup = new teShaderGroup(stream);
+
+            SavePostShader(path, shaderGroup, 0xF0A5D76B, "CopyPointSampledState");
+            SavePostShader(path, shaderGroup, 0x64DADF24, "OutlineFinalizeState");
+            SavePostShader(path, shaderGroup, 0xA2883CA8, "OutlineFinalizeApplyState");
+            SavePostShader(path, shaderGroup, 0x24F981CF, "RefractedOutlineFinalizeState[0]");
+            //SavePostShader(path, shaderGroup, 0x64DADF24, "RefractedOutlineFinalizeState[1]"); // same as m_outlineFinalizeState
+            SavePostShader(path, shaderGroup, 0x6E8A86F6, "RefractedOutlineFinalizeApplyState[0]");
+            //SavePostShader(path, shaderGroup, 0xA2883CA8, "RefractedOutlineFinalizeState[1]"); // same as m_outlineFinalizeApplyState
+            SavePostShader(path, shaderGroup, 0x2314B25F, "SolidColorState");
+            SavePostShader(path, shaderGroup, 0x23DEF50E, "HistogramState");
+            SavePostShader(path, shaderGroup, 0xF4F31C1E, "BrightPassStateLo");
+            SavePostShader(path, shaderGroup, 0x2418E502, "BrightPassStateHi");
+            SavePostShader(path, shaderGroup, 0x660AA4D1, "DownsampleState");
+            SavePostShader(path, shaderGroup, 0x7918E37C, "DownsampleStateCheckForNaN");
+            SavePostShader(path, shaderGroup, 0xE30F741A, "DownsampleLuminanceState");
+            SavePostShader(path, shaderGroup, 0xED42C442, "HorizontalBlurState");
+            SavePostShader(path, shaderGroup, 0x5D84E4EE, "VerticalBlurState");
+            SavePostShader(path, shaderGroup, 0x7BD41894, "OverlayAddState");
+            SavePostShader(path, shaderGroup, 0x26817C6F, "InvertZState");
+            SavePostShader(path, shaderGroup, 0x3C8225F1, "DOFTileIntermediateState");
+            SavePostShader(path, shaderGroup, 0x48ED2C1F, "DOFTileState");
+            SavePostShader(path, shaderGroup, 0xEC9BC9DB, "DOFTileFilterState");
+            SavePostShader(path, shaderGroup, 0x51305AFC, "DOFPresortState");
+            SavePostShader(path, shaderGroup, 0xF191CE9E, "DOFCircularFilterState");
+            SavePostShader(path, shaderGroup, 0xEA0B974D, "DOFMedianFilterState");
+            SavePostShader(path, shaderGroup, 0x36DF160E, "DOFUpsampleState");
+            SavePostShader(path, shaderGroup, 0xB3FE8DDE, "DOFUpsampleIntoGbufferState");
+            SavePostShader(path, shaderGroup, 0x79C90032, "TonemapState");
+            SavePostShader(path, shaderGroup, 0x895D656C, "GammaCorrectionState");
+            SavePostShader(path, shaderGroup, 0x9615383C, "ColorGradingState");
+            SavePostShader(path, shaderGroup, 0x14B25063, "ColorizationState");
+            SavePostShader(path, shaderGroup, 0x924CFDEA, "CombinedMainState");
+            SavePostShader(path, shaderGroup, 0xEB0B080A, "CombinedAllEnabledMainState");
+            SavePostShader(path, shaderGroup, 0x7540E081, "RadialBlurState");
+            SavePostShader(path, shaderGroup, 0x3460D76B, "FXAAState");
+            SavePostShader(path, shaderGroup, 0x739B7624, "HorizontalOutlineBlurState");
+            SavePostShader(path, shaderGroup, 0xC35D5688, "VerticalOutlineBlurState");
+            SavePostShader(path, shaderGroup, 0x2314B25F, "OutlineBlackState");
+            //SavePostShader(path, shaderGroup, 0x2314B25F, "OutlineClearToBlackState"); // same as m_outlineBlackState
+
+            SavePostShader(path, shaderGroup, 0xA5DBBF87, "PostUnkVertex1");
+            SavePostShader(path, shaderGroup, 0xC335DDAE, "PostUnkVertex2");
+        }
+    }
+
+    public void SavePostShader(string path, teShaderGroup shaderGroup, uint hash, string name) {
+        teResourceGUID state = shaderGroup.GetShaderByHash(hash);
+        if (state == 0) {
+            Console.Out.WriteLine($"Couldn't find {hash} / {name}");
+            return;
         }
 
-        public void SavePostShader(string path, teShaderGroup shaderGroup, uint hash, string name) {
-            teResourceGUID state = shaderGroup.GetShaderByHash(hash);
-            if (state == 0) {
-                Console.Out.WriteLine($"Couldn't find {hash} / {name}");
-                return;
-            }
+        SaveShaderInstance(path, state, name);
+    }
 
-            SaveShaderInstance(path, state, name);
-        }
+    public void SaveCompute(string path) {
+        Dictionary<ulong, int> bufferOccr = new Dictionary<ulong, int>();
 
-        public void SaveCompute(string path) {
-            Dictionary<ulong, int> bufferOccr = new Dictionary<ulong, int>();
-
-            foreach (ulong guid in TrackedFiles[0x86]) {
-                teShaderInstance instance = new teShaderInstance(IO.OpenFile(guid));
-                //teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
-
-                if (instance.BufferHeaders == null) continue;
-                foreach (teShaderInstance.BufferHeader bufferHeader in instance.BufferHeaders) {
-                    if (!bufferOccr.ContainsKey(bufferHeader.Hash)) {
-                        bufferOccr[bufferHeader.Hash] = 0;
-                    }
-
-                    bufferOccr[bufferHeader.Hash]++;
-                }
-
-                //if (shaderCode.Header.ShaderType == Enums.teSHADER_TYPE.COMPUTE) {
-                //    SaveShaderInstance(path, guid, instance, shaderCode);
-                //}
-            }
-
-            int i = 0;
-            foreach (KeyValuePair<ulong, int> buffer in bufferOccr.OrderByDescending(x => x.Value)) {
-                Console.Out.WriteLine($"{buffer.Key:X16}: {buffer.Value}");
-                i++;
-
-                //if (i == 10) {
-                //    break;
-                //}
-            }
-        }
-
-        public static void SaveMaterial(string basePath, ulong materialGUID, string name) {
-            string path = Path.Combine(basePath, name, IO.GetFileName(materialGUID));
-            string rawPath = Path.Combine(path, "raw");
-            string imgPath = Path.Combine(path, "img");
-            // IO.CreateDirectorySafe(path);
-            IO.CreateDirectorySafe(rawPath);
-
-            var matStream = IO.OpenFile(materialGUID);
-            if (matStream == null) return;
-            teMaterial material = new teMaterial(matStream);
-
-            IO.WriteFile(materialGUID, rawPath);
-            IO.WriteFile(material.Header.ShaderSource, rawPath);
-            IO.WriteFile(material.Header.ShaderGroup, rawPath);
-            IO.WriteFile(material.Header.GUIDx03A, rawPath);
-            IO.WriteFile(material.Header.MaterialData, rawPath);
-
-            using (Stream stream = IO.OpenFile(material.Header.MaterialData)) {
-                if (stream != null) {
-                    teMaterialData materialData = new teMaterialData(stream);
-                    if (materialData.Textures != null) {
-                        FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
-                        foreach (var texture in materialData.Textures) {
-                            FindLogic.Combo.Find(comboInfo, texture.TextureGUID);
-                            comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8")+".tif");
-
-                            IO.WriteFile(texture.TextureGUID, rawPath);
-                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 1), rawPath);
-                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 2), rawPath);
-                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 3), rawPath);
-                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 4), rawPath);
-                        }
-
-                        var context = new Combo.SaveContext(comboInfo);
-                        Combo.SaveLooseTextures(null, imgPath, context);
-                    }
-                }
-            }
-
-            teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile(material.Header.ShaderGroup));
-            SaveShaderGroup(shaderGroup, path);
-        }
-
-        public static void SaveShaderGroup(teShaderGroup shaderGroup, string path) {
-            int i = 0;
-            foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
-                string name = null;
-                if (shaderGroup.Hashes != null && shaderGroup.Hashes[i] != 0) {
-                    name = shaderGroup.Hashes[i].ToString("X8");
-                }
-
-                SaveShaderInstance(path, shaderGroupInstance, name);
-                i++;
-            }
-        }
-
-        public static void SaveShaderInstance(string path, ulong guid, string name) {
-            /*string rawPath = Path.Combine(path, "raw");
-            IO.WriteFile(guid, rawPath);
-            return;*/
-
+        foreach (ulong guid in TrackedFiles[0x86]) {
             teShaderInstance instance = new teShaderInstance(IO.OpenFile(guid));
-            teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
+            //teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
 
-            if (name == null) {
-                name = teResourceGUID.AsString(guid);
-            }
-
-            string instanceDirectory = Path.Combine(path, shaderCode.Header.ShaderType.ToString(), name);
-            IO.WriteFile(guid, instanceDirectory);
-            IO.WriteFile(instance.Header.ShaderCode, instanceDirectory);
-
-            using (Stream file = File.OpenWrite(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode) + ".bin"))) {
-                file.SetLength(0);
-                file.Write(shaderCode.ByteCode, 0, shaderCode.ByteCode.Length);
-            }
-
-            using (StreamWriter writer =
-                new StreamWriter(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode)) + ".meta")) {
-                writer.WriteLine($"{shaderCode.Header.ShaderType}");
-                writer.WriteLine("{texture \"hash\"} : {shader input index}");
-                if (instance.ShaderResources == null) return;
-                foreach (teShaderInstance.ShaderResourceDefinition textureInputDefinition in instance.ShaderResources) {
-                    writer.WriteLine($"{textureInputDefinition.NameHash:X8} : {textureInputDefinition.Register}");
+            if (instance.BufferHeaders == null) continue;
+            foreach (teShaderInstance.BufferHeader bufferHeader in instance.BufferHeaders) {
+                if (!bufferOccr.ContainsKey(bufferHeader.Hash)) {
+                    bufferOccr[bufferHeader.Hash] = 0;
                 }
+
+                bufferOccr[bufferHeader.Hash]++;
+            }
+
+            //if (shaderCode.Header.ShaderType == Enums.teSHADER_TYPE.COMPUTE) {
+            //    SaveShaderInstance(path, guid, instance, shaderCode);
+            //}
+        }
+
+        int i = 0;
+        foreach (KeyValuePair<ulong, int> buffer in bufferOccr.OrderByDescending(x => x.Value)) {
+            Console.Out.WriteLine($"{buffer.Key:X16}: {buffer.Value}");
+            i++;
+
+            //if (i == 10) {
+            //    break;
+            //}
+        }
+    }
+
+    public static void SaveMaterial(string basePath, ulong materialGUID, string name) {
+        string path = Path.Combine(basePath, name, IO.GetFileName(materialGUID));
+        string rawPath = Path.Combine(path, "raw");
+        string imgPath = Path.Combine(path, "img");
+        // IO.CreateDirectorySafe(path);
+        IO.CreateDirectorySafe(rawPath);
+
+        var matStream = IO.OpenFile(materialGUID);
+        if (matStream == null) return;
+        teMaterial material = new teMaterial(matStream);
+
+        IO.WriteFile(materialGUID, rawPath);
+        IO.WriteFile(material.Header.ShaderSource, rawPath);
+        IO.WriteFile(material.Header.ShaderGroup, rawPath);
+        IO.WriteFile(material.Header.GUIDx03A, rawPath);
+        IO.WriteFile(material.Header.MaterialData, rawPath);
+
+        using (Stream stream = IO.OpenFile(material.Header.MaterialData)) {
+            if (stream != null) {
+                teMaterialData materialData = new teMaterialData(stream);
+                if (materialData.Textures != null) {
+                    FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+                    foreach (var texture in materialData.Textures) {
+                        FindLogic.Combo.Find(comboInfo, texture.TextureGUID);
+                        comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8")+".tif");
+
+                        IO.WriteFile(texture.TextureGUID, rawPath);
+                        IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 1), rawPath);
+                        IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 2), rawPath);
+                        IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 3), rawPath);
+                        IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 4), rawPath);
+                    }
+
+                    var context = new Combo.SaveContext(comboInfo);
+                    Combo.SaveLooseTextures(null, imgPath, context);
+                }
+            }
+        }
+
+        teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile(material.Header.ShaderGroup));
+        SaveShaderGroup(shaderGroup, path);
+    }
+
+    public static void SaveShaderGroup(teShaderGroup shaderGroup, string path) {
+        int i = 0;
+        foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
+            string name = null;
+            if (shaderGroup.Hashes != null && shaderGroup.Hashes[i] != 0) {
+                name = shaderGroup.Hashes[i].ToString("X8");
+            }
+
+            SaveShaderInstance(path, shaderGroupInstance, name);
+            i++;
+        }
+    }
+
+    public static void SaveShaderInstance(string path, ulong guid, string name) {
+        /*string rawPath = Path.Combine(path, "raw");
+        IO.WriteFile(guid, rawPath);
+        return;*/
+
+        teShaderInstance instance = new teShaderInstance(IO.OpenFile(guid));
+        teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
+
+        if (name == null) {
+            name = teResourceGUID.AsString(guid);
+        }
+
+        string instanceDirectory = Path.Combine(path, shaderCode.Header.ShaderType.ToString(), name);
+        IO.WriteFile(guid, instanceDirectory);
+        IO.WriteFile(instance.Header.ShaderCode, instanceDirectory);
+
+        using (Stream file = File.OpenWrite(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode) + ".bin"))) {
+            file.SetLength(0);
+            file.Write(shaderCode.ByteCode, 0, shaderCode.ByteCode.Length);
+        }
+
+        using (StreamWriter writer =
+               new StreamWriter(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode)) + ".meta")) {
+            writer.WriteLine($"{shaderCode.Header.ShaderType}");
+            writer.WriteLine("{texture \"hash\"} : {shader input index}");
+            if (instance.ShaderResources == null) return;
+            foreach (teShaderInstance.ShaderResourceDefinition textureInputDefinition in instance.ShaderResources) {
+                writer.WriteLine($"{textureInputDefinition.NameHash:X8} : {textureInputDefinition.Register}");
             }
         }
     }

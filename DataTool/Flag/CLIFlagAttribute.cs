@@ -1,27 +1,27 @@
 ﻿using System;
 
-namespace DataTool.Flag {
-    [AttributeUsage(AttributeTargets.Field)]
-    [Serializable]
-    public class CLIFlagAttribute : Attribute {
-        public string Flag = null;
-        public string Help = null;
-        public bool Required = false;
-        public int Positional = -1;
-        public object Default = null;
-        public bool NeedsValue = false;
-        public string[] Parser = null;
-        public string[] Valid = null;
-        public bool AllPositionals = false;
-        public bool Hidden = false;
+namespace DataTool.Flag;
 
-        public new string ToString() {
-            return Flag;
-        }
-    }
+[AttributeUsage(AttributeTargets.Field)]
+[Serializable]
+public class CLIFlagAttribute : Attribute {
+    public string Flag = null;
+    public string Help = null;
+    public bool Required = false;
+    public int Positional = -1;
+    public object Default = null;
+    public bool NeedsValue = false;
+    public string[] Parser = null;
+    public string[] Valid = null;
+    public bool AllPositionals = false;
+    public bool Hidden = false;
 
-    public class FlagInfo : Attribute {
-        public string Name;
-        public string Description;
+    public new string ToString() {
+        return Flag;
     }
+}
+
+public class FlagInfo : Attribute {
+    public string Name;
+    public string Description;
 }

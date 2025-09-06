@@ -4,35 +4,35 @@ using DataTool.Flag;
 using DataTool.JSON;
 using static DataTool.Program;
 
-namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-report-responses", Description = "Lists the messages shown after the punishment of the reported player", CustomFlags = typeof(ListFlags), IsSensitive = true)]
-    public class ListReportResponses : JSONTool, ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            var flags = (ListFlags) toolFlags;
-            var data = GetData();
+namespace DataTool.ToolLogic.List.Misc;
 
-            if (flags.JSON) {
-                OutputJSON(data, flags);
-                return;
-            }
+[Tool("list-report-responses", Description = "Lists the messages shown after the punishment of the reported player", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+public class ListReportResponses : JSONTool, ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        var flags = (ListFlags) toolFlags;
+        var data = GetData();
 
-            foreach (var response in data) {
-                Log($"Title: {response.Title ?? "N/A"}");
-                Log($"Description: {response.Description ?? "N/A"}");
-                Log("\n");
-            }
+        if (flags.JSON) {
+            OutputJSON(data, flags);
+            return;
         }
 
-        private static List<ReportResponse> GetData() {
-            var responses = new List<ReportResponse>();
-
-            foreach (ulong key in TrackedFiles[0xEB]) {
-                var reportResponse = new ReportResponse(key);
-                if (reportResponse.GUID != 0)
-                    responses.Add(reportResponse);
-            }
-
-            return responses;
+        foreach (var response in data) {
+            Log($"Title: {response.Title ?? "N/A"}");
+            Log($"Description: {response.Description ?? "N/A"}");
+            Log("\n");
         }
+    }
+
+    private static List<ReportResponse> GetData() {
+        var responses = new List<ReportResponse>();
+
+        foreach (ulong key in TrackedFiles[0xEB]) {
+            var reportResponse = ReportResponse.Load(key);
+            if (reportResponse == null) continue;
+            responses.Add(reportResponse);
+        }
+
+        return responses;
     }
 }

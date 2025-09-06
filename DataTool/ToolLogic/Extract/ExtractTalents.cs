@@ -4,31 +4,31 @@ using DataTool.Flag;
 using DataTool.ToolLogic.List;
 using TankLib;
 
-namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-talents", Description = "Extract talents", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractTalents : ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            SaveTalents(toolFlags);
-        }
+namespace DataTool.ToolLogic.Extract;
 
-        public static void SaveTalents(ICLIFlags toolFlags) {
-            var flags = (ExtractFlags) toolFlags;
-            flags.EnsureOutputDirectory();
+[Tool("extract-talents", Description = "Extract talents", CustomFlags = typeof(ExtractFlags))]
+public class ExtractTalents : ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        SaveTalents(toolFlags);
+    }
 
-            const string folderName = "Talents";
+    public static void SaveTalents(ICLIFlags toolFlags) {
+        var flags = (ExtractFlags) toolFlags;
+        flags.EnsureOutputDirectory();
+
+        const string folderName = "Talents";
             
-            Combo.ComboInfo info = new Combo.ComboInfo();
-            foreach (var talent in ListTalents.GetData().Values) {
-                if (talent.Name == null) continue;
+        Combo.ComboInfo info = new Combo.ComboInfo();
+        foreach (var talent in ListTalents.GetData().Values) {
+            if (talent.Name == null) continue;
                 
-                Combo.Find(info, talent.TextureGUID);
+            Combo.Find(info, talent.TextureGUID);
 
-                var uniqueFilename = $"{talent.Name}.{teResourceGUID.Index(talent.GUID):X}";
-                info.SetTextureName(talent.TextureGUID, uniqueFilename);
-            }
-
-            var context = new SaveLogic.Combo.SaveContext(info);
-            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(flags.OutputPath, folderName), context);
+            var uniqueFilename = $"{talent.Name}.{teResourceGUID.Index(talent.GUID):X}";
+            info.SetTextureName(talent.TextureGUID, uniqueFilename);
         }
+
+        var context = new SaveLogic.Combo.SaveContext(info);
+        SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(flags.OutputPath, folderName), context);
     }
 }

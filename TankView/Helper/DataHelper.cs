@@ -180,7 +180,7 @@ namespace TankView.Helper {
             if (value == null || value.GUID == 0)
                 return null;
 
-            return new Conversation(value);
+            return Conversation.Load(value);
         }
 
         private static object GetSubtitle(GUIDEntry value) {

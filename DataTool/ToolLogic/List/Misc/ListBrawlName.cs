@@ -6,44 +6,44 @@ using TankLib;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-brawl-name", Description = "List brawl names", CustomFlags = typeof(ListFlags), IsSensitive = true)]
-    public class ListBrawlName : JSONTool, ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            var flags = (ListFlags) toolFlags;
-            var data = GetData();
+namespace DataTool.ToolLogic.List.Misc;
 
-            if (flags.JSON) {
-                OutputJSON(data, flags);
-                return;
-            }
+[Tool("list-brawl-name", Description = "List brawl names", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+public class ListBrawlName : JSONTool, ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        var flags = (ListFlags) toolFlags;
+        var data = GetData();
 
-            Log("Brawl Names:");
-            foreach (var item in data) {
-                if (item.Name != null)
-                    Log(item.Name);
-            }
+        if (flags.JSON) {
+            OutputJSON(data, flags);
+            return;
         }
 
-        private static List<BrawlName> GetData() {
-            var @return = new List<BrawlName>();
+        Log("Brawl Names:");
+        foreach (var item in data) {
+            if (item.Name != null)
+                Log(item.Name);
+        }
+    }
 
-            foreach (var key in TrackedFiles[0xD9]) {
-                var stu = GetInstance<STU_4B259FE1>(key);
-                if (stu == null) continue;
+    private static List<BrawlName> GetData() {
+        var @return = new List<BrawlName>();
 
-                @return.Add(new BrawlName {
-                    GUID = (teResourceGUID) key,
-                    Name = Helper.IO.GetString(stu.m_name)
-                });
-            }
+        foreach (var key in TrackedFiles[0xD9]) {
+            var stu = GetInstance<STU_4B259FE1>(key);
+            if (stu == null) continue;
 
-            return @return;
+            @return.Add(new BrawlName {
+                GUID = (teResourceGUID) key,
+                Name = Helper.IO.GetString(stu.m_name)
+            });
         }
 
-        public class BrawlName {
-            public teResourceGUID GUID;
-            public string Name;
-        }
+        return @return;
+    }
+
+    public class BrawlName {
+        public teResourceGUID GUID;
+        public string Name;
     }
 }

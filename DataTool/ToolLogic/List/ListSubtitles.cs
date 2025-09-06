@@ -5,38 +5,37 @@ using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-subtitles", Description = "List subtitles", CustomFlags = typeof(ListFlags))]
-    public class ListSubtitles : JSONTool, ITool {
-        public void Parse(ICLIFlags toolFlags) {
-            var flags = (ListFlags) toolFlags;
-            var subtitles = GetSubtitles();
+namespace DataTool.ToolLogic.List;
 
-            if (flags.JSON) {
-                OutputJSON(subtitles, flags);
-                return;
-            }
+[Tool("list-subtitles", Description = "List subtitles", CustomFlags = typeof(ListFlags))]
+public class ListSubtitles : JSONTool, ITool {
+    public void Parse(ICLIFlags toolFlags) {
+        var flags = (ListFlags) toolFlags;
+        var subtitles = GetSubtitles();
 
-            IndentHelper i = new IndentHelper();
-            foreach (KeyValuePair<teResourceGUID, string[]> subtitle in subtitles) {
-                Log($"{subtitle.Key}");
-                foreach (var str in subtitle.Value) {
-                    Log($"{i + 1}{str}");
-                }
-            }
+        if (flags.JSON) {
+            OutputJSON(subtitles, flags);
+            return;
         }
 
-        public Dictionary<teResourceGUID, string[]> GetSubtitles() {
-            var @return = new Dictionary<teResourceGUID, string[]>();
-
-            foreach (teResourceGUID key in TrackedFiles[0x71]) {
-                var subtitle = IO.GetSubtitle(key);
-                if (subtitle == null) continue;
-
-                @return[key] = subtitle.m_strings.ToArray();
+        IndentHelper i = new IndentHelper();
+        foreach (KeyValuePair<teResourceGUID, string[]> subtitle in subtitles) {
+            Log($"{subtitle.Key}");
+            foreach (var str in subtitle.Value) {
+                Log($"{i + 1}{str}");
             }
-
-            return @return;
         }
+    }
+
+    public Dictionary<teResourceGUID, string[]> GetSubtitles() {
+        var @return = new Dictionary<teResourceGUID, string[]>();
+
+        foreach (teResourceGUID key in TrackedFiles[0x71]) {
+            var subtitle = IO.GetSubtitle(key);
+            if (subtitle == null) continue;
+            @return[key] = subtitle.m_strings.ToArray();
+        }
+
+        return @return;
     }
 }

@@ -19,7 +19,7 @@ namespace DataTool.ToolLogic.Dbg {
                 //try {
                 //    Unlock unlock = new Unlock(guid);
                 //    if (unlock.Name == "Supercharger") {
-                //        
+                //
                 //    }
                 //} catch (NotImplementedException) { }
             }
@@ -31,12 +31,12 @@ namespace DataTool.ToolLogic.Dbg {
         private void SaveUnlock(ulong guid) {
             Unlock unlock;
             try {
-                unlock = new Unlock(guid);
+                unlock = Unlock.Load(guid);
             } catch (NotImplementedException) {
                 return;
             }
 
-            STUUnlock_POTGAnimation potgAnim = unlock.STU as STUUnlock_POTGAnimation;
+            STUUnlock_POTGAnimation potgAnim = unlock?.STU as STUUnlock_POTGAnimation;
             if (potgAnim == null) return;
             if (potgAnim.m_animation == 0) return;
             //if (unlock.Name != "Selfie") return;

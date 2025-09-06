@@ -1,24 +1,24 @@
-namespace DataTool.ConvertLogic {
-    public class BitUint {
-        public uint Value;
-        public readonly uint BitSize;
+namespace DataTool.ConvertLogic;
 
-        public BitUint(uint size) {
-            BitSize = size;
-            Value = 0;
-        }
+public class BitUint {
+    public uint Value;
+    public readonly uint BitSize;
 
-        public BitUint(uint size, uint v) {
-            BitSize = size;
-            Value = v;
-        }
+    public BitUint(uint size) {
+        BitSize = size;
+        Value = 0;
+    }
 
-        public static implicit operator uint(BitUint bitUint) {
-            return bitUint.Value;
-        }
+    public BitUint(uint size, uint v) {
+        BitSize = size;
+        Value = v;
+    }
 
-        public int AsInt() {
-            return (int) Value;
-        }
+    public static implicit operator uint(BitUint bitUint) {
+        return bitUint.Value;
+    }
+
+    public int AsInt() {
+        return (int) Value;
     }
 }
