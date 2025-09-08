@@ -272,7 +272,7 @@ public static class Program {
         if (Client.ProductCode != "pro")
             Logger.Warn("Core", $"The branch \"{Client.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
 
-        if (Client.AgentProduct != null) {
+        if (!args.Online && Client.AgentProduct != null) {
             var clientLanguages = Client.AgentProduct.Settings.Languages.Select(x => x.Language).ToArray();
             var clientLanguagesStr = string.Join(", ", clientLanguages);
             if (!clientLanguages.Contains(args.TextLanguage))
