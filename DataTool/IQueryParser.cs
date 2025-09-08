@@ -350,8 +350,7 @@ namespace DataTool {
                     if (givenTypeName == "*") {
                         typesMatchingName = queryTypes;
                     } else if (!queryTypeMap.TryGetValue(givenTypeName, out var typeObject)) {
-                        Log($"\r\nUnknown type: {givenTypeName}\r\n");
-                        QueryHelp(queryTypes);
+                        LogUnknownType(queryTypes, givenTypeName);
                         return null;
                     } else {
                         typesMatchingName.Add(typeObject);
@@ -387,8 +386,7 @@ namespace DataTool {
                                 var tagName = kv[0];
                                 QueryTag? tagObj = queryType.Tags.FirstOrDefault(x => x.Name.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
                                 if (tagObj == null) {
-                                    Log($"\r\nUnknown tag: {tagName}\r\n");
-                                    QueryHelp(queryTypes);
+                                    LogUnknownTag(queryTypes, queryType, tagName);
                                     return null;
                                 }
                                 
@@ -412,6 +410,35 @@ namespace DataTool {
             }
 
             return output;
+        }
+
+        private void LogUnknownType(List<QueryType> queryTypes, string typeName) {
+            Log($"\r\nUnknown type: {typeName}");
+            
+            var typeSpellCheck = new ScopedSpellCheck();
+            foreach (var queryType in queryTypes) {
+                typeSpellCheck.Add(queryType.Name);
+                foreach (var alias in queryType.Aliases) {
+                    typeSpellCheck.Add(alias);
+                }
+            }
+            typeSpellCheck.LogSpellCheck(typeName);
+            
+            Log("\r\n\r\n");
+            QueryHelp(queryTypes);
+        }
+
+        private void LogUnknownTag(List<QueryType> queryTypes, QueryType queryType, string tagName) {
+            Log($"\r\nUnknown tag: {tagName}");
+            
+            var tagSpellCheck = new ScopedSpellCheck();
+            foreach (var tagType in queryType.Tags) {
+                tagSpellCheck.Add(tagType.Name);
+            }
+            tagSpellCheck.LogSpellCheck(tagName);
+                      
+            Log("\r\n\r\n");
+            QueryHelp(queryTypes);
         }
 
         private static void PopulateDefaultTags(QueryType typeObj, ParsedArg parsedArg) {
