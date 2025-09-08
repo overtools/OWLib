@@ -588,7 +588,7 @@ public static class Program {
             spellCheck.Add(attribute.Keyword.ToLowerInvariant());
         }
         
-        spellCheck.TrySpellCheck(Flags.Mode.ToLowerInvariant());
+        spellCheck.LogSpellCheck(Flags.Mode.ToLowerInvariant());
     }
 
     #endregion

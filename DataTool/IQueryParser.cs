@@ -459,8 +459,7 @@ namespace DataTool {
             
             foreach (var hero in parsedHeroes) {
                 if (!hero.Value.Matched) {
-                    Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}\"");
-                    RootSpellCheck.TrySpellCheck(hero.Key);
+                    LogUnknownQuery(unknownPart => unknownPart, hero.Key, RootSpellCheck);
                     anyUnknown = true;
                     continue;
                 }
@@ -480,8 +479,8 @@ namespace DataTool {
                             unknownBaseSkin = true;
                         }
                         
-                        Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}={allowed.Value}\"");
-                        type.Value.Values.SpellCheck.TrySpellCheck(allowed.Value);
+                        LogUnknownQuery(unknownPart => $"{hero.Key}|{type.Key}={unknownPart}", 
+                                      allowed.Value, type.Value.Values.SpellCheck);
                         anyUnknown = true;
                     }
                     
@@ -491,8 +490,8 @@ namespace DataTool {
                         foreach (var allowed in tag.Value.Allowed) {
                             if (allowed.Matched) continue;
                         
-                            Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}=({tag.Key}={allowed.Value})\"");
-                            tag.Value.SpellCheck.TrySpellCheck(allowed.Value);
+                            LogUnknownQuery(unknownPart => $"{hero.Key}|{type.Key}=({tag.Key}={unknownPart}", 
+                                          allowed.Value, tag.Value.SpellCheck);
                             anyUnknown = true;
                         }
                     }
@@ -521,6 +520,15 @@ namespace DataTool {
             
             // ("your game language" could mean language specified to tool... idk how else to word)
             Logger.Warn("Query", $"Your game language is set to {textLanguage}. The names of any Heroes, Unlocks, Maps, etc should be entered exactly how they appear in-game using that language.");
+        }
+
+        private static void LogUnknownQuery(Func<string, string> formatter, string unknownPart, ScopedSpellCheck spellCheck) {
+            Logger.Error("Query", $"Found nothing matching your query of \"{formatter(unknownPart)}\"");
+
+            var suggestion = spellCheck.TryGetSuggestion(unknownPart);
+            if (suggestion != null) {
+                Logger.Warn("SpellCheck", $"Did you mean: \"{formatter(suggestion)}\" ?");
+            }
         }
     }
 }

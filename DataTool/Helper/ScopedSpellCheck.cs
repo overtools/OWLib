@@ -28,21 +28,28 @@ public class ScopedSpellCheck {
         }
     }
 
-    public void TrySpellCheck(string? text) {
+    public string? TryGetSuggestion(string? text) {
         CommitSpellCheck();
 
         if (text == null || text == "*") {
             // nothing to check
-            return;
+            return null;
         }
 
         text = text.ToLowerInvariant();
-        var correctedStr = m_symSpell.Lookup(text, SymSpell.Verbosity.Closest);
+        var correctedStr = m_symSpell!.Lookup(text, SymSpell.Verbosity.Closest);
         if (correctedStr.Count == 0 || correctedStr[0].term == text) {
             // no useful suggestions
-            return;
+            return null;
         }
 
-        Warn("SpellCheck", $"Did you mean \"{correctedStr[0].term}\"?");
+        return correctedStr[0].term;
+    }
+
+    public void LogSpellCheck(string? text) {
+        var suggestion = TryGetSuggestion(text);
+        if (suggestion == null) return;
+
+        Warn("SpellCheck", $"Did you mean \"{suggestion}\"?");
     }
 }
