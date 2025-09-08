@@ -12,9 +12,9 @@ using TankLib.Helpers;
 namespace DataTool {
     public record ParsedArg {
         public readonly string Type;
-        public HashSet<string> Allowed = [];
-        public HashSet<string> Disallowed = [];
-        public Dictionary<string, TagValue> Tags = new Dictionary<string, TagValue>();
+        public ParsedNameSet Allowed = new ParsedNameSet();
+        public ParsedNameSet Disallowed = new ParsedNameSet();
+        public Dictionary<string, ParsedName> Tags = new Dictionary<string, ParsedName>();
 
         public ParsedArg(QueryType type) {
             Type = type.Name;
@@ -23,14 +23,14 @@ namespace DataTool {
         public ParsedArg Combine(ParsedArg? second) {
             if (second == null) return this;
 
-            Dictionary<string, TagValue> combinedTags = Tags.ToDictionary();
-            foreach (KeyValuePair<string, TagValue> tag in second.Tags) {
+            Dictionary<string, ParsedName> combinedTags = Tags.ToDictionary();
+            foreach (KeyValuePair<string, ParsedName> tag in second.Tags) {
                 combinedTags[tag.Key] = tag.Value;
             }
 
             return this with {
-                Allowed = Allowed.Union(second.Allowed).ToHashSet(),
-                Disallowed = Disallowed.Union(second.Disallowed).ToHashSet(),
+                Allowed = Allowed.Union(second.Allowed),
+                Disallowed = Disallowed.Union(second.Disallowed),
                 Tags = combinedTags
             };
         }
@@ -54,14 +54,83 @@ namespace DataTool {
                 }
             }
 
-            string nameReal = name.ToLowerInvariant();
-            return (Allowed.Contains(nameReal) || Allowed.Contains("*")) && (!Disallowed.Contains(nameReal) || !Disallowed.Contains("*"));
+            if (Disallowed.Matches(name)) {
+                return false;
+            }
+            return Allowed.Matches(name);
         }
     }
 
     public record ParsedHero {
         public required Dictionary<string, ParsedArg> Types;
         public bool Matched = false;
+    }
+
+    public class ParsedNameSet {
+        private readonly Dictionary<string, ParsedName> Map;
+        public int Count => Map.Count;
+
+        public ParsedNameSet() {
+            Map = new Dictionary<string, ParsedName>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        public void Add(string value) {
+            Map.TryAdd(value, new ParsedName(value));
+        }
+
+        public bool Matches(string name) {
+            // no need to convert string to lower, dict has comparer
+            if (Map.TryGetValue(name, out var exactName)) {
+                exactName.Matched = true;
+                return true;
+            }
+
+            if (Map.TryGetValue("*", out var globName)) {
+                globName.Matched = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public ParsedNameSet Union(ParsedNameSet other) {
+            var output = new ParsedNameSet();
+
+            foreach (var name in Map) {
+                output.Map.TryAdd(name.Key, name.Value);
+            }
+            foreach (var name in other.Map) {
+                output.Map.TryAdd(name.Key, name.Value);
+            }
+
+            return output;
+        }
+    }
+
+    public record ParsedName {
+        public readonly string Value;
+        public bool Matched = false;
+
+        public ParsedName(string value) {
+            Value = value;
+
+            if (value == "*") {
+                // we don't care to look for issues matching this
+                Matched = true;
+            }
+        }
+
+        public bool IsEqual(ReadOnlySpan<char> query) {
+            var equal = query.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
+            if (equal) {
+                Matched = true;
+            }
+            return equal;
+        }
+
+        public override int GetHashCode() {
+            return Value.GetHashCode();
+        }
     }
 
     public class TagExpectedValue {
@@ -90,18 +159,6 @@ namespace DataTool {
         public readonly string? Default = defaultValue;
 
         public string DynamicChoicesKey = "";
-    }
-
-    public class TagValue(string value) {
-        public readonly string Value = value;
-
-        public bool IsEqual(string query) {
-            return string.Equals(query, Value, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        public bool IsEqual(ReadOnlySpan<char> query) {
-            return query.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
-        }
     }
 
     public interface IQueryParser { // I want a consistent style
@@ -270,9 +327,8 @@ namespace DataTool {
                                     QueryHelp(queryTypes);
                                     return null;
                                 }
-
-                                TagValue valueObject = new TagValue(tagValue);
-                                parsedArg.Tags[tagName] = valueObject;
+                                
+                                parsedArg.Tags[tagName] = new ParsedName(tagValue);
                             }
 
                             if (nextNotBracket) isBracket = false;
@@ -283,7 +339,7 @@ namespace DataTool {
                         if (parsedArg.Allowed.Count == 0 && parsedArg.Tags.Count > 0) {
                             // the query string only gave tags
                             // set allowed to all (tag filtering still applies)
-                            parsedArg.Allowed = ["*"];
+                            parsedArg.Allowed.Add("*");
                         }
                     }
                 }
@@ -300,7 +356,9 @@ namespace DataTool {
                 // dont override user given value
                 if (parsedArg.Tags.ContainsKey(tagName)) continue;
 
-                parsedArg.Tags.Add(tagName, new TagValue(tagObj.Default));
+                parsedArg.Tags.Add(tagName, new ParsedName(tagObj.Default) {
+                    Matched = true // not relevant for warnings
+                });
             }
         }
 
