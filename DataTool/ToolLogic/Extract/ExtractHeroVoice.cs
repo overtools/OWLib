@@ -65,7 +65,7 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
 
         var heroes = Helpers.GetHeroes();
         var validHeroes = Helpers.GetHeroNamesMapping(heroes);
-        var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+        var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides, namesForThisLocale: validHeroes);
         if (parsedTypes == null) return;
 
         FillHeroSpellDict(SymSpell);
@@ -123,6 +123,8 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
                 }
             }
         }
+        
+        LogUnknownQueries(parsedTypes);
     }
 
     private static void ProcessUnlock(Unlock unlock, ICLIFlags flags, string basePath, string heroFileName, STUHero hero, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {

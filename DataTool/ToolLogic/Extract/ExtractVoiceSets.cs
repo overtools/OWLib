@@ -22,7 +22,7 @@ public class ExtractVoiceSets : QueryParser, ITool {
         flags.EnsureOutputDirectory();
 
         var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
-        if (parsedTypes == null || parsedTypes.First().Key == "*") {
+        if (parsedTypes == null || parsedTypes.ContainsKey("*")) {
             Log("Saving all voice sets. This will take some time.");
         }
 
@@ -43,5 +43,7 @@ public class ExtractVoiceSets : QueryParser, ITool {
             Combo.Find(comboInfo, key);
             SaveLogic.Combo.SaveVoiceSet(toolFlags, Path.Combine(flags.OutputPath, Container), context, key);
         }
+        
+        LogUnknownQueries(parsedTypes);
     }
 }

@@ -38,6 +38,8 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
         Logger.Log("Generating voiceline mappings, this will take a moment...");
         GenerateVoicelineMapping();
         ProcessConversations(flags, path, parsedTypes);
+        
+        LogUnknownQueries(parsedTypes);
     }
 
     private const string Container = "HeroConvo";

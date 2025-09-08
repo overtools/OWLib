@@ -64,6 +64,8 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
             Map.Save(flags, mapInfo, map, key, flags.OutputPath);
             SaveScratchDatabase();
         }
+        
+        LogUnknownQueries(parsedTypes);
     }
 
     public List<QueryType> QueryTypes => new List<QueryType>();

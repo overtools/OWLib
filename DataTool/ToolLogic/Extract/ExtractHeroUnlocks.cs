@@ -75,7 +75,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
     protected virtual bool NPCs => false;
     public Dictionary<string, string> QueryNameOverrides => null;
     public virtual string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
-    private static bool HasSavedAnything = false;
 
     public List<QueryType> QueryTypes => new List<QueryType> {
         new CosmeticType(UnlockType.Skin, "Skin"),
@@ -108,15 +107,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         flags.EnsureOutputDirectory();
 
         SaveUnlocksForHeroes(flags, flags.OutputPath);
-
-        if (!HasSavedAnything) {
-            Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly? Names must match exactly with what is in-game.");
-            if (Client.CreateArgs.TextLanguage != "enUS") {
-                Logger.Error("Tool", $"Reminder! Your language is set to \"{Client.CreateArgs.TextLanguage}\".");
-                Logger.Warn("Tool", $"When extracting data in other languages, the names of the unlocks must be in the language you're extracting as they might differ from their English versions.");
-            }
-
-        }
     }
 
     protected override void QueryHelp(List<QueryType> types) {
@@ -213,7 +203,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
                         continue;
 
                     SkinTheme.SaveNpcSkin(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero.STU);
-                    HasSavedAnything = true;
                 }
 
                 continue;
@@ -241,6 +230,8 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
 
             SaveScratchDatabase();
         }
+            
+        LogUnknownQueries(parsedTypes);
     }
 
     public static void SaveUnlocks(
@@ -371,10 +362,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             var typeLower = CosmeticType.UnlockTypeToName(unlockType);
             shouldDo = config.TryGetValue(typeLower, out var configForType) &&
                        configForType.ShouldDo(unlock.GetName(), tags);
-        }
-
-        if (shouldDo) {
-            HasSavedAnything = true;
         }
 
         return shouldDo;

@@ -105,6 +105,8 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
                 SaveVoiceSet(skinContext);
             }
         }
+        
+        LogUnknownQueries(parsedTypes);
     }
 
     public struct SaveSetContext {

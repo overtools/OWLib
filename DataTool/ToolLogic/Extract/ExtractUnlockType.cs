@@ -48,6 +48,16 @@ public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
         // but i think its nice to keep the folder name consistent with the mode name
         string path = Path.Combine(flags.OutputPath, GetFolderName());
         ExtractHeroUnlocks.SaveUnlocks(toolFlags, allUnlocks, path, null, fullConfig, null, null, null);
+        
+        foreach (var allowed in fullArg.Allowed) {
+            if (parsedQuery == null) continue;
+            if (!parsedQuery.TryGetValue(allowed.Value, out var originalQueryPart)) {
+                continue;
+            }
+
+            originalQueryPart.Matched = allowed.Matched;
+        }
+        LogUnknownQueries(parsedQuery);
     }
 }
     

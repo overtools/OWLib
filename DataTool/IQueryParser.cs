@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
+using TACTLib.Client.HandlerArgs;
 using TankLib;
 using TankLib.Helpers;
 
@@ -105,6 +106,8 @@ namespace DataTool {
 
             return output;
         }
+
+        public IEnumerator<ParsedName> GetEnumerator() => Map.Values.GetEnumerator();
     }
 
     public record ParsedName {
@@ -230,7 +233,7 @@ namespace DataTool {
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
 
-            Dictionary<string, ParsedHero> output = new Dictionary<string, ParsedHero>();
+            Dictionary<string, ParsedHero> output = new Dictionary<string, ParsedHero>(StringComparer.OrdinalIgnoreCase);
 
             foreach (string opt in inputArguments) {
                 if (opt.StartsWith("--")) continue; // ok so this is a flag
@@ -381,6 +384,65 @@ namespace DataTool {
             }
 
             return output;
+        }
+
+        public static void LogUnknownQueries(Dictionary<string, ParsedHero>? parsedHeroes) {
+            if (parsedHeroes == null) return;
+            var anyUnknown = false;
+            var unknownBaseSkin = false;
+            
+            foreach (var hero in parsedHeroes) {
+                if (!hero.Value.Matched) {
+                    Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}\"");
+                    anyUnknown = true;
+                    continue;
+                }
+                
+                foreach (var type in hero.Value.Types) {
+                    foreach (var allowed in type.Value.Allowed) {
+                        if (allowed.Matched) continue;
+
+                        if (allowed.IsEqual("overwatch 1") || allowed.IsEqual("overwatch 2") ||
+                            allowed.IsEqual("classic") || allowed.IsEqual("valorous")) {
+                            unknownBaseSkin = true;
+                        }
+                        
+                        Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}={allowed.Value}\"");
+                        anyUnknown = true;
+                    }
+
+
+                    foreach (var tag in type.Value.Tags) {
+                        if (tag.Value.Matched) continue;
+                        
+                        Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}=({tag.Key}={tag.Value.Value})\"");
+                        anyUnknown = true;
+                    }
+                }
+            }
+
+            if (!anyUnknown) return;
+
+            var createArgs = Program.Client.CreateArgs;
+            var textLanguage = createArgs.TextLanguage;
+            var isEnglish = textLanguage == "enUS";
+            var isChinese = textLanguage == "zhCN";
+            var isChinaClient = ((ClientCreateArgs_Tank)createArgs.HandlerArgs!).ManifestRegion == ClientCreateArgs_Tank.REGION_CN;
+
+            if (isChinaClient && unknownBaseSkin) {
+                if (isEnglish) {
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" skins are renamed to \"Classic\"");
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to \"Valorous\"");
+                } else if (isChinese) {
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" skins are renamed to \"守望先锋\"");
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to  \"守望先锋归来\"");
+                } else {
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" and \"Overwatch 2\" skins have different names. Check in-game");
+                }
+            }
+            
+            // ("your game language" could mean language specified to tool... idk how else to word)
+            Logger.Warn("Query", $"Your game language is set to {textLanguage}. The names of any Heroes, Unlocks, Maps, etc should be entered exactly how they appear in-game using that language.");
         }
     }
 }
