@@ -62,8 +62,7 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         }
 
         var heroes = Helpers.GetHeroes();
-        var validHeroes = Helpers.GetHeroNamesMapping(heroes);
-        var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
+        var parsedTypes = ParseQuery(flags, QueryTypes, localizedNameOverrides: Helpers.GetHeroNameLocaleOverrides(heroes));
         if (parsedTypes == null) return;
 
         foreach (var (heroGuid, hero) in heroes) {

@@ -282,7 +282,7 @@ namespace DataTool {
             ICLIFlags flags,
             List<QueryType> queryTypes,
             Dictionary<string, string>? queryNameOverrides = null,
-            Dictionary<teResourceGUID, string>? namesForThisLocale = null) {
+            Dictionary<string, string>? localizedNameOverrides = null) {
             if (queryTypes.Count == 0) {
                 // the query parser needs to operate on at least one type
                 queryTypes = [new QueryType("SyntheticType")];
@@ -297,12 +297,12 @@ namespace DataTool {
                 }
             }
             
-            if (queryNameOverrides != null) {
-                foreach (KeyValuePair<string, string> o in queryNameOverrides) {
-                    RootSpellCheck.Add(o.Key);
-                }
-            }
-
+            // important!!
+            // both queryNameOverrides and localizedNameOverrides must be created with StringComparer.OrdinalIgnoreCase
+            
+            // we don't want to add queryNameOverrides to skellcheck as it contains joke names (maps)
+            // we don't want to add localizedNameOverrides to spellcheck as it may contain filtered hero names (npcs)
+            // (the names are also all lowercase... which doesn't look great)
 
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
@@ -315,17 +315,11 @@ namespace DataTool {
 
                 // okay.. we dont just parse heroes.
                 // but idk which other term is most unambiguous here
-                string hero = split[0].ToLowerInvariant(); // todo: queryNameOverrides requires ToLowerInvariant still
+                var hero = split[0];
                 if (queryNameOverrides != null && queryNameOverrides.TryGetValue(hero, out var toolUnderstandableName)) {
                     hero = toolUnderstandableName;
-                }
-
-                // todo: ContainsValue = slow lookup and assumes ToLowerInvariant
-                if (namesForThisLocale != null && !namesForThisLocale.ContainsValue(hero)) {
-                    var foundGuidForGivenName = IO.TryGetLocalizedName(0x75, hero);
-                    if (foundGuidForGivenName != null && namesForThisLocale.TryGetValue(foundGuidForGivenName.Value, out var nameForThisLocale)) {
-                        hero = nameForThisLocale;
-                    }
+                } else if (localizedNameOverrides != null && localizedNameOverrides.TryGetValue(hero, out var nameForThisLocale)) {
+                    hero = nameForThisLocale;
                 }
 
                 var heroOutput = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);

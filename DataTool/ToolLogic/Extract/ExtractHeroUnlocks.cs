@@ -147,8 +147,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
 
         var heroes = Helpers.GetHeroes();
-        var validNames = Helpers.GetHeroNamesMapping(heroes);
-        var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validNames);
+        var parsedTypes = ParseQuery(flags, QueryTypes, localizedNameOverrides: Helpers.GetHeroNameLocaleOverrides(heroes));
         if (parsedTypes == null) return;
 
         foreach (var (heroGuid, hero) in heroes) {

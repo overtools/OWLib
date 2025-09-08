@@ -28,8 +28,7 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
             path = Path.Combine(path, Program.Client.CreateArgs.SpeechLanguage ?? "enUS");
         }
 
-        var validHeroes = Helpers.GetHeroNamesMapping();
-        var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
+        var parsedTypes = ParseQuery(flags, QueryTypes, localizedNameOverrides: Helpers.GetHeroNameLocaleOverrides());
         if (parsedTypes == null) {
             Logger.Warn("No query specified, extracting all conversations for all heroes.");
         }

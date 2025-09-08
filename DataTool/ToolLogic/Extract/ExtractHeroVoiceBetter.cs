@@ -42,8 +42,7 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
             .ThenBy(x => x.GUID.GUID) // then by GUID
             .ToArray();
 
-        var validHeroes = Helpers.GetHeroNamesMapping(heroesDict);
-        var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
+        var parsedTypes = ParseQuery(flags, QueryTypes, localizedNameOverrides: Helpers.GetHeroNameLocaleOverrides(heroesDict));
 
         var criteriaContext = new CriteriaContext();
         foreach (var hero in heroes) {

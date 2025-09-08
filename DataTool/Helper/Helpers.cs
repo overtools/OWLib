@@ -1,3 +1,5 @@
+#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels.Hero;
@@ -25,8 +27,33 @@ public static class Helpers {
     /// Returns a mapping of hero names to their GUIDs in lowercase.
     /// </summary>
     /// <param name="heroes">optional heroes dict if you already have one from <see cref="GetHeroes"/></param>
-    public static Dictionary<teResourceGUID, string> GetHeroNamesMapping(Dictionary<teResourceGUID, Hero> heroes = null) {
+    private static Dictionary<teResourceGUID, string> GetHeroNamesMapping(Dictionary<teResourceGUID, Hero>? heroes=null) {
         heroes ??= GetHeroes();
-        return heroes.ToDictionary(x => x.Key, x => x.Value.Name?.ToLowerInvariant());
+        return heroes
+            .Where(x => x.Value.Name != null)
+            .ToDictionary(x => x.Key, x => x.Value.Name!);
+    }
+
+    public static Dictionary<string, string> GetHeroNameLocaleOverrides(Dictionary<teResourceGUID, Hero>? heroes=null) {
+        var namesForThisLocale = GetHeroNamesMapping(heroes);
+
+        var overrides = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var localizedName in IO.GetLocalizedNames(0x75)) {
+            if (!namesForThisLocale.TryGetValue(localizedName.Value, out var nameForThisLocale)) {
+                continue;
+            }
+            
+            if (localizedName.Key.Equals(nameForThisLocale, StringComparison.OrdinalIgnoreCase)) {
+                // identical, don't bother mapping
+                continue;
+            }
+            if (namesForThisLocale.Values.Any(x => x.Equals(localizedName.Key, StringComparison.OrdinalIgnoreCase))) {
+                // theoretically, this locale already has a hero with that name. give up
+                continue;
+            }
+            overrides[localizedName.Key] = nameForThisLocale;
+        }
+
+        return overrides;
     }
 }

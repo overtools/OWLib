@@ -44,7 +44,7 @@ public static class IO {
     }
 
     public static readonly Dictionary<(ulong, ushort), string> GUIDTable = new ();
-    public static readonly Dictionary<ushort, Dictionary<string, ulong>> LocalizedNames = new ();
+    public static readonly Dictionary<ushort, Dictionary<string, teResourceGUID>> LocalizedNames = new ();
     private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new ();
 
     public static void LoadGUIDTable(bool onlyCanonical) {
@@ -112,20 +112,21 @@ public static class IO {
             }
 
             string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
-            string indexString = parts[0];
+            string idString = parts[0];
             string typeString = parts[1];
             string name = parts[2];
 
-            var index = ulong.Parse(indexString, NumberStyles.HexNumber);
-            ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
+            var id = ulong.Parse(idString, NumberStyles.HexNumber);
+            var type = ushort.Parse(typeString, NumberStyles.HexNumber);
+            var guid = new teResourceGUID(id).WithType(type);
 
             if (!LocalizedNames.ContainsKey(type)) {
-                LocalizedNames[type] = new Dictionary<string, ulong>(StringComparer.OrdinalIgnoreCase);
+                LocalizedNames[type] = new Dictionary<string, teResourceGUID>(StringComparer.OrdinalIgnoreCase);
                 IgnoredLocalizedNames[type] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
 
-            if (LocalizedNames[type].ContainsKey(name) && LocalizedNames[type][name] != index) {
-                TankLib.Helpers.Logger.Warn("LocalizedNames", $"Duplicate localized name with different values??: {indexString}.{typeString} {name}");
+            if (LocalizedNames[type].ContainsKey(name) && LocalizedNames[type][name] != guid) {
+                TankLib.Helpers.Logger.Warn("LocalizedNames", $"Duplicate localized name with different values??: {idString}.{typeString} {name}");
                 LocalizedNames[type].Remove(name);
                 IgnoredLocalizedNames[type].Add(name);
                 continue;
@@ -135,20 +136,23 @@ public static class IO {
                 continue;
             }
 
-            LocalizedNames[type][name] = index;
+            LocalizedNames[type][name] = guid;
         }
     }
 
-    public static teResourceGUID? TryGetLocalizedName(ushort type, string name) {
-        if (!LocalizedNames.ContainsKey(type)) return null;
+    public static Dictionary<string, teResourceGUID> GetLocalizedNames(ushort type) {
+        if (!LocalizedNames.TryGetValue(type, out var names)) {
+            return [];
+        }
+        return names;
+    }
 
-        if (!LocalizedNames[type].TryGetValue(name, out var match)) {
+    public static teResourceGUID? TryGetLocalizedName(ushort type, string name) {
+        var names = GetLocalizedNames(type);
+        if (!names.TryGetValue(name, out var match)) {
             return null;
         }
-
-        var guid = new teResourceGUID(match);
-        guid.SetType(type);
-        return guid;
+        return match;
     }
 
     public static string GetGUIDName(ulong guid) {
