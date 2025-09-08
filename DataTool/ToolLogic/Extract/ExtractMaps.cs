@@ -7,7 +7,6 @@ using DataTool.ToolLogic.Util;
 using TankLib;
 using static DataTool.Program;
 using Map = DataTool.SaveLogic.Map;
-using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract;
 
@@ -46,9 +45,6 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
             QueryHelp(QueryTypes);
             return;
         }
-
-        FillMapSpellDict(SymSpell);
-        SpellCheckMapName(parsedTypes,SymSpell);
 
         foreach (ulong key in TrackedFiles[0x9F]) {
             var mapInfo = MapHeader.Load(key);

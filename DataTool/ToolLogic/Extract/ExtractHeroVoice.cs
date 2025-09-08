@@ -12,7 +12,6 @@ using DataTool.SaveLogic.Unlock;
 using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
-using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract;
 
@@ -67,9 +66,6 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         var validHeroes = Helpers.GetHeroNamesMapping(heroes);
         var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides, namesForThisLocale: validHeroes);
         if (parsedTypes == null) return;
-
-        FillHeroSpellDict(SymSpell);
-        SpellCheckQuery(parsedTypes, SymSpell);
 
         foreach (var (heroGuid, hero) in heroes) {
             var heroStu = hero.STU;

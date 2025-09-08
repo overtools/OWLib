@@ -142,6 +142,7 @@ namespace DataTool {
     public class ParsedNameSetPair {
         public ParsedNameSet Allowed = new ParsedNameSet();
         public ParsedNameSet Disallowed = new ParsedNameSet();
+        public ScopedSpellCheck SpellCheck = new ScopedSpellCheck();
 
         public void Add(ReadOnlySpan<char> value) {
             if (value.StartsWith('!')) {
@@ -152,10 +153,14 @@ namespace DataTool {
         }
 
         public bool IsDisallowed(string name) {
+            SpellCheck.Add(name);
+            
             return Disallowed.Matches(name);
         }
 
         public bool IsAllowed(string name) {
+            SpellCheck.Add(name);
+            
             if (Allowed.Count == 0) {
                 // nothing explicitly specified as allowed = anything
                 return true;
@@ -166,7 +171,8 @@ namespace DataTool {
         public ParsedNameSetPair Union(ParsedNameSetPair other) {
             return new ParsedNameSetPair {
                 Allowed = Allowed.Union(other.Allowed),
-                Disallowed = Disallowed.Union(other.Disallowed)
+                Disallowed = Disallowed.Union(other.Disallowed),
+                SpellCheck = new ScopedSpellCheck() // don't copy
             };
         }
     }
@@ -234,7 +240,8 @@ namespace DataTool {
 
     public class QueryParser {
         public static void Log(string message = "") => Logger.Log(message);
-        protected static readonly SymSpell SymSpell = new SymSpell(128, 4);
+
+        private readonly ScopedSpellCheck RootSpellCheck = new ScopedSpellCheck();
 
         protected virtual void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
@@ -423,11 +430,14 @@ namespace DataTool {
             }
         }
 
-        protected static Dictionary<string, ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
+        protected Dictionary<string, ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
             Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
-                if (!parsedHeroes.TryGetValue(nameToMatch, out var parsedHero)) continue;
+                if (!parsedHeroes.TryGetValue(nameToMatch, out var parsedHero)) {
+                    RootSpellCheck.Add(nameToMatch);
+                    continue;
+                }
 
                 parsedHero.Matched = true;
                 foreach (KeyValuePair<string, ParsedArg> parsedType in parsedHero.Types) {
@@ -442,7 +452,7 @@ namespace DataTool {
             return output;
         }
 
-        public static void LogUnknownQueries(Dictionary<string, ParsedHero>? parsedHeroes) {
+        public void LogUnknownQueries(Dictionary<string, ParsedHero>? parsedHeroes) {
             if (parsedHeroes == null) return;
             var anyUnknown = false;
             var unknownBaseSkin = false;
@@ -450,6 +460,7 @@ namespace DataTool {
             foreach (var hero in parsedHeroes) {
                 if (!hero.Value.Matched) {
                     Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}\"");
+                    RootSpellCheck.TrySpellCheck(hero.Key);
                     anyUnknown = true;
                     continue;
                 }
@@ -470,6 +481,7 @@ namespace DataTool {
                         }
                         
                         Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}={allowed.Value}\"");
+                        type.Value.Values.SpellCheck.TrySpellCheck(allowed.Value);
                         anyUnknown = true;
                     }
                     
@@ -480,6 +492,7 @@ namespace DataTool {
                             if (allowed.Matched) continue;
                         
                             Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}=({tag.Key}={allowed.Value})\"");
+                            tag.Value.SpellCheck.TrySpellCheck(allowed.Value);
                             anyUnknown = true;
                         }
                     }

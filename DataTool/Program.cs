@@ -21,7 +21,6 @@ using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
 using TankLib.Helpers;
 using ValveKeyValue;
-using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool;
 
@@ -581,9 +580,15 @@ public static class Program {
             return;
         }
 
-        var symSpell = new SymSpell(50, 6);
-        FillToolSpellDict(symSpell);
-        SpellCheckString(Flags.Mode.ToLower(), symSpell);
+        var spellCheck = new ScopedSpellCheck();
+        foreach (var type in GetTools()) {
+            var attribute = type.GetCustomAttribute<ToolAttribute>();
+            if (attribute == null || attribute.IsSensitive) continue;
+            
+            spellCheck.Add(attribute.Keyword.ToLowerInvariant());
+        }
+        
+        spellCheck.TrySpellCheck(Flags.Mode.ToLowerInvariant());
     }
 
     #endregion

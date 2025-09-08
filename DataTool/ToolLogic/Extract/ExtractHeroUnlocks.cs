@@ -15,7 +15,6 @@ using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.SpellCheckUtils;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Extract;
@@ -152,9 +151,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         var validNames = Helpers.GetHeroNamesMapping(heroes);
         var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validNames);
         if (parsedTypes == null) return;
-
-        FillHeroSpellDict(SymSpell);
-        SpellCheckQuery(parsedTypes,SymSpell);
 
         foreach (var (heroGuid, hero) in heroes) {
             var heroNameActual = hero.Name;
