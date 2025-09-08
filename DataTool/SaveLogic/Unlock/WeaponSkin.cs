@@ -100,7 +100,9 @@ public static class WeaponSkin {
 
             var loadout = Loadout.Load(weaponEntity.m_loadout);
             if (loadout == null) continue;
-            info.SetEntityName(weaponEntity.m_entityDefinition, $"{loadout.Name}-{teResourceGUID.Index(weaponEntity.m_entityDefinition)}");
+
+            var weaponEntityGUID = FindLogic.Combo.GetReplacement(weaponEntity.m_entityDefinition, weaponReplacements);
+            info.SetEntityName(weaponEntityGUID, $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}");
         }
     }
 
