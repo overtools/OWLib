@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using DataTool.FindLogic;
@@ -22,7 +23,7 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         new QueryType("groupRestriction") { HumanName = "Group" }
     };
 
-    public Dictionary<string, string> QueryNameOverrides => null;
+    public Dictionary<string, string> QueryNameOverrides => throw new NotImplementedException();
 
     public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
@@ -73,8 +74,7 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
 
             string heroNameActual = hero.Name ?? $"Unknown{teResourceGUID.Index(heroGuid)}";
 
-
-            Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
+            Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual, "*");
 
             if (config.Count == 0) continue;
 

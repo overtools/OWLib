@@ -297,6 +297,13 @@ namespace DataTool {
                     queryTypeMap.Add(alias, queryType);
                 }
             }
+            
+            if (queryNameOverrides != null) {
+                foreach (KeyValuePair<string, string> o in queryNameOverrides) {
+                    RootSpellCheck.Add(o.Key);
+                }
+            }
+
 
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
@@ -461,6 +468,7 @@ namespace DataTool {
             Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
+                
                 if (!parsedHeroes.TryGetValue(nameToMatch, out var parsedHero)) {
                     RootSpellCheck.Add(nameToMatch);
                     continue;

@@ -36,7 +36,6 @@ public class ScopedSpellCheck {
             return null;
         }
 
-        text = text.ToLowerInvariant();
         var correctedStr = m_symSpell!.Lookup(text, SymSpell.Verbosity.Closest);
         if (correctedStr.Count == 0 || correctedStr[0].term == text) {
             // no useful suggestions

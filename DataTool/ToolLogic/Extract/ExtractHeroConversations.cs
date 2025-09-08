@@ -60,7 +60,7 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
                     var (heroName, instance) = VoicelineHeroMapping[voicelineGuid.m_E295B99C];
                     if (string.IsNullOrEmpty(heroName)) continue;
 
-                    var config = GetQuery(parsedTypes, heroName.ToLowerInvariant(), "*");
+                    var config = GetQuery(parsedTypes, heroName, "*");
                     if (config.Count >= 1) {
                         shouldProcessConvo = true;
                         break;

@@ -156,7 +156,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             var heroNameActual = hero.Name;
             if (heroNameActual == null) continue;
 
-            Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroGuid).ToString("X"));
+            Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual, "*", teResourceGUID.Index(heroGuid).ToString("X"));
             if (config.Count == 0) continue;
             
             string heroFileName = GetValidFilename(heroNameActual);

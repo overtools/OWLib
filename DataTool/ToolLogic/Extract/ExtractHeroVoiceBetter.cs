@@ -50,7 +50,7 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
         foreach (var hero in heroes) {
             // if we have a query, check if we should process this hero
             if (parsedTypes != null) {
-                var config = GetQuery(parsedTypes, hero.Name?.ToLowerInvariant(), "*", teResourceGUID.Index(hero.GUID).ToString("X"));
+                var config = GetQuery(parsedTypes, hero.Name, "*", teResourceGUID.Index(hero.GUID).ToString("X"));
                 if (config.Count == 0) {
                     continue;
                 }
