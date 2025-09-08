@@ -15,7 +15,7 @@ namespace DataTool {
         public readonly string Type;
         public ParsedNameSet Allowed = new ParsedNameSet();
         public ParsedNameSet Disallowed = new ParsedNameSet();
-        public Dictionary<string, ParsedName> Tags = new Dictionary<string, ParsedName>();
+        public Dictionary<string, ParsedName> Tags = new Dictionary<string, ParsedName>(StringComparer.OrdinalIgnoreCase);
 
         public ParsedArg(QueryType type) {
             Type = type.Name;
@@ -24,7 +24,7 @@ namespace DataTool {
         public ParsedArg Combine(ParsedArg? second) {
             if (second == null) return this;
 
-            Dictionary<string, ParsedName> combinedTags = Tags.ToDictionary();
+            Dictionary<string, ParsedName> combinedTags = Tags.ToDictionary(StringComparer.OrdinalIgnoreCase);
             foreach (KeyValuePair<string, ParsedName> tag in second.Tags) {
                 combinedTags[tag.Key] = tag.Value;
             }
@@ -39,7 +39,7 @@ namespace DataTool {
         public bool ShouldDo(string name, Dictionary<string, TagExpectedValue>? expectedVals = null) {
             if (expectedVals != null) {
                 foreach (KeyValuePair<string, TagExpectedValue> expectedVal in expectedVals) {
-                    if (!Tags.TryGetValue(expectedVal.Key.ToLowerInvariant(), out var givenValue)) continue;
+                    if (!Tags.TryGetValue(expectedVal.Key, out var givenValue)) continue;
 
                     if (!expectedVal.Value.Values.Any(x => {
                         if (x.StartsWith('!')) {
@@ -73,6 +73,10 @@ namespace DataTool {
 
         public ParsedNameSet() {
             Map = new Dictionary<string, ParsedName>(StringComparer.OrdinalIgnoreCase);
+        }
+        
+        public void Add(ReadOnlySpan<char> value) {
+            Add(value.ToString());
         }
 
         public void Add(string value) {
@@ -221,12 +225,12 @@ namespace DataTool {
                 queryTypes = [new QueryType("SyntheticType")];
             }
 
-            var queryTypeMap = new Dictionary<string, QueryType>();
+            var queryTypeMap = new Dictionary<string, QueryType>(StringComparer.OrdinalIgnoreCase);
             foreach (var queryType in queryTypes) {
-                queryTypeMap.Add(queryType.Name.ToLowerInvariant(), queryType);
+                queryTypeMap.Add(queryType.Name, queryType);
 
                 foreach (var alias in queryType.Aliases) {
-                    queryTypeMap.Add(alias.ToLowerInvariant(), queryType);
+                    queryTypeMap.Add(alias, queryType);
                 }
             }
 
@@ -241,7 +245,7 @@ namespace DataTool {
 
                 // okay.. we dont just parse heroes.
                 // but idk which other term is most unambiguous here
-                string hero = split[0].ToLowerInvariant();
+                string hero = split[0].ToLowerInvariant(); // todo: queryNameOverrides requires ToLowerInvariant still
                 if (queryNameOverrides != null && queryNameOverrides.TryGetValue(hero, out var toolUnderstandableName)) {
                     hero = toolUnderstandableName;
                 }
@@ -253,7 +257,7 @@ namespace DataTool {
                     }
                 }
 
-                var heroOutput = new Dictionary<string, ParsedArg>();
+                var heroOutput = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);
                 output[hero] = new ParsedHero {
                     Types = heroOutput
                 };
@@ -276,7 +280,8 @@ namespace DataTool {
                 foreach (string afterHeroOpt in afterHero) {
                     var typeNameLength = afterHeroOpt.IndexOf('=');
                     if (typeNameLength == -1) throw new Exception("invalid query");
-                    var givenTypeName = afterHeroOpt.AsSpan(0, typeNameLength).ToString().ToLowerInvariant();
+                    var givenTypeName = afterHeroOpt.AsSpan(0, typeNameLength).ToString();
+                    var givenValuesSpan = afterHeroOpt.AsSpan(typeNameLength + 1);
 
                     List<QueryType> typesMatchingName = [];
                     if (givenTypeName == "*") {
@@ -288,42 +293,39 @@ namespace DataTool {
                     } else {
                         typesMatchingName.Add(typeObject);
                     }
-
-                    var givenValues = afterHeroOpt.AsSpan(typeNameLength + 1).ToString().Split(',');
+                    
                     foreach (QueryType queryType in typesMatchingName) {
                         var parsedArg = new ParsedArg(queryType);
                         heroOutput.Add(queryType.Name, parsedArg);
                         // todo: using .Add here can of course fail but we would previously only use the 2nd occurrence.. its better to explode
 
                         // todo: rewrite this parse loop...
-                        bool isBracket = false;
-                        foreach (string item in givenValues) {
-                            string realItem = item.ToLowerInvariant();
-                            bool nextNotBracket = false;
-
-                            if (item.StartsWith('(') && item.EndsWith(')')) {
-                                realItem = item.Substring(1);
-                                realItem = realItem.Remove(realItem.Length - 1);
-                                isBracket = true;
-                                nextNotBracket = true;
-                            } else if (item.StartsWith('(')) {
-                                isBracket = true;
-                                realItem = item.Substring(1);
-                            } else if (item.EndsWith(')')) {
-                                nextNotBracket = true;
-                                realItem = item.Remove(item.Length - 1);
+                        var insideTag = false;
+                        foreach (var itemRange in givenValuesSpan.Split(',')) {
+                            var itemBody = givenValuesSpan[itemRange];
+                            
+                            var endingTag = false;
+                            if (itemBody.StartsWith('(')) {
+                                insideTag = true;
+                                itemBody = itemBody[1..];
+                            } 
+                            if (itemBody.EndsWith(')')) {
+                                // todo: error if not insideTag
+                                endingTag = true;
+                                itemBody = itemBody[..^1];
                             }
+                            // (^ can be both begin and end on same iter)
 
-                            if (!isBracket) {
-                                if (!realItem.StartsWith('!')) {
-                                    parsedArg.Allowed.Add(realItem);
+                            if (!insideTag) {
+                                if (!itemBody.StartsWith('!')) {
+                                    parsedArg.Allowed.Add(itemBody);
                                 } else {
-                                    parsedArg.Disallowed.Add(realItem.Substring(1));
+                                    parsedArg.Disallowed.Add(itemBody[1..]);
                                 }
                             } else {
-                                string[] kv = realItem.Split('=');
-                                string tagName = kv[0].ToLowerInvariant();
-                                string tagValue = kv[1].ToLowerInvariant();
+                                string[] kv = itemBody.ToString().Split('=');
+                                
+                                var tagName = kv[0];
                                 QueryTag? tagObj = queryType.Tags.FirstOrDefault(x => x.Name.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
                                 if (tagObj == null) {
                                     Log($"\r\nUnknown tag: {tagName}\r\n");
@@ -331,11 +333,14 @@ namespace DataTool {
                                     return null;
                                 }
                                 
+                                var tagValue = kv[1];
                                 parsedArg.Tags[tagName] = new ParsedName(tagValue);
                             }
 
-                            if (nextNotBracket) isBracket = false;
+                            if (endingTag) insideTag = false;
                         }
+                        
+                        // todo: error if insideTag
 
                         PopulateDefaultTags(queryType, parsedArg);
 
@@ -355,7 +360,7 @@ namespace DataTool {
             foreach (QueryTag tagObj in typeObj.Tags) {
                 if (tagObj.Default == null) continue;
 
-                string tagName = tagObj.Name.ToLowerInvariant();
+                string tagName = tagObj.Name;
                 // dont override user given value
                 if (parsedArg.Tags.ContainsKey(tagName)) continue;
 
@@ -366,12 +371,10 @@ namespace DataTool {
         }
 
         protected static Dictionary<string, ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
-            Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>();
+            Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
-
-                string nameInvariant = nameToMatch.ToLowerInvariant();
-                if (!parsedHeroes.TryGetValue(nameInvariant, out var parsedHero)) continue;
+                if (!parsedHeroes.TryGetValue(nameToMatch, out var parsedHero)) continue;
 
                 parsedHero.Matched = true;
                 foreach (KeyValuePair<string, ParsedArg> parsedType in parsedHero.Types) {
@@ -404,6 +407,7 @@ namespace DataTool {
 
                         if (allowed.IsEqual("overwatch 1") || allowed.IsEqual("overwatch 2") ||
                             allowed.IsEqual("classic") || allowed.IsEqual("valorous")) {
+                            // (IsEqual sets matched flag, but doesn't matter at this point)
                             unknownBaseSkin = true;
                         }
                         
@@ -435,7 +439,7 @@ namespace DataTool {
                     Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to \"Valorous\"");
                 } else if (isChinese) {
                     Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" skins are renamed to \"守望先锋\"");
-                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to  \"守望先锋归来\"");
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to \"守望先锋归来\"");
                 } else {
                     Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" and \"Overwatch 2\" skins have different names. Check in-game");
                 }

@@ -120,8 +120,8 @@ public static class IO {
             ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
 
             if (!LocalizedNames.ContainsKey(type)) {
-                LocalizedNames[type] = new Dictionary<string, ulong>();
-                IgnoredLocalizedNames[type] = new HashSet<string>();
+                LocalizedNames[type] = new Dictionary<string, ulong>(StringComparer.OrdinalIgnoreCase);
+                IgnoredLocalizedNames[type] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
 
             if (LocalizedNames[type].ContainsKey(name) && LocalizedNames[type][name] != index) {
