@@ -16,7 +16,6 @@ namespace DataTool.ToolLogic.Extract;
 
 [ExtractTool("extract-conversations", "extract-hero-convo", Description = "Extracts heroes voice conversations")]
 public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
-    public Dictionary<string, string> QueryNameOverrides => null;
     public List<QueryType> QueryTypes => new List<QueryType>();
     public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 

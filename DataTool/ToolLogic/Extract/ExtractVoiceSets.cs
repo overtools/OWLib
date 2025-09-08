@@ -14,14 +14,13 @@ namespace DataTool.ToolLogic.Extract;
 public class ExtractVoiceSets : QueryParser, ITool {
     private const string Container = "VoiceSets";
 
-    public Dictionary<string, string> QueryNameOverrides => null;
     public List<QueryType> QueryTypes => new List<QueryType>();
 
     public void Parse(ICLIFlags toolFlags) {
         var flags = (ExtractFlags) toolFlags;
         flags.EnsureOutputDirectory();
 
-        var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+        var parsedTypes = ParseQuery(flags, QueryTypes);
         if (parsedTypes == null || parsedTypes.ContainsKey("*")) {
             Log("Saving all voice sets. This will take some time.");
         }

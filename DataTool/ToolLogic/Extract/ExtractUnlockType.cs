@@ -9,7 +9,6 @@ namespace DataTool.ToolLogic.Extract;
 
 public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
     public List<QueryType> QueryTypes { get; } = []; // synthetic only
-    public Dictionary<string, string> QueryNameOverrides => null;
     public string DynamicChoicesKey => ""; // not supported
         
     public abstract UnlockType GetUnlockType();
@@ -26,7 +25,7 @@ public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
             
         // turn the query into the format that ExtractUnlocks expects
         // (it's used to dealing with heroes)
-        var parsedQuery = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+        var parsedQuery = ParseQuery(flags, QueryTypes);
         if (parsedQuery != null) {
             foreach (var passedName in parsedQuery.Keys) {
                 fullArg.Values.Add(passedName);

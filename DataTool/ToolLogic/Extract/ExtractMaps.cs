@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using DataTool.DataModels;
 using DataTool.Flag;
@@ -67,7 +68,7 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
     public List<QueryType> QueryTypes => new List<QueryType>();
 
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    public static readonly Dictionary<string, string> MapMapping = new Dictionary<string, string> {
+    public static readonly Dictionary<string, string> MapMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
         ["horizon"] = "horizon lunar colony",
         ["moon"] = "horizon lunar colony",
         ["hlc"] = "horizon lunar colony",

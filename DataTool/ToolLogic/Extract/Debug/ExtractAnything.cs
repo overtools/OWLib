@@ -12,11 +12,10 @@ namespace DataTool.ToolLogic.Extract.Debug;
 [Tool("extract-anything", Description = "Extract any specific asset (terms & conditions apply)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
 public class ExtractAnything : QueryParser, ITool, IQueryParser {
     public List<QueryType> QueryTypes { get; } = []; // synthetic only
-    public Dictionary<string, string> QueryNameOverrides => null;
     public string DynamicChoicesKey => ""; // not supported
         
     public void Parse(ICLIFlags toolFlags) {
-        var query = ParseQuery(toolFlags, QueryTypes, QueryNameOverrides);
+        var query = ParseQuery(toolFlags, QueryTypes);
         if (query == null) {
             Logger.Warn("No query specified.");
             return;

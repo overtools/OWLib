@@ -233,7 +233,6 @@ namespace DataTool {
 
     public interface IQueryParser { // I want a consistent style
         List<QueryType> QueryTypes { get; }
-        Dictionary<string, string>? QueryNameOverrides { get; }
 
         string DynamicChoicesKey { get; }
     }
@@ -321,6 +320,7 @@ namespace DataTool {
                     hero = toolUnderstandableName;
                 }
 
+                // todo: ContainsValue = slow lookup and assumes ToLowerInvariant
                 if (namesForThisLocale != null && !namesForThisLocale.ContainsValue(hero)) {
                     var foundGuidForGivenName = IO.TryGetLocalizedName(0x75, hero);
                     if (foundGuidForGivenName != null && namesForThisLocale.TryGetValue(foundGuidForGivenName.Value, out var nameForThisLocale)) {

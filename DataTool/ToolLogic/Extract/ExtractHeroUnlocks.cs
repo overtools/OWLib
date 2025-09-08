@@ -72,7 +72,6 @@ public class CosmeticType : QueryType {
 public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
     protected virtual string RootDir => "Heroes";
     protected virtual bool NPCs => false;
-    public Dictionary<string, string> QueryNameOverrides => null;
     public virtual string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
     public List<QueryType> QueryTypes => new List<QueryType> {

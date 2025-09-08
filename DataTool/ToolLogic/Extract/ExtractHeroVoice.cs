@@ -23,8 +23,6 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         new QueryType("groupRestriction") { HumanName = "Group" }
     };
 
-    public Dictionary<string, string> QueryNameOverrides => throw new NotImplementedException();
-
     public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
     public void Parse(ICLIFlags toolFlags) {
@@ -65,7 +63,7 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
 
         var heroes = Helpers.GetHeroes();
         var validHeroes = Helpers.GetHeroNamesMapping(heroes);
-        var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides, namesForThisLocale: validHeroes);
+        var parsedTypes = ParseQuery(flags, QueryTypes, namesForThisLocale: validHeroes);
         if (parsedTypes == null) return;
 
         foreach (var (heroGuid, hero) in heroes) {
