@@ -171,11 +171,9 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             if (heroNameActual == null) continue;
 
             Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroGuid).ToString("X"));
-
-            string heroFileName = GetValidFilename(heroNameActual);
-
             if (config.Count == 0) continue;
-
+            
+            string heroFileName = GetValidFilename(heroNameActual);
             string heroPath = Path.Combine(basePath, RootDir, heroFileName);
 
             var voiceSet = VoiceSet.Load(hero.STU);

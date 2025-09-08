@@ -41,7 +41,7 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
         var flags = (ExtractFlags) toolFlags;
         flags.EnsureOutputDirectory();
 
-        Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+        Dictionary<string, ParsedHero> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
         if (parsedTypes == null) {
             QueryHelp(QueryTypes);
             return;

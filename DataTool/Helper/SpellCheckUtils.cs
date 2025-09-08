@@ -20,13 +20,13 @@ public static class SpellCheckUtils {
         Warn("SpellCheck", $"Did you mean {correctedStr[0].term}?");
     }
 
-    public static void SpellCheckQuery(Dictionary<string, Dictionary<string, ParsedArg>> pTypes, SymSpell symSpell) {
+    public static void SpellCheckQuery(Dictionary<string, ParsedHero> pTypes, SymSpell symSpell) {
         foreach (var type in pTypes) {
             SpellCheckString(type.Key, symSpell);
         }
     }
 
-    public static void SpellCheckMapName(Dictionary<string, Dictionary<string, ParsedArg>> pTypes, SymSpell symSpell) {
+    public static void SpellCheckMapName(Dictionary<string, ParsedHero> pTypes, SymSpell symSpell) {
         foreach (var map_name in pTypes) {
             SpellCheckString((map_name.Key.Contains(':') ? map_name.Key.Split(':')[0] : map_name.Key), symSpell); //for MapName:GUID case
         }

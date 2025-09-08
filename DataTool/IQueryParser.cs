@@ -59,6 +59,11 @@ namespace DataTool {
         }
     }
 
+    public record ParsedHero {
+        public required Dictionary<string, ParsedArg> Types;
+        public bool Matched = false;
+    }
+
     public class TagExpectedValue {
         public readonly HashSet<string> Values;
 
@@ -146,7 +151,7 @@ namespace DataTool {
             }
         }
 
-        protected Dictionary<string, Dictionary<string, ParsedArg>>? ParseQuery(
+        protected Dictionary<string, ParsedHero>? ParseQuery(
             ICLIFlags flags,
             List<QueryType> queryTypes,
             Dictionary<string, string>? queryNameOverrides = null,
@@ -168,7 +173,7 @@ namespace DataTool {
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
 
-            Dictionary<string, Dictionary<string, ParsedArg>> output = new Dictionary<string, Dictionary<string, ParsedArg>>();
+            Dictionary<string, ParsedHero> output = new Dictionary<string, ParsedHero>();
 
             foreach (string opt in inputArguments) {
                 if (opt.StartsWith("--")) continue; // ok so this is a flag
@@ -189,7 +194,9 @@ namespace DataTool {
                 }
 
                 var heroOutput = new Dictionary<string, ParsedArg>();
-                output[hero] = heroOutput;
+                output[hero] = new ParsedHero {
+                    Types = heroOutput
+                };
 
                 var afterHero = split.AsSpan(1);
                 if (afterHero.Length == 0) {
@@ -297,7 +304,7 @@ namespace DataTool {
             }
         }
 
-        protected static Dictionary<string, ParsedArg> GetQuery(Dictionary<string, Dictionary<string, ParsedArg>> parsedHeroes, params string?[] namesToMatch) {
+        protected static Dictionary<string, ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
             Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>();
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
@@ -305,7 +312,8 @@ namespace DataTool {
                 string nameInvariant = nameToMatch.ToLowerInvariant();
                 if (!parsedHeroes.TryGetValue(nameInvariant, out var parsedHero)) continue;
 
-                foreach (KeyValuePair<string, ParsedArg> parsedType in parsedHero) {
+                parsedHero.Matched = true;
+                foreach (KeyValuePair<string, ParsedArg> parsedType in parsedHero.Types) {
                     if (output.TryGetValue(parsedType.Key, out ParsedArg? existingArg)) {
                         output[parsedType.Key] = existingArg.Combine(parsedType.Value);
                     } else {

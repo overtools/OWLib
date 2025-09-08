@@ -43,7 +43,7 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
     private const string Container = "HeroConvo";
     private static readonly Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)>();
 
-    private void ProcessConversations(ExtractFlags flags, string basePath, Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes) {
+    private void ProcessConversations(ExtractFlags flags, string basePath, Dictionary<string, ParsedHero> parsedTypes) {
         foreach (var conversationGuid in Program.TrackedFiles[0xD0]) {
             var conversation = GetInstance<STUVoiceConversation>(conversationGuid);
             if (conversation == null) continue;
