@@ -34,10 +34,10 @@ public static class Helpers {
             .ToDictionary(x => x.Key, x => x.Value.Name!);
     }
 
-    public static Dictionary<string, string> GetHeroNameLocaleOverrides(Dictionary<teResourceGUID, Hero>? heroes=null) {
+    public static IgnoreCaseDict<string> GetHeroNameLocaleOverrides(Dictionary<teResourceGUID, Hero>? heroes=null) {
         var namesForThisLocale = GetHeroNamesMapping(heroes);
 
-        var overrides = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var overrides = new IgnoreCaseDict<string>();
         foreach (var localizedName in IO.GetLocalizedNames(0x75)) {
             if (!namesForThisLocale.TryGetValue(localizedName.Value, out var nameForThisLocale)) {
                 continue;

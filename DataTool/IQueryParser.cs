@@ -7,14 +7,13 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using TACTLib.Client.HandlerArgs;
-using TankLib;
 using TankLib.Helpers;
 
 namespace DataTool {
     public record ParsedArg {
         public readonly string Type;
         public ParsedNameSetPair Values = new ParsedNameSetPair();
-        public Dictionary<string, ParsedNameSetPair> Tags = new Dictionary<string, ParsedNameSetPair>(StringComparer.OrdinalIgnoreCase);
+        public IgnoreCaseDict<ParsedNameSetPair> Tags = new IgnoreCaseDict<ParsedNameSetPair>();
 
         public ParsedArg(QueryType type) {
             Type = type.Name;
@@ -22,8 +21,11 @@ namespace DataTool {
 
         public ParsedArg Combine(ParsedArg? other) {
             if (other == null) return this;
-            
-            var combinedTags = Tags.ToDictionary(StringComparer.OrdinalIgnoreCase);
+
+            var combinedTags = new IgnoreCaseDict<ParsedNameSetPair>();
+            foreach (var thisTag in Tags) {
+                combinedTags.Add(thisTag.Key, thisTag.Value);
+            }
             foreach (var otherTag in other.Tags) {
                 if (!combinedTags.TryGetValue(otherTag.Key, out var firstTag)) {
                     combinedTags.Add(otherTag.Key, otherTag.Value);
@@ -81,11 +83,11 @@ namespace DataTool {
     }
 
     public class ParsedNameSet {
-        private readonly Dictionary<string, ParsedName> Map;
+        private readonly IgnoreCaseDict<ParsedName> Map;
         public int Count => Map.Count;
 
         public ParsedNameSet() {
-            Map = new Dictionary<string, ParsedName>(StringComparer.OrdinalIgnoreCase);
+            Map = new IgnoreCaseDict<ParsedName>();
         }
         
         public void Add(ReadOnlySpan<char> value) {
@@ -231,9 +233,8 @@ namespace DataTool {
         public string DynamicChoicesKey = "";
     }
 
-    public interface IQueryParser { // I want a consistent style
+    public interface IQueryParser {
         List<QueryType> QueryTypes { get; }
-
         string DynamicChoicesKey { get; }
     }
 
@@ -281,14 +282,14 @@ namespace DataTool {
         protected Dictionary<string, ParsedHero>? ParseQuery(
             ICLIFlags flags,
             List<QueryType> queryTypes,
-            Dictionary<string, string>? queryNameOverrides = null,
-            Dictionary<string, string>? localizedNameOverrides = null) {
+            IgnoreCaseDict<string>? queryNameOverrides = null,
+            IgnoreCaseDict<string>? localizedNameOverrides = null) {
             if (queryTypes.Count == 0) {
                 // the query parser needs to operate on at least one type
                 queryTypes = [new QueryType("SyntheticType")];
             }
 
-            var queryTypeMap = new Dictionary<string, QueryType>(StringComparer.OrdinalIgnoreCase);
+            var queryTypeMap = new IgnoreCaseDict<QueryType>();
             foreach (var queryType in queryTypes) {
                 queryTypeMap.Add(queryType.Name, queryType);
 
@@ -297,9 +298,6 @@ namespace DataTool {
                 }
             }
             
-            // important!!
-            // both queryNameOverrides and localizedNameOverrides must be created with StringComparer.OrdinalIgnoreCase
-            
             // we don't want to add queryNameOverrides to skellcheck as it contains joke names (maps)
             // we don't want to add localizedNameOverrides to spellcheck as it may contain filtered hero names (npcs)
             // (the names are also all lowercase... which doesn't look great)
@@ -307,7 +305,7 @@ namespace DataTool {
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
 
-            Dictionary<string, ParsedHero> output = new Dictionary<string, ParsedHero>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, ParsedHero> output = new IgnoreCaseDict<ParsedHero>();
 
             foreach (string opt in inputArguments) {
                 if (opt.StartsWith("--")) continue; // ok so this is a flag
@@ -322,7 +320,7 @@ namespace DataTool {
                     hero = nameForThisLocale;
                 }
 
-                var heroOutput = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);
+                var heroOutput = new IgnoreCaseDict<ParsedArg>();
                 output[hero] = new ParsedHero {
                     Types = heroOutput
                 };
@@ -459,7 +457,7 @@ namespace DataTool {
         }
 
         protected Dictionary<string, ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
-            Dictionary<string, ParsedArg> output = new Dictionary<string, ParsedArg>(StringComparer.OrdinalIgnoreCase);
+            IgnoreCaseDict<ParsedArg> output = new IgnoreCaseDict<ParsedArg>();
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
                 

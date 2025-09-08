@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using static TankLib.Helpers.Logger;
 
@@ -9,7 +7,7 @@ namespace DataTool.Helper;
 public class ScopedSpellCheck {
     // storing a billion strings for unlocks isn't great but no other way...
     // symspell has a staging system, but it requires creating a SymSpell up-front which is expensive
-    private readonly HashSet<string> m_values = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    private readonly IgnoreCaseSet m_values = new IgnoreCaseSet();
     private SymSpell? m_symSpell;
 
     public void Add(string value) {

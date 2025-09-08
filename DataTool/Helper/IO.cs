@@ -44,8 +44,8 @@ public static class IO {
     }
 
     public static readonly Dictionary<(ulong, ushort), string> GUIDTable = new ();
-    public static readonly Dictionary<ushort, Dictionary<string, teResourceGUID>> LocalizedNames = new ();
-    private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new ();
+    public static readonly Dictionary<ushort, IgnoreCaseDict<teResourceGUID>> LocalizedNames = new ();
+    private static readonly Dictionary<ushort, IgnoreCaseSet> IgnoredLocalizedNames = new ();
 
     public static void LoadGUIDTable(bool onlyCanonical) {
         var guidNamesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Static", "GUIDNames.csv");
@@ -121,8 +121,8 @@ public static class IO {
             var guid = new teResourceGUID(id).WithType(type);
 
             if (!LocalizedNames.ContainsKey(type)) {
-                LocalizedNames[type] = new Dictionary<string, teResourceGUID>(StringComparer.OrdinalIgnoreCase);
-                IgnoredLocalizedNames[type] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                LocalizedNames[type] = new IgnoreCaseDict<teResourceGUID>();
+                IgnoredLocalizedNames[type] = new IgnoreCaseSet();
             }
 
             if (LocalizedNames[type].ContainsKey(name) && LocalizedNames[type][name] != guid) {

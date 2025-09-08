@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using DataTool.DataModels;
 using DataTool.Flag;
@@ -68,30 +67,28 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
     public List<QueryType> QueryTypes => new List<QueryType>();
 
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    public static readonly Dictionary<string, string> MapMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
-        ["horizon"] = "horizon lunar colony",
-        ["moon"] = "horizon lunar colony",
-        ["hlc"] = "horizon lunar colony",
-        ["anubis"] = "temple of anubis",
-        ["gibraltar"] = "watchpoint: gibraltar",
-        ["watchpoint"] = "watchpoint: gibraltar",
-        ["watchpoint gibraltar"] = "watchpoint: gibraltar",
-        ["lijiang"] = "lijiang tower",
-        ["estadio das ras"] = "estádio das rãs",
-        ["chateau guillard"] = "château guillard",
-        ["chateau"] = "château guillard",
-        ["ecopoint"] = "ecopoint: antarctica",
-        ["antarctica"] = "ecopoint: antarctica",
-        ["ecopoint antarctica"] = "ecopoint: antarctica",
-        ["volskaya"] = "volskaya industries",
-        ["kings row"] = "king's row",
-        ["paraiso"] = "paraíso",
-        ["rio"] = "paraíso",
-        ["esperanca"] = "esperança",
-        ["portugal"] = "esperança",
-        ["atlis"] = "aatlis",
-        ["atlas"] = "aatlis",
+    public static readonly IgnoreCaseDict<string> QueryNameOverrides = new IgnoreCaseDict<string>() {
+        ["horizon"] = "Horizon Lunar Colony",
+        ["moon"] = "horizon Lunar Colony",
+        ["hlc"] = "Horizon Lunar Colony",
+        ["anubis"] = "Temple of Anubis",
+        ["gibraltar"] = "Watchpoint: Gibraltar",
+        ["watchpoint"] = "Watchpoint: Gibraltar",
+        ["watchpoint gibraltar"] = "Watchpoint: Gibraltar",
+        ["lijiang"] = "Lijiang Tower",
+        ["estadio das ras"] = "Estádio Das Rãs",
+        ["chateau guillard"] = "Château Guillard",
+        ["chateau"] = "Château Guillard",
+        ["ecopoint"] = "Ecopoint: Antarctica",
+        ["antarctica"] = "Ecopoint: Antarctica",
+        ["ecopoint antarctica"] = "Ecopoint: Antarctica",
+        ["volskaya"] = "Volskaya Industries",
+        ["kings row"] = "King's Row",
+        ["paraiso"] = "Paraíso",
+        ["rio"] = "Paraíso",
+        ["esperanca"] = "Esperança",
+        ["portugal"] = "Esperança",
+        ["atlis"] = "Aatlis",
+        ["atlas"] = "Aatlis",
     };
-
-    public Dictionary<string, string> QueryNameOverrides => MapMapping;
 }
