@@ -55,7 +55,7 @@ public class CosmeticType : QueryType {
     public CosmeticType(UnlockType type, string humanName) : base(UnlockTypeToName(type)) {
         HumanName = humanName;
         Tags = new List<QueryTag> {
-            new QueryTag("rarity", "Rarity", new List<string> {"common", "rare", "epic", "legendary"}),
+            new QueryTag("rarity", "Rarity", new List<string> {"common", "rare", "epic", "legendary", "mythic"}),
             new QueryTag("event", "Event", new List<string> {"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
             new QueryTag("leagueTeam", "League Team", new List<string>(), "none") {
                 DynamicChoicesKey = UtilDynamicChoices.VALID_OWL_TEAMS

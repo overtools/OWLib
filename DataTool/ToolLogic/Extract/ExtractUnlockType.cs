@@ -29,11 +29,11 @@ public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
         var parsedQuery = ParseQuery(flags, QueryTypes, QueryNameOverrides);
         if (parsedQuery != null) {
             foreach (var passedName in parsedQuery.Keys) {
-                fullArg.Allowed.Add(passedName);
+                fullArg.Values.Add(passedName);
             }
         } else {
             // no specific name query, allow everything
-            fullArg.Allowed.Add("*");
+            fullArg.Values.Add("*");
         }
 
         var fullConfig = new Dictionary<string, ParsedArg> {
@@ -49,7 +49,7 @@ public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
         string path = Path.Combine(flags.OutputPath, GetFolderName());
         ExtractHeroUnlocks.SaveUnlocks(toolFlags, allUnlocks, path, null, fullConfig, null, null, null);
         
-        foreach (var allowed in fullArg.Allowed) {
+        foreach (var allowed in fullArg.Values.Allowed) {
             if (parsedQuery == null) continue;
             if (!parsedQuery.TryGetValue(allowed.Value, out var originalQueryPart)) {
                 continue;

@@ -13,52 +13,65 @@ using TankLib.Helpers;
 namespace DataTool {
     public record ParsedArg {
         public readonly string Type;
-        public ParsedNameSet Allowed = new ParsedNameSet();
-        public ParsedNameSet Disallowed = new ParsedNameSet();
-        public Dictionary<string, ParsedName> Tags = new Dictionary<string, ParsedName>(StringComparer.OrdinalIgnoreCase);
+        public ParsedNameSetPair Values = new ParsedNameSetPair();
+        public Dictionary<string, ParsedNameSetPair> Tags = new Dictionary<string, ParsedNameSetPair>(StringComparer.OrdinalIgnoreCase);
 
         public ParsedArg(QueryType type) {
             Type = type.Name;
         }
 
-        public ParsedArg Combine(ParsedArg? second) {
-            if (second == null) return this;
+        public ParsedArg Combine(ParsedArg? other) {
+            if (other == null) return this;
+            
+            var combinedTags = Tags.ToDictionary(StringComparer.OrdinalIgnoreCase);
+            foreach (var otherTag in other.Tags) {
+                if (!combinedTags.TryGetValue(otherTag.Key, out var firstTag)) {
+                    combinedTags.Add(otherTag.Key, otherTag.Value);
+                    continue;
+                }
 
-            Dictionary<string, ParsedName> combinedTags = Tags.ToDictionary(StringComparer.OrdinalIgnoreCase);
-            foreach (KeyValuePair<string, ParsedName> tag in second.Tags) {
-                combinedTags[tag.Key] = tag.Value;
+                combinedTags[otherTag.Key] = firstTag.Union(otherTag.Value);
             }
 
             return this with {
-                Allowed = Allowed.Union(second.Allowed),
-                Disallowed = Disallowed.Union(second.Disallowed),
+                Values = Values.Union(other.Values),
                 Tags = combinedTags
             };
         }
 
         public bool ShouldDo(string name, Dictionary<string, TagExpectedValue>? expectedVals = null) {
+            if (Values.IsDisallowed(name)) {
+                // if disallowed by name, don't attempt to match tags
+                return false;
+            }
+            
             if (expectedVals != null) {
                 foreach (KeyValuePair<string, TagExpectedValue> expectedVal in expectedVals) {
                     if (!Tags.TryGetValue(expectedVal.Key, out var givenValue)) continue;
 
-                    if (!expectedVal.Value.Values.Any(x => {
-                        if (x.StartsWith('!')) {
-                            if (givenValue.IsEqual(x.AsSpan(1))) return false;
-                        } else {
-                            if (!givenValue.IsEqual(x)) return false;
-                        }
+                    var explicitlyDisallowed = false;
+                    var explicitlyAllowed = false;
 
-                        return true;
-                    })) {
+                    foreach (var expectedValue in expectedVal.Value.Values) {
+                        explicitlyDisallowed |= givenValue.IsDisallowed(expectedValue);
+                        explicitlyAllowed |= givenValue.IsAllowed(expectedValue);
+                    }
+
+                    if (explicitlyDisallowed) {
                         return false;
+                    }
+                    
+                    if (!explicitlyAllowed) {
+                        // if the tag value is not explicitly allowed or disallowed
+                        // try to match by exact unlock name instead
+                        // this helps with owl skins, as the tag is set to "none" by default
+                        // (if we allowed glob, (leagueteam=boston) would match everything due to unspecified Allowed)
+                        return Values.Allowed.MatchesNoGlob(name);
                     }
                 }
             }
 
-            if (Disallowed.Matches(name)) {
-                return false;
-            }
-            return Allowed.Matches(name);
+            return Values.IsAllowed(name);
         }
     }
 
@@ -80,13 +93,25 @@ namespace DataTool {
         }
 
         public void Add(string value) {
-            Map.TryAdd(value, new ParsedName(value));
+            Add(new ParsedName(value));
         }
 
-        public bool Matches(string name) {
+        public void Add(ParsedName name) {
+            Map.TryAdd(name.Value, name);
+        }
+
+        public bool MatchesNoGlob(string name) {
             // no need to convert string to lower, dict has comparer
             if (Map.TryGetValue(name, out var exactName)) {
                 exactName.Matched = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Matches(string name) {
+            if (MatchesNoGlob(name)) {
                 return true;
             }
 
@@ -112,6 +137,38 @@ namespace DataTool {
         }
 
         public IEnumerator<ParsedName> GetEnumerator() => Map.Values.GetEnumerator();
+    }
+
+    public class ParsedNameSetPair {
+        public ParsedNameSet Allowed = new ParsedNameSet();
+        public ParsedNameSet Disallowed = new ParsedNameSet();
+
+        public void Add(ReadOnlySpan<char> value) {
+            if (value.StartsWith('!')) {
+                Disallowed.Add(value.Slice(1));
+            } else {
+                Allowed.Add(value);
+            }
+        }
+
+        public bool IsDisallowed(string name) {
+            return Disallowed.Matches(name);
+        }
+
+        public bool IsAllowed(string name) {
+            if (Allowed.Count == 0) {
+                // nothing explicitly specified as allowed = anything
+                return true;
+            }
+            return Allowed.Matches(name);
+        }
+        
+        public ParsedNameSetPair Union(ParsedNameSetPair other) {
+            return new ParsedNameSetPair {
+                Allowed = Allowed.Union(other.Allowed),
+                Disallowed = Disallowed.Union(other.Disallowed)
+            };
+        }
     }
 
     public record ParsedName {
@@ -269,7 +326,6 @@ namespace DataTool {
 
                     foreach (QueryType type in queryTypes) {
                         var parsedArg = new ParsedArg(type);
-                        parsedArg.Allowed.Add("*"); // allow anything
                         PopulateDefaultTags(type, parsedArg);
 
                         heroOutput.Add(type.Name, parsedArg);
@@ -317,11 +373,7 @@ namespace DataTool {
                             // (^ can be both begin and end on same iter)
 
                             if (!insideTag) {
-                                if (!itemBody.StartsWith('!')) {
-                                    parsedArg.Allowed.Add(itemBody);
-                                } else {
-                                    parsedArg.Disallowed.Add(itemBody[1..]);
-                                }
+                                parsedArg.Values.Add(itemBody);
                             } else {
                                 string[] kv = itemBody.ToString().Split('=');
                                 
@@ -334,7 +386,12 @@ namespace DataTool {
                                 }
                                 
                                 var tagValue = kv[1];
-                                parsedArg.Tags[tagName] = new ParsedName(tagValue);
+
+                                if (!parsedArg.Tags.TryGetValue(tagName, out var tagValues)) {
+                                    tagValues = new ParsedNameSetPair();
+                                    parsedArg.Tags.Add(tagName, tagValues);
+                                }
+                                tagValues.Add(tagValue);
                             }
 
                             if (endingTag) insideTag = false;
@@ -343,12 +400,6 @@ namespace DataTool {
                         // todo: error if insideTag
 
                         PopulateDefaultTags(queryType, parsedArg);
-
-                        if (parsedArg.Allowed.Count == 0 && parsedArg.Tags.Count > 0) {
-                            // the query string only gave tags
-                            // set allowed to all (tag filtering still applies)
-                            parsedArg.Allowed.Add("*");
-                        }
                     }
                 }
             }
@@ -364,9 +415,11 @@ namespace DataTool {
                 // dont override user given value
                 if (parsedArg.Tags.ContainsKey(tagName)) continue;
 
-                parsedArg.Tags.Add(tagName, new ParsedName(tagObj.Default) {
+                var pair = new ParsedNameSetPair();
+                pair.Allowed.Add(new ParsedName(tagObj.Default) {
                     Matched = true // not relevant for warnings
                 });
+                parsedArg.Tags.Add(tagName, pair);
             }
         }
 
@@ -402,8 +455,13 @@ namespace DataTool {
                 }
                 
                 foreach (var type in hero.Value.Types) {
-                    foreach (var allowed in type.Value.Allowed) {
-                        if (allowed.Matched) continue;
+                    var anyMatchedInType = type.Value.Values.Allowed.Count == 0;
+                    
+                    foreach (var allowed in type.Value.Values.Allowed) {
+                        if (allowed.Matched) {
+                            anyMatchedInType = true;
+                            continue;
+                        }
 
                         if (allowed.IsEqual("overwatch 1") || allowed.IsEqual("overwatch 2") ||
                             allowed.IsEqual("classic") || allowed.IsEqual("valorous")) {
@@ -414,13 +472,16 @@ namespace DataTool {
                         Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}={allowed.Value}\"");
                         anyUnknown = true;
                     }
-
-
+                    
                     foreach (var tag in type.Value.Tags) {
-                        if (tag.Value.Matched) continue;
+                        if (!anyMatchedInType) break; // will be misleading
                         
-                        Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}=({tag.Key}={tag.Value.Value})\"");
-                        anyUnknown = true;
+                        foreach (var allowed in tag.Value.Allowed) {
+                            if (allowed.Matched) continue;
+                        
+                            Logger.Error("Query", $"Found nothing matching your query of \"{hero.Key}|{type.Key}=({tag.Key}={allowed.Value})\"");
+                            anyUnknown = true;
+                        }
                     }
                 }
             }
