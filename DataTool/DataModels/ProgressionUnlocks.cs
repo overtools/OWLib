@@ -65,8 +65,8 @@ public class ProgressionUnlocks {
     public IEnumerable<Unlock> IterateUnlocks() {
         if (LootBoxesUnlocks != null) {
             foreach (LootBoxUnlocks lootBoxUnlocks in LootBoxesUnlocks) {
-                foreach (Unlock VARIABLE in lootBoxUnlocks.Unlocks) {
-                    yield return VARIABLE;
+                foreach (Unlock unlock in lootBoxUnlocks.Unlocks) {
+                    yield return unlock;
                 }
             }
         }

@@ -75,7 +75,7 @@ public class DumpLootboxPools : JSONTool, ITool {
         foreach (var rarity in pool.m_5F2BF9E9) {
             foreach (var unlockGUID in rarity.m_unlocks) {
                 var unlock = GetUnlock(unlockGUID);
-                if (unlock.STU == null) continue; // sanity
+                if (unlock == null) continue; // sanity
 
                 UnlockToHero.TryGetValue(unlock.GUID, out var owningHero);
 

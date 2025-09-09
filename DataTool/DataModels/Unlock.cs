@@ -256,11 +256,11 @@ public class Unlock {
 
     /// <summary>Get an array of <see cref="Unlock"/> from STUUnlocks</summary>
     /// <inheritdoc cref="GetArray(System.Collections.Generic.IEnumerable{ulong})"/>
-    public static Unlock[] GetArray(STUUnlocks unlocks) {
+    public static Unlock[] GetArray(STUUnlocks? unlocks) {
         return GetArray(unlocks?.m_unlocks);
     }
 
-    public static Unlock[] GetArray(teStructuredDataAssetRef<STUUnlock>[] unlocks) {
+    public static Unlock[] GetArray(teStructuredDataAssetRef<STUUnlock>[]? unlocks) {
         return GetArray(unlocks?.Select(x => (ulong) x));
     }
 

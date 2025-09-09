@@ -126,18 +126,18 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         // Log("https://www.youtube.com/watch?v=9Deg7VrpHbM");
     }
 
-    private static Dictionary<teResourceGUID, string> EventConfig;
+    private static Dictionary<teResourceGUID, string?>? EventConfig;
 
-    public static IReadOnlyDictionary<teResourceGUID, string> GetEventConfig() {
+    public static IReadOnlyDictionary<teResourceGUID, string?> GetEventConfig() {
         if (EventConfig != null) {
             return EventConfig;
         }
 
-        using (var stu = OpenSTUSafe(TrackedFiles[0x54].First(x => teResourceGUID.Index(x) == 0x16C))) {
-            var map = stu.GetInstance<STU_D7BD8322>();
-            EventConfig = map.m_categories.ToDictionary(x => x.m_id.GUID, y => GetCleanString(y.m_name));
-            return EventConfig;
-        }
+        using var stu = OpenSTUSafe(TrackedFiles[0x54].First(x => teResourceGUID.Index(x) == 0x16C));
+        var map = stu?.GetInstance<STU_D7BD8322>();
+        
+        EventConfig = map?.m_categories?.ToDictionary(x => x.m_id.GUID, y => GetCleanString(y.m_name));
+        return EventConfig ?? [];
     }
 
     public void SaveUnlocksForHeroes(ICLIFlags flags, string basePath) {
@@ -211,7 +211,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
 
             if (progressionUnlocks.LootBoxesUnlocks != null) {
                 foreach (LootBoxUnlocks lootBoxUnlocks in progressionUnlocks.LootBoxesUnlocks) {
-                    if (lootBoxUnlocks.Unlocks == null) continue;
                     string lootboxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
 
                     var tags = new Dictionary<string, TagExpectedValue> {
@@ -229,8 +228,8 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
     }
 
     public static void SaveUnlocks(
-        ICLIFlags flags, Unlock[]? unlocks, string path, string eventKey,
-        Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, VoiceSet? voiceSet, STUHero hero) {
+        ICLIFlags flags, Unlock[]? unlocks, string path, string? eventKey,
+        Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
         if (unlocks == null) return;
         foreach (Unlock unlock in unlocks) {
             SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
@@ -238,9 +237,9 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
     }
 
     public static void SaveUnlock(
-        ICLIFlags flags, Unlock unlock, string path, string eventKey,
+        ICLIFlags flags, Unlock unlock, string path, string? eventKey,
         Dictionary<string, ParsedArg> config,
-        Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero hero) {
+        Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
         string rarity;
 
         if (tags != null) {
@@ -248,7 +247,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
                 rarity = unlock.Rarity.ToString();
                 tags["leagueTeam"] = new TagExpectedValue("none");
             } else {
-                TeamDefinition teamDef = TeamDefinition.Load(unlock.STU.m_0B1BA7C1);
+                TeamDefinition teamDef = TeamDefinition.Load(unlock.STU.m_0B1BA7C1)!;
                 tags["leagueTeam"] = new TagExpectedValue(teamDef.Abbreviation, // NY
                                                           teamDef.Location, // New York
                                                           teamDef.Name, // Excelsior
@@ -269,8 +268,8 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         var eventMap = GetEventConfig();
         if (unlock.STU.m_BEE9BCDA != null) {
             var formalEventKey = unlock.STU.m_BEE9BCDA.FirstOrDefault(x => eventMap.ContainsKey(x));
-            if (eventMap.ContainsKey(formalEventKey)) {
-                eventKey = eventMap[formalEventKey] ?? eventKey;
+            if (eventMap.TryGetValue(formalEventKey, out var eventMapName)) {
+                eventKey = eventMapName ?? eventKey;
             }
         }
 
@@ -346,7 +345,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
     }
 
-    private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, UnlockType unlockType) {
+    private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg>? config, Dictionary<string, TagExpectedValue>? tags, UnlockType unlockType) {
         if (unlock.Type != unlockType) return false;
 
         bool shouldDo;

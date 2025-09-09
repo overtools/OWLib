@@ -208,8 +208,8 @@ namespace DataTool {
     public class TagExpectedValue {
         public readonly HashSet<string> Values;
 
-        public TagExpectedValue(params string[] args) {
-            Values = args.Where(x => !string.IsNullOrWhiteSpace(x)).ToHashSet();
+        public TagExpectedValue(params string?[] args) {
+            Values = args.Where(x => !string.IsNullOrWhiteSpace(x)).ToHashSet()!;
         }
     }
 

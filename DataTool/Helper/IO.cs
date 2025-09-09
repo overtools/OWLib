@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,7 @@ public static class IO {
 
     private static readonly Regex InvalidChars = new ($@"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()))}]+", RegexOptions.Compiled);
 
+    [return: NotNullIfNotNull(nameof(filename))]
     public static string? GetValidFilename(string? filename) {
         if (filename == null) {
             return null;
