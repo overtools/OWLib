@@ -184,7 +184,8 @@ namespace TankView {
         private void OpenCASC(object sender, RoutedEventArgs e) {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog {
                 IsFolderPicker = true,
-                EnsurePathExists = true
+                EnsurePathExists = true,
+                Title = "Select Overwatch Install"
             };
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
                 OpenCASC(dialog.FileName);

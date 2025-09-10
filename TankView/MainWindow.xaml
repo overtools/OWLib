@@ -42,12 +42,7 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="Open...">
-                    <MenuItem Header="CASC" Click="OpenCASC"
-                              IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-                    <MenuItem Header="NGDP" Click="OpenNGDP"
-                              IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-                </MenuItem>
+                <MenuItem Header="Open..." Click="OpenCASC" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
                 <MenuItem Header="Recent..." ItemsSource="{Binding RecentLocations}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
