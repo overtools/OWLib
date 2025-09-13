@@ -78,7 +78,6 @@ public class CriteriaContext {
             return name;
         }
 
-
         var objective = GetInstance<STU_19A98AF4>(guid);
         var userFacingNameEntry = objective?.m_99381822?.m_1EB5A024?
             .SingleOrDefault(x => x.m_0D09D2D9 == 0x0D8000000000320E);
@@ -97,9 +96,8 @@ public class CriteriaContext {
             return name;
         }
 
-        // todo: cache
         var talent = Talent.Load(guid);
-        name = talent?.Name  ?? GetNoTypeGUIDName(guid);
+        name = talent?.Name ?? GetNoTypeGUIDName(guid);
 
         m_talents.Add(guid, name);
         return name;
@@ -117,7 +115,7 @@ public class CriteriaContext {
 
     private static string GetNoTypeGUIDName(ulong guid) {
         var manualName = GetNullableGUIDName(guid);
-        if (manualName != null) return manualName;
+        if (manualName != null) return $"{manualName}({teResourceGUID.Index(guid):X})";
 
         return $"Unknown{teResourceGUID.Index(guid):X}";
     }
