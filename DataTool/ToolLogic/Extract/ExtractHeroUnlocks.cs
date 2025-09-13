@@ -113,15 +113,13 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         base.QueryHelp(types);
 
         Log("\r\nExample commands: ");
-        Log($"{indent + 1}\"Lúcio|skin=common\"");
-        Log($"{indent + 1}\"Torbjörn|skin=(rarity=legendary)\"");
-        Log($"{indent + 1}\"D.Va|skin=(event=summergames)\"");
-        Log($"{indent + 1}\"Soldier: 76|skin=Daredevil: 76\" \"Roadhog|spray=Pixel\"");
-        Log($"{indent + 1}\"Reaper|spray=*\" \t(extract all of Reaper's sprays)");
-        Log($"{indent + 1}\"Reaper|spray=(event=!halloween)\" \t\t(extract all of Reaper's sprays that are not from Halloween)");
-        Log($"{indent + 1}\"Reaper|skin=(rarity=legendary)\" \t\t(extract all of Reaper's legendary skins)");
-        Log($"{indent + 1}\"Reaper|spray=!Cute,*\" \t\t(extract all of Reaper's sprays except \"Cute\")");
-        Log($"{indent + 1}\"*|skin=(leagueteam=none)\" \t\t(extract skins for every hero ignoring Overwatch League skins)");
+        Log($"{indent + 1}\"Lúcio|skin=Overwatch 1\"");
+        Log($"{indent + 1}\"Tracer|skin=Track and Field\"");
+        Log($"{indent + 1}\"Reinhardt|emote=*\"");
+        Log($"{indent + 1}\"Junker Queen|victorypose=*\"");
+        Log($"{indent + 1}\"Torbjörn|highlightintro=*\"");
+        Log($"{indent + 1}\"Reaper|weaponskin=Hard Light\"");
+        Log($"{indent + 1}\"Reinhardt|weaponskin=Bound Demon\"");
 
         // Log("https://www.youtube.com/watch?v=9Deg7VrpHbM");
     }
@@ -229,7 +227,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
 
     public static void SaveUnlocks(
         ICLIFlags flags, Unlock[]? unlocks, string path, string? eventKey,
-        Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
+        Dictionary<string, ParsedArg>? config, Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
         if (unlocks == null) return;
         foreach (Unlock unlock in unlocks) {
             SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
@@ -238,7 +236,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
 
     public static void SaveUnlock(
         ICLIFlags flags, Unlock unlock, string path, string? eventKey,
-        Dictionary<string, ParsedArg> config,
+        Dictionary<string, ParsedArg>? config,
         Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
         string rarity;
 
