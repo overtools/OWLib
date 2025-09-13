@@ -11,7 +11,7 @@ using static DataTool.Program;
 namespace DataTool.ToolLogic.Extract;
 
 [Tool("extract-vector-images", Description = "Extracts vector images used in UI to SVGs", CustomFlags = typeof(ExtractFlags))]
-public class ExtractVectormages : ITool {
+public class ExtractVectorImages : ITool {
     private const string Container = "VectorImages";
 
     public void Parse(ICLIFlags toolFlags) {

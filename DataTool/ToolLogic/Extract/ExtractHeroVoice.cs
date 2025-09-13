@@ -88,8 +88,10 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
 
                 bool npc = progression.LootBoxesUnlocks == null;
 
-                foreach (Unlock itemInfo in progression.OtherUnlocks) {
-                    ProcessUnlock(itemInfo, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
+                if (progression.OtherUnlocks != null) {
+                    foreach (Unlock itemInfo in progression.OtherUnlocks) {
+                        ProcessUnlock(itemInfo, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
+                    }
                 }
 
                 if (npc) {
@@ -99,17 +101,15 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
                     continue;
                 }
 
-                foreach (var defaultUnlocks in progression.LevelUnlocks) {
-                    if (defaultUnlocks.Unlocks == null) continue; // wot??
-
-                    foreach (Unlock unlock in defaultUnlocks.Unlocks) {
-                        ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
+                if (progression.LevelUnlocks != null) {
+                    foreach (var defaultUnlocks in progression.LevelUnlocks) {
+                        foreach (Unlock unlock in defaultUnlocks.Unlocks) {
+                            ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
+                        }
                     }
                 }
 
                 foreach (var eventUnlocks in progression.LootBoxesUnlocks) {
-                    if (eventUnlocks?.Unlocks == null) continue;
-
                     foreach (Unlock unlock in eventUnlocks.Unlocks) {
                         ProcessUnlock(unlock, flags, basePath, heroFileName, heroStu, baseComponent, baseInfo);
                     }

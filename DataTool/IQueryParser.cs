@@ -316,7 +316,8 @@ namespace DataTool {
                 var hero = split[0];
                 if (queryNameOverrides != null && queryNameOverrides.TryGetValue(hero, out var toolUnderstandableName)) {
                     hero = toolUnderstandableName;
-                } else if (localizedNameOverrides != null && localizedNameOverrides.TryGetValue(hero, out var nameForThisLocale)) {
+                } 
+                if (localizedNameOverrides != null && localizedNameOverrides.TryGetValue(hero, out var nameForThisLocale)) {
                     hero = nameForThisLocale;
                 }
 
