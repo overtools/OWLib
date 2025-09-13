@@ -4,12 +4,13 @@ using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.ToolLogic.List;
+using DataTool.ToolLogic.Util;
 
 namespace DataTool.ToolLogic.Extract;
 
 public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
     public List<QueryType> QueryTypes { get; } = []; // synthetic only
-    public string DynamicChoicesKey => ""; // not supported
+    public string DynamicChoicesKey => UtilDynamicChoices.GetUnlockKey(GetUnlockType());
         
     public abstract UnlockType GetUnlockType();
     public abstract string GetFolderName();
