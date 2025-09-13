@@ -102,6 +102,11 @@ public class CriteriaContext {
         m_talents.Add(guid, name);
         return name;
     }
+    
+    public string GetIdentifierName(ulong guid) 
+    {
+        return GetNoTypeGUIDName(guid);
+    }
 
     public string GetCelebrationName(ulong guid)
     {
@@ -139,7 +144,7 @@ public class CriteriaContext {
             case STUCriteria_Statescript statescript: {
                 using var _ = new ModifierScope(writer, statescript.m_57D96E27, "NOT");
 
-                writer.Write($"Scripted Event: {teResourceGUID.Index(statescript.m_identifier):X}");
+                writer.Write($"Scripted Event: {GetIdentifierName(statescript.m_identifier)}");
                 break;
             }
             case STU_D815520F heroInteraction: {
