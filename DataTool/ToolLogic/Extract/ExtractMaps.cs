@@ -90,5 +90,7 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
         ["portugal"] = "Esperança",
         ["atlis"] = "Aatlis",
         ["atlas"] = "Aatlis",
+        ["Circuit Royale"] = "Circuit Royal", // (its lowercase royal in game...)
+        ["Monte Carworld"] = "Circuit Royal",
     };
 }
