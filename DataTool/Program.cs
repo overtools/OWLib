@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -60,6 +61,22 @@ public static class Program {
 
         Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{Util.GetVersion(typeof(Program).Assembly)}");
         Logger.Info("Core", $"CommandLine: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
+        
+        // the text `"junkrat|spray="Venomous" by Leon"`
+        // is interpreted by cmd as `junkrat|spray=Venomous by Leon`
+        // (sequential quoted elements are concatenated)
+        // therefore, any " in the cli args must be because of an imbalance
+        
+        // todo: trying to match unlock names that contain " characters has never worked.
+        // should probably remove the character from any name...
+        
+        var invalidCliChars = SearchValues.Create(['"', '”']);
+        if (Environment.GetCommandLineArgs().Any(x => x.AsSpan().IndexOfAny(invalidCliChars) != -1)) {
+            Logger.Error("Core", "The tool cannot interpret your command!");
+            Logger.Warn("Core", "- Ensure there are spaces between each part.");
+            Logger.Warn("Core", "- Ensure there are no \\ characters before a \".");
+            return;
+        }
 
         var tools = GetTools();
         InitFlags(tools);
@@ -70,12 +87,6 @@ public static class Program {
 
         if (Flags.OverwatchDirectory == "{overwatch_directory}") {
             Logger.Error("Core", "You need to replace {overwatch_directory} with the location you have Overwatch installed to. It can be found in Battle.net. Remember to surround it with quotes");
-            return;
-        }
-
-        // todo: this code cant detect e.g `"c:\mypath\" list-heroes` because flags validation fails
-        if (Flags.OverwatchDirectory.Contains("\"")) {
-            Logger.Error("Core", "The Overwatch directory you passed will confuse the tool! Please remove the last \\ character");
             return;
         }
 
