@@ -519,7 +519,7 @@ namespace DataTool {
                         foreach (var allowed in tag.Value.Allowed) {
                             if (allowed.Matched) continue;
                         
-                            LogUnknownQuery(unknownPart => $"{hero.Key}|{type.Key}=({tag.Key}={unknownPart}", 
+                            LogUnknownQuery(unknownPart => $"{hero.Key}|{type.Key}=({tag.Key}={unknownPart})", 
                                           allowed.Value, tag.Value.SpellCheck);
                             anyUnknown = true;
                         }
