@@ -207,6 +207,12 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
                         criteriaDesc = stringWriter.ToString();
                     }
 
+                    string weightDesc = null;
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    if (voiceLineInstance.m_weight != null && voiceLineInstance.m_weight != 1) {
+                        weightDesc = $"{voiceLineInstance.m_weight}";
+                    }
+
                     // 99% of voiceline instances only have a single sound file however there are cases where some NPCs have multiple
                     // the Junkenstein Narrator is an example, the lines are the same however they are spoken differently.
                     foreach (var soundFile in voiceLineInstance.SoundFiles) {
@@ -227,6 +233,7 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
                         SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename, soundFile);
                             
                         WriteFile(criteriaDesc, Path.Combine(path, $"{soundFileGuid}-criteria.txt"));
+                        WriteFile(weightDesc, Path.Combine(path, $"{soundFileGuid}-weight.txt"));
                     }
 
                     // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems

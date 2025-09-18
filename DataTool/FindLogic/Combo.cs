@@ -213,6 +213,7 @@ public static class Combo {
         public HashSet<ulong> SoundFiles;
 
         public STUCriteriaContainer? m_criteria;
+        public float? m_weight;
     }
 
     public class SoundFileAsset : ComboAsset {
@@ -1052,6 +1053,7 @@ public static class Combo {
                         voiceLineInstanceInfo.Conversations = voiceLineInstance.m_voiceLineRuntime.m_BD1B6F64?.Select(x => x.GUID.GUID).ToArray();
                         voiceLineInstanceInfo.SubtitleRuntime = voiceLineInstance.m_voiceLineRuntime.m_6148094F;
                         voiceLineInstanceInfo.m_criteria = voiceLineInstance.m_voiceLineRuntime.m_criteria;
+                        voiceLineInstanceInfo.m_weight = voiceLineInstance.m_voiceLineRuntime.m_weight;
                         Find(info, voiceLineInstanceInfo.ExternalSound, replacements, context);
                         Find(info, voiceLineInstanceInfo.SubtitleRuntime, replacements, context);
                     } else {
