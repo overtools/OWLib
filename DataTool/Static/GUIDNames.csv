@@ -664,6 +664,11 @@ FFB,078,Voicelines,1 ; 1.62
 192A,078,Voicelines,1 ; s17 - gi joe
 192B,078,Voicelines,1 ; s17 - gi joe
 194F,078,Voicelines,1 ; s18
+195D,078,Voicelines,1 ; s18 - persona
+195E,078,Voicelines,1 ; s18 - persona
+195F,078,Voicelines,1 ; s18 - persona
+1960,078,Voicelines,1 ; s18 - persona
+1961,078,Voicelines,1 ; s18 - persona
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
@@ -844,6 +849,8 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 139D,09F,Menu/Wuyang Art,1
 139F,09F,Menu/S18 Mythics 3D,1
 13A2,09F,Menu/S18 Mythics Art,1
+13AC,09F,Menu/Persona Collab Art,1
+13AD,09F,Menu/Anniversary Art,1
 ; Celebrations,,,
 2168,01C,Winter,1
 2498,01C,LunarNewYear,1
@@ -858,11 +865,17 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 14C,0C3,Winter,1 ; after 2.14
 1E9,0C3,Winter (2023),1 ; before 2.14
 254,0C3,Halloween,1
+2F2,0C3,Nerf Collab Teaser,1
+32D,0C3,Persona Collab,1
 ; (Unintended) Map Variant Celebrations,,,
 211,0C3,April Fools,1 ; busan
 24B,0C3,Overwatch Classic(release),1 ; gibraltar..
 282,0C3,Kingmaker,1 ; basically all maps..
 29F,0C3,6v6Min1,1 ; basically all maps..
+329,0C3,Anniversary 2025 Week 1,1 ; gibraltar.. few maps..
+32A,0C3,Anniversary 2025 Week 2,1 ; gibraltar.. few maps..
+32B,0C3,Anniversary 2025 Week 3,1 ; gibraltar.. few maps..
+32C,0C3,Anniversary 2025 Week 4,1 ; gibraltar.. few maps..
 ; NPC VoiceSet names,,,
 1C2,05F,Sojourn,1
 22F,05F,Zeus,1
