@@ -502,7 +502,8 @@ namespace DataTool {
                         }
 
                         if (allowed.IsEqual("overwatch 1") || allowed.IsEqual("overwatch 2") ||
-                            allowed.IsEqual("classic") || allowed.IsEqual("valorous")) {
+                            allowed.IsEqual("classic") || allowed.IsEqual("valorous") ||
+                            allowed.IsEqual("守望先锋") || allowed.IsEqual("守望先锋归来")) {
                             // (IsEqual sets matched flag, but doesn't matter at this point)
                             unknownBaseSkin = true;
                         }
@@ -534,14 +535,14 @@ namespace DataTool {
             var isChinese = textLanguage == "zhCN";
             var isChinaClient = ((ClientCreateArgs_Tank)createArgs.HandlerArgs!).ManifestRegion == ClientCreateArgs_Tank.REGION_CN;
 
-            if (isChinaClient && unknownBaseSkin) {
-                if (isEnglish) {
+            if (unknownBaseSkin) {
+                if (isChinaClient && isEnglish) {
                     Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" skins are renamed to \"Classic\"");
                     Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to \"Valorous\"");
                 } else if (isChinese) {
-                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" skins are renamed to \"守望先锋\"");
-                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to \"守望先锋归来\"");
-                } else {
+                    Logger.Warn("Query", "In Chinese, \"Overwatch 1\" skins are renamed to \"守望先锋\"");
+                    Logger.Warn("Query", "In Chinese, \"Overwatch 2\" skins are renamed to \"守望先锋归来\"");
+                } else if (isChinaClient) {
                     Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" and \"Overwatch 2\" skins have different names. Check in-game");
                 }
             }
