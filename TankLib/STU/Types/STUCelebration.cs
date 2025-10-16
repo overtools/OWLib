@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xACCDE63F, 280)]
+    [STU(0xACCDE63F, 232)]
     public class STUCelebration : STUInstance
     {
         [STUField(0xBA09D725, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
@@ -18,55 +18,46 @@ namespace TankLib.STU.Types
         [STUField(0xED999C8B, 80)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_celebrationType;
 
-        [STUField(0x752FEF56, 96)] // size: 16
-        public teStructuredDataAssetRef<STUStat> m_752FEF56 = 0x8600000000003F5;
-
-        [STUField(0x34AC2796, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
-        public STU_1ED304DF[] m_34AC2796;
-
-        [STUField(0xFE3E185A, 128)] // size: 16
-        public teStructuredDataAssetRef<STU_2B8093CD>[] m_FE3E185A;
-
-        [STUField(0x38BFB46C, 144)] // size: 16
+        [STUField(0x38BFB46C, 96)] // size: 16
         public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
 
-        [STUField(0x1DAD9B7C, 160, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x1DAD9B7C, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_C12AE264[] m_1DAD9B7C;
 
-        [STUField(0x5B32D0EF, 176, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x5B32D0EF, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_0F32B4E9[] m_5B32D0EF;
 
-        [STUField(0x151434A1, 192)] // size: 16
+        [STUField(0x151434A1, 144)] // size: 16
         public teStructuredDataAssetRef<ulong> m_151434A1;
 
-        [STUField(0xEBF1AB65, 208)] // size: 16
+        [STUField(0xEBF1AB65, 160)] // size: 16
         public teStructuredDataAssetRef<ulong> m_EBF1AB65;
 
-        [STUField(0xF81F4386, 224)] // size: 8
+        [STUField(0xF81F4386, 176)] // size: 8
         public teStructuredDataDateAndTime m_startTime;
 
-        [STUField(0xFBEBAD6F, 232)] // size: 8
+        [STUField(0xFBEBAD6F, 184)] // size: 8
         public teStructuredDataDateAndTime m_endTime;
 
-        [STUField(0x9FBC8212, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x9FBC8212, 192, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_BCD1C634 m_9FBC8212;
 
-        [STUField(0x113CBC51, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x113CBC51, 200, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_BCD1C634 m_113CBC51;
 
-        [STUField(0x872E6F7B, 256)] // size: 8
+        [STUField(0x872E6F7B, 208)] // size: 8
         public teStructuredDataDateAndTime m_872E6F7B;
 
-        [STUField(0xEDE36CB7, 264)] // size: 8
+        [STUField(0xEDE36CB7, 216)] // size: 8
         public ulong m_resourceKeyId;
 
-        [STUField(0x0D0E7006, 272)] // size: 4
+        [STUField(0x0D0E7006, 224)] // size: 4
         public float m_0D0E7006;
 
-        [STUField(0x6DA2714B, 276)] // size: 1
+        [STUField(0x6DA2714B, 228)] // size: 1
         public byte m_6DA2714B;
 
-        [STUField(0xB28C0B25, 277)] // size: 1
+        [STUField(0xB28C0B25, 229)] // size: 1
         public byte m_B28C0B25 = 0x1;
     }
 }

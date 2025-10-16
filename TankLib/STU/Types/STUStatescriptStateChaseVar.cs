@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6AE5D1A1, 296)]
+    [STU(0x6AE5D1A1, 304)]
     public class STUStatescriptStateChaseVar : STUStatescriptState
     {
         [STUField(0x20D151F5, 192, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
@@ -31,25 +31,28 @@ namespace TankLib.STU.Types
         [STUField(0x592D15F7, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_out_Var;
 
-        [STUField(0x9B0385B4, 256, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xDD792FF0, 256, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_DD792FF0;
+
+        [STUField(0x9B0385B4, 264, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_9B0385B4;
 
-        [STUField(0x5BEFF040, 264, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x5BEFF040, 272, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_5BEFF040;
 
-        [STUField(0x5DA62D02, 272, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x5DA62D02, 280, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onAbortPlug;
 
-        [STUField(0xA0B58111, 280, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xA0B58111, 288, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onFinishedPlug;
 
-        [STUField(0x1E10B2B1, 288)] // size: 4
+        [STUField(0x1E10B2B1, 296)] // size: 4
         public Enum_8FC75FF8 m_1E10B2B1 = Enum_8FC75FF8.x24A6704B;
 
-        [STUField(0xCB671004, 292)] // size: 1
+        [STUField(0xCB671004, 300)] // size: 1
         public byte m_CB671004;
 
-        [STUField(0x9FF96195, 293)] // size: 1
+        [STUField(0x9FF96195, 301)] // size: 1
         public byte m_9FF96195;
     }
 }

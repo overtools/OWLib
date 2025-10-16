@@ -11,5 +11,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xF0DD1972)] PassiveAbility = 0x2,
         [STUField(0xB8B1437C)] UltimateAbility = 0x3,
         [STUField(0x560D5787)] Perk = 0x4,
+        [STUField(0xEB644997)] xEB644997 = 0x5,
     }
 }
