@@ -213,13 +213,15 @@ public static class SkinTheme {
     private static void SetPreviewWeaponNames(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities, int index) {
         if (entities == null) return;
         foreach (STU_A0872511 weaponEntity in entities) {
-            FindLogic.Combo.Find(info, weaponEntity.m_entityDefinition, weaponReplacements);
+            var weaponEntityGUID = weaponEntity.m_entityDefinition;
+            FindLogic.Combo.Find(info, weaponEntityGUID, weaponReplacements);
 
             var loadout = Loadout.Load(weaponEntity.m_loadout);
             if (loadout == null) continue;
-            info.SetEntityName(weaponEntity.m_entityDefinition, $"{loadout.Name}-{teResourceGUID.Index(weaponEntity.m_entityDefinition)}");
+            
+            info.SetEntityName(weaponEntityGUID, $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}", weaponReplacements);
 
-            if ((weaponReplacements == null || index == 0) && info.m_entities.TryGetValue(weaponEntity.m_entityDefinition, out var entity) && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {
+            if ((weaponReplacements == null || index == 0) && info.m_entities.TryGetValue(weaponEntityGUID, out var entity) && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {
                 foreach (var modellook in model.m_modelLooks) {
                     info.SetModelLookName(modellook, $"{(STUWeaponType) index:G}-{teResourceGUID.Index(modellook):X}");
                 }

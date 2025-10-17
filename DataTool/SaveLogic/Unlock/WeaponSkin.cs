@@ -116,8 +116,8 @@ public static class WeaponSkin {
             var loadout = Loadout.Load(weaponEntity.m_loadout);
             if (loadout == null) continue;
 
-            var weaponEntityGUID = FindLogic.Combo.GetReplacement(weaponEntity.m_entityDefinition, weaponReplacements);
-            info.SetEntityName(weaponEntityGUID, $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}");
+            var weaponEntityGUID = weaponEntity.m_entityDefinition;
+            info.SetEntityName(weaponEntityGUID, $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}", weaponReplacements);
         }
     }
 
