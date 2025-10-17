@@ -729,6 +729,8 @@ AD3F,01C,Shop,1
 C1A7,01C,Pride,1
 C760,01C,Progression,1
 CB01,01C,HeroMastery,1
+43EB,01C,Mythic,1
+107D2,01C,Stadium,1
 AD37,01C,Season1,1
 B647,01C,Season2,1
 B734,01C,Season3,1
@@ -858,9 +860,10 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 13A2,09F,Menu/S18 Mythics Art,1
 13AC,09F,Menu/Persona Collab Art,1
 13AD,09F,Menu/Anniversary Art,1
+13B7,09F,Menu/S19 Mythics 3D,1
 13C2,09F,Menu/S19 One Punch Man Art,1
 13C4,09F,Menu/S19 Stadium Art,1
-13C5,09F,Menu/S19 Mythics Art,1
+13C5,09F,Menu/S19 Halloween Art,1
 ; Celebrations,,,
 2168,01C,Winter,1
 2498,01C,LunarNewYear,1
@@ -886,6 +889,7 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 32A,0C3,Anniversary 2025 Week 2,1 ; gibraltar.. few maps..
 32B,0C3,Anniversary 2025 Week 3,1 ; gibraltar.. few maps..
 32C,0C3,Anniversary 2025 Week 4,1 ; gibraltar.. few maps..
+330,0C3,Haunted Masquerade,1 ; lijiang
 ; NPC VoiceSet names,,,
 1C2,05F,Sojourn,1
 22F,05F,Zeus,1
