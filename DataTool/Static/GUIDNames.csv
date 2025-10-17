@@ -564,6 +564,7 @@ E754,01C,OverwatchClassic,1
 59D,078,Voicelines,1
 59E,078,Voicelines,1
 59F,078,Voicelines,1
+766,078,Voicelines,1
 77A,078,Voicelines,1
 77C,078,Voicelines,1
 77D,078,Voicelines,1
@@ -587,6 +588,8 @@ D00,078,Voicelines,1
 D0E,078,Voicelines,1
 D68,078,Voicelines,1
 D77,078,Voicelines,1
+DB8,078,Voicelines,1
+DE2,078,Voicelines,1
 DE5,078,Voicelines,1
 E34,078,Voicelines,1
 E89,078,Voicelines,1
@@ -628,6 +631,8 @@ FFB,078,Voicelines,1 ; 1.62
 16FF,078,Voicelines,1 ; s9
 1707,078,Voicelines,1 ; s9
 173C,078,Voicelines,1 ; s10
+173D,078,Voicelines,1 ; s10
+173E,078,Voicelines,1 ; s10
 1748,078,Voicelines,1 ; s11
 1772,078,Voicelines,1 ; s11 - transformers
 1773,078,Voicelines,1 ; s11 - transformers
@@ -669,6 +674,7 @@ FFB,078,Voicelines,1 ; 1.62
 195F,078,Voicelines,1 ; s18 - persona
 1960,078,Voicelines,1 ; s18 - persona
 1961,078,Voicelines,1 ; s18 - persona
+1972,078,Voicelines,1 ; s19
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
@@ -741,6 +747,7 @@ EC03,01C,Season15,1
 EC0F,01C,Season16,1
 EC11,01C,Season17,1
 EC12,01C,Season18,1
+EC13,01C,Season19,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -851,6 +858,9 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 13A2,09F,Menu/S18 Mythics Art,1
 13AC,09F,Menu/Persona Collab Art,1
 13AD,09F,Menu/Anniversary Art,1
+13C2,09F,Menu/S19 One Punch Man Art,1
+13C4,09F,Menu/S19 Stadium Art,1
+13C5,09F,Menu/S19 Mythics Art,1
 ; Celebrations,,,
 2168,01C,Winter,1
 2498,01C,LunarNewYear,1
