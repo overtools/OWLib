@@ -41,7 +41,8 @@ public static class WeaponSkin {
         FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
         FindWeapons(info, replacements, hero);
         FindEffects(info, replacements);
-        SkinTheme.FindSoundFiles(flags, directory, replacements); // save any sounds to main skin dir
+        SkinTheme.SaveSoundFiles(flags, directory, replacements); // save any sounds to main skin dir
+        SaveAnimations(flags, directory, replacements);
 
         var context = new Combo.SaveContext(info) {
             m_saveAnimationEffectsAsLoose = true
@@ -91,7 +92,8 @@ public static class WeaponSkin {
             }
 
             FindEffects(findInfo, variantReplacements);
-            SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkinGUID)); // save any sounds to main skin dir
+            SkinTheme.SaveSoundFiles(flags, directory, variantReplacements); // save any sounds to main skin dir
+            SaveAnimations(flags, directory, variantReplacements);
 
             // todo: the part textures seem to not be set... bound demon = hanzo mythic bow
             using var infoTexture = MythicSkin.BuildVariantInfoImage(partVariantIndices, partTextures);
@@ -135,5 +137,35 @@ public static class WeaponSkin {
 
             FindLogic.Combo.Find(info, replacement.Value);
         }
+    }
+    
+    private static void SaveAnimations(ICLIFlags flags, string directory, Dictionary<ulong, ulong> replacements) {
+        // similar story to effects, but we have to diff
+        // (as they are overriding whole bend tree sets which contain a lot of base animations too)
+        
+        FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
+        FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
+
+        foreach (KeyValuePair<ulong, ulong> replacement in replacements) {
+            uint type = teResourceGUID.Type(replacement.Value);
+            if (type != 0x6 && type != 0x20 && type != 0x21) {
+                // animation, blend tree, blend tree set
+                continue;
+            }
+            
+            // note: passing replacements will break this (it would walk skinned only)
+            // although, this could also be technically wrong if, if things inside the blend trees/set could be skinned
+            FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
+            FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
+        }
+        
+        foreach (var baseAnimation in diffInfoBefore.m_animations) {
+            // remove anything that wasn't replaced by the skin
+            diffInfoAfter.m_animations.Remove(baseAnimation.Key);
+        }
+        
+        var saveContext = new Combo.SaveContext(diffInfoAfter);
+        // (automatically appends "Animations" dir)
+        Combo.SaveAllAnimations(flags, directory, saveContext);
     }
 }

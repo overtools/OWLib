@@ -53,7 +53,7 @@ public static class MythicSkin {
 
             // save any sounds to main skin dir..
             // todo: there arent any. probably replacing effect. just for sanity
-            SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkinGUID));
+            SkinTheme.SaveSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkinGUID));
 
             using var infoTexture = BuildVariantInfoImage(partVariantIndices, partTextures);
             infoTexture?.SaveAsPng(Path.Combine(variantDirectory, "Info.png"));

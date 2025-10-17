@@ -122,7 +122,7 @@ public static class SkinTheme {
     public static void SaveCore(ICLIFlags flags, string directory, teResourceGUID skinGUID, FindLogic.Combo.ComboInfo info) {
         Dictionary<ulong, ulong> replacements = GetReplacements(skinGUID);
 
-        FindSoundFiles(flags, directory, replacements);
+        SaveSoundFiles(flags, directory, replacements);
 
         Logger.Log("\t\tSaving");
         var saveContext = new Combo.SaveContext(info);
@@ -131,7 +131,7 @@ public static class SkinTheme {
         Logger.Log("\t\tDone");
     }
 
-    public static void FindSoundFiles(ICLIFlags flags, string directory, Dictionary<ulong, ulong> replacements) {
+    public static void SaveSoundFiles(ICLIFlags flags, string directory, Dictionary<ulong, ulong> replacements) {
         string soundDirectory = Path.Combine(directory, "Sound");
 
         FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
