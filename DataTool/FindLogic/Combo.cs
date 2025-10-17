@@ -137,6 +137,7 @@ public static class Combo {
             SetAssetName(effect, name, m_animationEffects, replacements);
         }
 
+        public void SetModelName(ulong look, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(look, name, m_models, replacements);
         public void SetModelLookName(ulong look, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(look, name, m_modelLooks, replacements);
 
         public void SetEffectVoiceSet(ulong effectGUID, ulong voiceSet) {
@@ -619,7 +620,7 @@ public static class Combo {
                 }
 
                 if (context.Model == 0 && context.Entity == 0) {
-                    TankLib.Helpers.Logger.Debug("Combo", "Animation with no model or entity. will be lost");
+                    TankLib.Helpers.Logger.Debug("Combo", "Animation with no model or entity. will be lost (unless saving all)");
                 }
 
                 if (info.m_animations.ContainsKey(guid)) break;

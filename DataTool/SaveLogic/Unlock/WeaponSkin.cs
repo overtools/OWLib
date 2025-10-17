@@ -77,6 +77,19 @@ public static class WeaponSkin {
             FindWeapons(findInfo, variantReplacements, hero);
             MythicSkin.SaveAndFlushEntities(flags, findInfo, saveContext, variantDirectory);
 
+            if (variantWeaponSkin is STU_475420BE derivedSkin) {
+                // ow2 heroes
+                // also on the root skin... doesn't really matter
+                
+                FindLogic.Combo.Find(findInfo, derivedSkin.m_8EB89D4C, variantReplacements);
+                FindLogic.Combo.Find(findInfo, derivedSkin.m_56BE636B, variantReplacements, new FindLogic.Combo.ComboContext {
+                    // ensure the look is linked to the model
+                    Model = derivedSkin.m_8EB89D4C
+                });
+
+                findInfo.SetModelName(derivedSkin.m_8EB89D4C, "Combined", variantReplacements);
+            }
+
             FindEffects(findInfo, variantReplacements);
             SkinTheme.FindSoundFiles(flags, directory, SkinTheme.GetReplacements(variantSkinGUID)); // save any sounds to main skin dir
 
