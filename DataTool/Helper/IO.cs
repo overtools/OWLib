@@ -67,32 +67,36 @@ public static class IO {
                 continue;
             }
 
-            // :modCheck: csv parser
-            // sure hope we never have to deal with quotes containing commas
-            string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
-            string indexString = parts[0];
-            string typeString = parts[1];
-            string name = parts[2];
-            string canonicalString = parts[3];
+            try {
+                // :modCheck: csv parser
+                // sure hope we never have to deal with quotes containing commas
+                string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
+                string indexString = parts[0];
+                string typeString = parts[1];
+                string name = parts[2];
+                string canonicalString = parts[3];
 
-            ulong index = ulong.Parse(indexString, NumberStyles.HexNumber);
-            ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
-            bool canonical = byte.Parse(canonicalString) == 1;
+                ulong index = ulong.Parse(indexString, NumberStyles.HexNumber);
+                ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
+                bool canonical = byte.Parse(canonicalString) == 1;
 
-            // tbh I don't know what this does
-            if (onlyCanonical && !canonical) {
-                continue;
+                // tbh I don't know what this does
+                if (onlyCanonical && !canonical) {
+                    continue;
+                }
+
+                if (!canonical) {
+                    name += $"-{index:X}";
+                }
+
+                if (GUIDTable.ContainsKey((index, type))) {
+                    TankLib.Helpers.Logger.Warn("GUIDNames", $"Duplicate key detected: {indexString}.{typeString}");
+                }
+
+                GUIDTable[(index, type)] = name;
+            } catch (Exception ex) {
+                TankLib.Helpers.Logger.Warn("GUIDNames", $"Failed to parse line: {line} - {ex.Message}");
             }
-
-            if (!canonical) {
-                name += $"-{index:X}";
-            }
-
-            if (GUIDTable.ContainsKey((index, type))) {
-                TankLib.Helpers.Logger.Warn("GUIDNames", $"Duplicate key detected: {indexString}.{typeString}");
-            }
-
-            GUIDTable[(index, type)] = name;
         }
     }
 
