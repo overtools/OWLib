@@ -55,7 +55,7 @@ public class Talent {
 
                 Loadout = new HeroLoadout {
                     GUID = talent.m_loadout,
-                    Name = LoadoutVM.GetName(talent.m_loadout),
+                    Name = Helpers.GetLoadoutById(talent.m_loadout)?.Name,
                     HeroGUID = hero?.GUID ?? null,
                     HeroName = hero?.Name,
                 };
@@ -67,13 +67,13 @@ public class Talent {
 
                 Loadout = new HeroLoadout {
                     GUID = perk.m_loadout,
-                    Name = LoadoutVM.GetName(perk.m_loadout),
+                    Name = Helpers.GetLoadoutById(perk.m_loadout)?.Name,
                     HeroGUID = hero?.GUID ?? null,
                     HeroName = hero?.Name,
                 };
             }
 
-            Name = LoadoutVM.GetName(perk.m_loadout);
+            Name = Helpers.GetLoadoutById(perk.m_loadout)?.Name;
             Level = (int) perk.m_4DDE5023;
             Major = perk.m_D60C9EA2 != 0;
         }

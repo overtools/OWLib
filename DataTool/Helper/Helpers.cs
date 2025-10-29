@@ -4,23 +4,61 @@ using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels.Hero;
 using TankLib;
-using TankLib.STU.Types;
 
 namespace DataTool.Helper;
 
 public static class Helpers {
+    private static Dictionary<teResourceGUID, HeroVM>? _heroesCache;
+    private static Dictionary<teResourceGUID, LoadoutVM>? _loadoutsCache;
+
     /// <summary>
-    /// Returns dictionary of all Heroes by GUID using the <see cref="Hero"/> data model.
+    /// Returns dictionary of all Heroes by GUID using the <see cref="HeroVM"/> data model.
     /// </summary>
     public static Dictionary<teResourceGUID, Hero> GetHeroes() {
-        var @return = new Dictionary<teResourceGUID, Hero>();
-        foreach (teResourceGUID key in Program.TrackedFiles[0x75]) {
-            var hero = STUHelper.GetInstance<STUHero>(key);
-            if (hero == null) continue;
-            @return[key] = new Hero(hero, key);
+        if (_heroesCache != null) {
+            return _heroesCache;
         }
 
+        var @return = new Dictionary<teResourceGUID, Hero>();
+        foreach (teResourceGUID key in Program.TrackedFiles[0x75]) {
+            var hero = HeroVM.Load(key);
+            if (hero == null) continue;
+            @return[key] = hero;
+        }
+
+        _heroesCache = @return;
         return @return;
+    }
+
+    /// <summary>
+    /// Returns dictionary of all Loadouts by GUID using the <see cref="LoadoutVM"/> data model.
+    /// </summary>
+    public static Dictionary<teResourceGUID, Loadout> GetLoadouts() {
+        if (_loadoutsCache != null) {
+            return _loadoutsCache;
+        }
+
+        var @return = new Dictionary<teResourceGUID, Loadout>();
+        foreach (teResourceGUID key in Program.TrackedFiles[0x9E]) {
+            var loadout = LoadoutVM.Load(key);
+            if (loadout == null) continue;
+            @return[key] = loadout;
+        }
+
+        _loadoutsCache = @return;
+        return @return;
+    }
+
+    /// <summary>Returns a Loadout by its GUID</summary>
+    public static LoadoutVM? GetLoadoutById(ulong guid) {
+        var loadouts = GetLoadouts();
+        return loadouts.GetValueOrDefault((teResourceGUID) guid);
+    }
+
+    /// <summary>Returns a Hero by its GUID</summary>
+    public static HeroVM? GetHeroById(ulong guid) {
+        var heroes = GetHeroes();
+        return heroes.GetValueOrDefault((teResourceGUID) guid);
     }
 
     /// <summary>
@@ -42,7 +80,7 @@ public static class Helpers {
             if (!namesForThisLocale.TryGetValue(localizedName.Value, out var nameForThisLocale)) {
                 continue;
             }
-            
+
             if (localizedName.Key.Equals(nameForThisLocale, StringComparison.OrdinalIgnoreCase)) {
                 // identical, don't bother mapping
                 continue;
