@@ -1,3 +1,6 @@
+// Dank hack to make it easier to reference this class elsewhere
+global using HeroVM = DataTool.DataModels.Hero.Hero;
+
 #nullable enable
 using System.Collections.Generic;
 using System.Diagnostics;

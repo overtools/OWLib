@@ -1,4 +1,7 @@
-﻿#nullable enable
+﻿// Dank hack to make it easier to reference this class elsewhere
+global using LoadoutVM = DataTool.DataModels.Hero.Loadout;
+
+#nullable enable
 using System.Linq;
 using DataTool.Helper;
 using TankLib;
@@ -57,9 +60,16 @@ public class Loadout {
 
         return new Loadout(stu, guid);
     }
+
+    public static string? GetName(ulong guid) {
+        var stu = STUHelper.GetInstance<STULoadout>(guid);
+        if (stu == null) return null;
+        return GetString(stu.m_name);
+    }
 }
 
 public class LoadoutLite {
+    public teResourceGUID GUID { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
     public LoadoutCategory Category { get; set; }
@@ -67,6 +77,7 @@ public class LoadoutLite {
     public teResourceGUID TextureGUID { get; set; }
 
     public LoadoutLite(Loadout loadout) {
+        GUID = loadout.GUID;
         Name = loadout.Name;
         Description = loadout.Description;
         Category = loadout.Category;

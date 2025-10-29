@@ -900,3 +900,16 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 021,17B,Epic Loot Box (S16),1
 026,17B,Loot Box (S16),1
 027,17B,Legendary Loot Box (S16),1
+; Rarities,,,
+297,01C,Common,1
+61ED,01C,Epic,1
+3DA0,01C,Rare,1
+644A,01C,Legendary,1
+64F0,01C,Mythic,1
+; Stadium Categories,,,
+68D3,01C,Weapon,1
+5FDC,01C,Ability,1
+ECD2,01C,Survival,1
+ECC7,01C,HeroPower,1
+2BB,01C,Gadget,1
+

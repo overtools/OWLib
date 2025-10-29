@@ -19,10 +19,14 @@ public class ListTalents : JSONTool, ITool {
         }
 
         IndentHelper indentLevel = new IndentHelper();
-        foreach (var loadout in data) {
-            Log($"{indentLevel}{loadout.Value.Name}:");
+        foreach (var (key, talent) in data) {
+            Log($"{indentLevel}{talent.Name}:");
             if (!flags.Simplify) {
-                Log($"{indentLevel + 1}Description: {loadout.Value.Description}");
+                Log($"{indentLevel + 1}Type: {talent.TalentType}");
+                Log($"{indentLevel + 1}Description: {talent.Description}");
+                Log($"{indentLevel + 1}Rarity: {talent.Rarity?.Value}");
+                Log($"{indentLevel + 1}Category: {talent.Category?.Value}");
+
                 Log();
             }
         }
