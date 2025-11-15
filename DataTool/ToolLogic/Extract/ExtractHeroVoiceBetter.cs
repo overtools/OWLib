@@ -125,7 +125,7 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
     }
 
     public static bool SaveVoiceSet(SaveSetContext context) {
-        if (context.m_voiceSetGUID == null) {
+        if (context.m_voiceSetGUID == null || context.m_voiceSetGUID == 0) {
             return false;
         }
 
