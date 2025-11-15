@@ -79,6 +79,7 @@ namespace TankLib {
             }
 
             public bool IsCubemap => HasFlag(Flags.Cube);
+            public bool Is3D => HasFlag(Flags.Tex3D);
 
             public bool IsArray => HasFlag(Flags.Array);
         }
