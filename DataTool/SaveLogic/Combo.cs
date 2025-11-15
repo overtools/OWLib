@@ -773,6 +773,7 @@ public static class Combo {
             }
 
             if (texture.Header.IsCubemap) return; // todo zingy - broken
+            if (texture.Header.Is3D) return; // todo zingy - broken. 32DF4.004
 
             if (texture.PayloadRequired && texture.Payloads.Length > 1) {
                 for (uint i = (uint)texture.Payloads.Length-1u; i >= 1; i++) {
