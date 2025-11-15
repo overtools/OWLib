@@ -32,16 +32,16 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AssetRipper.TextureDecoder" Version="2.3.0" />
-        <PackageReference Include="CsvHelper" Version="33.0.1" />
+        <PackageReference Include="AssetRipper.TextureDecoder" Version="2.4.0" />
+        <PackageReference Include="CsvHelper" Version="33.1.0" />
         <PackageReference Include="DirectXTexNet" Version="1.0.7" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
-        <PackageReference Include="Spectre.Console" Version="0.50.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+        <PackageReference Include="Spectre.Console" Version="0.54.0" />
         <PackageReference Include="SymSpell" Version="6.7.3" />
-        <PackageReference Include="ValveKeyValue" Version="0.13.1.398" />
+        <PackageReference Include="ValveKeyValue" Version="0.20.0.417" />
     </ItemGroup>
     <Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
         <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">

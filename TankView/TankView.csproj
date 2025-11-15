@@ -39,9 +39,9 @@
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
     <PackageReference Include="NVorbis" Version="0.10.5" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="2.1.1" />
-    <PackageReference Include="WindowsAPICodePackCore" Version="8.0.8" />
-    <PackageReference Include="WindowsAPICodePackShell" Version="8.0.8" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="2.3.2" />
+    <PackageReference Include="WindowsAPICodePackCore" Version="8.0.12" />
+    <PackageReference Include="WindowsAPICodePackShell" Version="8.0.12" />
   </ItemGroup>
   <Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
     <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">
