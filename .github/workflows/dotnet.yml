@@ -13,7 +13,7 @@ jobs:
                 with:
                     fetch-depth: 0
                     submodules: 'recursive'
-            -   name: Install .NET 9
+            -   name: Install .NET 10
                 uses: actions/setup-dotnet@v4
             -   name: Mutate Run Number
                 run: |
