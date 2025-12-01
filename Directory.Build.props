@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <!-- people are still hitting https://github.com/dotnet/runtime/issues/110000 -->
+        <!-- so just disable cet. it serves no purpose for us anyway -->
+        <CETCompat>false</CETCompat>
+    </PropertyGroup>
+</Project>
