@@ -808,8 +808,8 @@ public static class Combo {
                     try {
                         ProcessPortraitTexture(texture, filePath, convertType);
                         return;
-                    } catch {
-                        Logger.Debug("Combo", $"Failed to process {Path.GetFileName(filePath)} as a portrait, saving as regular");
+                    } catch(Exception e) {
+                        Logger.Debug("Combo", $"Failed to process {Path.GetFileName(filePath)} as a portrait, saving as regular: {e.Message}");
                     }
                 }
 
@@ -818,7 +818,7 @@ public static class Combo {
                         ConvertTexture(texture, splitMultiSurface, createMultiSurfaceSheet, grayscale, filePath, convertType);
                         return;
                     } catch(Exception e) {
-                        Logger.Warn("Combo", $"Failed to convert {Path.GetFileName(filePath)} using the texture decoder: {e.Message}");
+                        Logger.Warn("Combo", $"Failed to convert {Path.GetFileName(filePath)} using AssetRipper: {e.Message}");
                     }
                 }
 

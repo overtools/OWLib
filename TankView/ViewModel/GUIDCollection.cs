@@ -66,7 +66,7 @@ namespace TankView.ViewModel {
                 case DataHelper.DataType.Image: {
                     var buffer = DataHelper.ConvertDDS(value.GUID, out var width, out var height);
                     if (!buffer.IsEmpty) {
-                        PreviewSource = new RGBABitmapSource(buffer, width, height);
+                        PreviewSource = new BGRABitmapSource(buffer, width, height);
                         PreviewControl = new PreviewDataImage();
                     } else {
                         // i'm lazy

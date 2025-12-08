@@ -15,7 +15,7 @@ namespace TankView.ObjectModel {
                 if(data.IsEmpty) {
                     return null;
                 }
-                return new RGBABitmapSource(data, width, height);
+                return new BGRABitmapSource(data, width, height);
             } catch {
                 return default;
             }

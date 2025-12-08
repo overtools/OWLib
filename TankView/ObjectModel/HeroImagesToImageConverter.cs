@@ -22,7 +22,7 @@ namespace TankView.ObjectModel {
 
                 try {
                     var data = DataHelper.ConvertDDS(guid, out var width, out var height);
-                    image.Source = new RGBABitmapSource(data, width, height);
+                    image.Source = new BGRABitmapSource(data, width, height);
                     image.Width = width;
                     image.Height = height;
                     images.Add(image);

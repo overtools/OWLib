@@ -5,6 +5,7 @@ using DirectXTexNet;
 
 namespace DataTool.ConvertLogic;
 
+[Obsolete]
 public sealed class DDSConverter : IDisposable {
     [Flags]
     public enum CoInit : uint {
