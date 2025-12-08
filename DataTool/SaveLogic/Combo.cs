@@ -855,7 +855,6 @@ public static class Combo {
     }
 
     private static void ConvertDDS(teTexture texture, int maxMips, bool processIcon, string filePath, string convertType, bool splitMultiSurface, WICCodecs imageFormat) {
-        using Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount);
         if (processIcon) {
             try {
                 ProcessIconTexture(texture, filePath, convertType);
@@ -865,6 +864,7 @@ public static class Combo {
             }
         }
 
+        using Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount);
         using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, processIcon);
         var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
         for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
