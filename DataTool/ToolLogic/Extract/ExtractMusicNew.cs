@@ -8,7 +8,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using Spectre.Console;
 using TankLib.STU.Types;
-using TankLib.STU.Types.Enums;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-music-new", Description = "Extracts every sound file classified as music", CustomFlags = typeof(ExtractFlags))]
@@ -30,7 +29,10 @@ namespace DataTool.ToolLogic.Extract {
             var soundsTask = context.AddTaskAfter("Scanning Sounds", banksTask, true, allSoundGUIDs.Count);
             var extractingTask = context.AddTaskAfter("Extracting", soundsTask);
 
-            var musicBanks = new HashSet<ulong>();
+            // many sounds share each bank.
+            // it's not good enough to say "this bank contains some music"
+            // we need to identify exactly which tracks are music
+            var musicIDs = new HashSet<uint>();
             foreach (ulong bankGUID in allBankGUIDs) {
                 banksTask.Increment(1);
 
@@ -45,9 +47,10 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
                 }
 
-                var isMusic = bank.ObjectsOfType<BankObjectMusicTrack>().Any();
-                if (isMusic) {
-                    musicBanks.Add(bankGUID);
+                foreach (var musicTrack in bank.ObjectsOfType<BankObjectMusicTrack>()) {
+                    foreach (var musicSource in musicTrack.Sources) {
+                        musicIDs.Add(musicSource.Media.SourceID);
+                    }
                 }
             }
             banksTask.StopTask();
@@ -59,7 +62,13 @@ namespace DataTool.ToolLogic.Extract {
                 var sound = STUHelper.GetInstance<STUSound>(soundGUID);
                 if (sound == null) continue;
 
-                if (!musicBanks.Contains(sound.m_C32C2195.m_soundBank)) continue;
+                var soundIsMusic =
+                    sound.m_C32C2195.m_wwiseWEMFileIDs != null && musicIDs.Overlaps(sound.m_C32C2195.m_wwiseWEMFileIDs) ||
+                    sound.m_C32C2195.m_wwiseWEMStreamIDs != null && musicIDs.Overlaps(sound.m_C32C2195.m_wwiseWEMStreamIDs);
+                if (!soundIsMusic) {
+                    continue;
+                }
+
                 Combo.Find(findInfo, soundGUID);
             }
             soundsTask.StopTask();
