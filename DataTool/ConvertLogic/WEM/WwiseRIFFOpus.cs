@@ -146,56 +146,39 @@ namespace DataTool.ConvertLogic.WEM {
                 throw new InvalidDataException("Invalid codec version");
             }
 
-            if (MappingFamily > 0 && Header.ChannelType == 1) {
+            Header.ChannelMapping = new byte[Header.Channels];
+            if (Header.ChannelType == 1 && MappingFamily == 1) {
                 Header.CoupledCount = (WAVEChannelMask) Header.ChannelLayout switch {
                     WAVEChannelMask.STEREO => 1,
                     WAVEChannelMask.TWOPOINT1 => 1,
                     WAVEChannelMask.QUAD_side => 2,
+                    WAVEChannelMask.FIVEPOINT0 => 2,
                     WAVEChannelMask.FIVEPOINT1 => 2,
-                    WAVEChannelMask.SEVENPOINT1 => 2,
+                    WAVEChannelMask.SEVENPOINT1 => 3,
                     _ => 0,
                 };
 
                 Header.StreamCount = Header.Channels - Header.CoupledCount;
 
-                Header.ChannelMapping = new byte[Header.Channels];
-                if (MappingFamily == 1) {
-                    for (var i = 0; i < Header.Channels; i++) {
-                        Header.ChannelMapping[i] = MappingMatrix[Header.Channels - 1][i];
-                    }
-                } else {
-                    if (DEBUGForceStereo && Header.Channels > 2) {
-                        Header.StreamCount = Header.Channels;
-                        Header.Channels = 2;
-                        MappingFamily = 1;
-                    }
+                for (var i = 0; i < Header.Channels; i++) {
+                    Header.ChannelMapping[i] = MappingMatrix[Header.Channels - 1][i];
+                }
+            } else if (Header.ChannelType == 1 && MappingFamily == 255) { /* Overwatch 2 (PC) */
+                /* only seen 12ch, but seems to be what ChannelConfigToMapping would output with > 8 */
+                Header.CoupledCount = 0;
 
-                    if (MappingFamily is 0 or 1 || (Header.ChannelLayout & 8) == 0) {
-                        for (var i = 0; i < Header.Channels; i++) {
-                            Header.ChannelMapping[i] = (byte) i;
-                        }
-                    } else {
-                        for (var i = 0; i < Header.Channels; i++) {
-                            var idx = 0;
-                            for (var j = Header.ChannelLayout & 7; j > 0; j &= j - 1) {
-                                idx++;
-                            }
+                Header.StreamCount = Header.Channels - Header.CoupledCount;
 
-                            if (idx == i) {
-                                Header.ChannelMapping[i] = (byte)(idx - 1);
-                            } else if (i > idx) {
-                                Header.ChannelMapping[i] = (byte)(i - 1);
-                            } else {
-                                Header.ChannelMapping[i] = (byte) i;
-                            }
-                        }
-                    }
+                //TODO: mapping seems to be 0x2d63f / FL FR FC LFE BL BR SL SR TFL TFR TBL TBR
+                // while output order seems to swap FC and LFE? (not set in passed channel mapping but reordered later)
+                for (var i = 0; i < Header.Channels; i++) {
+                    Header.ChannelMapping[i] = (byte)i;
                 }
             }
 
-            if (Header.SampleRate == 0) {
+            //if (Header.SampleRate == 0) {
                 Header.SampleRate = 48000;
-            }
+            //}
 
             FrameTable = new ushort[Header.TableCount];
             stream.Position = Header.TableOffset;
