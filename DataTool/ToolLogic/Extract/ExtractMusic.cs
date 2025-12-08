@@ -19,6 +19,7 @@ namespace DataTool.ToolLogic.Extract {
             var outputPath = Path.Combine(flags.OutputPath, Container);
 
             AnsiConsole.Progress().Start(context => Work(context, flags, outputPath));
+            AnsiConsole.MarkupLine("[bold yellow]VLC is unable to play Opus ogg files (which means most music). Use foobar2000 instead[/]");
         }
 
         private static void Work(ProgressContext context, ExtractFlags flags, string outputPath) {
@@ -31,6 +32,7 @@ namespace DataTool.ToolLogic.Extract {
             // many sounds share each bank.
             // it's not good enough to say "this bank contains some music"
             // we need to identify exactly which tracks are music
+            // todo: it's possible we need to store ids per bank to avoid false-positives. haven't checked
             var musicIDs = new HashSet<uint>();
             foreach (ulong bankGUID in allBankGUIDs) {
                 banksTask.Increment(1);

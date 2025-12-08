@@ -146,6 +146,7 @@ namespace DataTool.ConvertLogic.WEM {
                 throw new InvalidDataException("Invalid codec version");
             }
 
+            // https://github.com/vgmstream/vgmstream/blob/90506671070a2214814a26879a817565fc6854cc/src/meta/wwise.c#L550
             Header.ChannelMapping = new byte[Header.Channels];
             if (Header.ChannelType == 1 && MappingFamily == 1) {
                 Header.CoupledCount = (WAVEChannelMask) Header.ChannelLayout switch {
