@@ -9,9 +9,9 @@ using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract;
 
-[Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags))]
-public class ExtractMusic : ITool {
-    private const string Container = "Music";
+[Tool("extract-music-old", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+public class ExtractMusicOld : ITool {
+    private const string Container = "MusicOld";
 
     Dictionary<UInt32, string> music_types = new Dictionary<uint, string> {
         { 0xE590A66D, "LoadingScreen" },
