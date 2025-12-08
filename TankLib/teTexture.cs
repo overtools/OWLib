@@ -35,22 +35,22 @@ namespace TankLib {
                     Depth = 0,
                     MipmapCount = (uint)mips,
                     Format = TextureTypes.TextureType.Unknown.ToPixelFormat(),
-                    Caps1 = 0x1000,
+                    Caps1 = 0x1000, // DDSCAPS_TEXTURE - required
                     Caps2 = 0,
                     Caps3 = 0,
                     Caps4 = 0,
                     Reserved2 = 0
                 };
-                if (surfaces > 1 || IsArray) {
-                    ret.Caps1 = 0x8 | 0x1000;
+
+                if (surfaces > 1 || mips > 1 || IsArray || IsCubemap) {
+                    ret.Caps1 |= 0x8; // DDSCAPS_COMPLEX
                 }
-
-                if (IsCubemap) ret.Caps2 = 0xFE00;
-
-                // todo: wtf
-                if (MipCount > 1 && (PayloadCount == 1 || IsCubemap)) {
-                    ret.MipmapCount = MipCount;
-                    ret.Caps1 = 0x8 | 0x1000 | 0x400000;
+                if (mips > 1) {
+                    ret.Caps1 |= 0x400000; // DDSCAPS_MIPMAP
+                }
+                if (IsCubemap) {
+                    // DDSCAPS2_CUBEMAP_*
+                    ret.Caps2 |= 0xFE00;
                 }
 
                 return ret;
@@ -133,7 +133,7 @@ namespace TankLib {
             }
 
             Data = new byte[Header.DataSize];
-            reader.Read(Data, 0, (int)Header.DataSize);
+            reader.ReadExactly(Data);
         }
 
         public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
@@ -266,7 +266,7 @@ namespace TankLib {
                         payload.SaveToDDSData(Header, ddsWriter);
                     }
                 } else {
-                    ddsWriter.Write(Data, 0, (int) Header.DataSize);
+                    ddsWriter.Write(Data, 0, Header.DataSize);
                 }
             }
         }
