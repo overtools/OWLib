@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DataTool.ConvertLogic.WEM;
 using DataTool.FindLogic;
 using DataTool.Flag;
@@ -10,19 +9,19 @@ using Spectre.Console;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-music-new", Description = "Extracts every sound file classified as music", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractMusicNew : ITool {
-        private const string Container = "MusicNew";
+    [Tool("extract-music", Description = "Extracts every sound file classified as music", CustomFlags = typeof(ExtractFlags))]
+    public class ExtractMusic : ITool {
+        private const string Container = "Music";
 
         public void Parse(ICLIFlags toolFlags) {
             var flags = (ExtractFlags) toolFlags;
             flags.EnsureOutputDirectory();
             var outputPath = Path.Combine(flags.OutputPath, Container);
 
-            AnsiConsole.Progress().Start(context => ExtractMusic(context, flags, outputPath));
+            AnsiConsole.Progress().Start(context => Work(context, flags, outputPath));
         }
 
-        private static void ExtractMusic(ProgressContext context, ExtractFlags flags, string outputPath) {
+        private static void Work(ProgressContext context, ExtractFlags flags, string outputPath) {
             var allBankGUIDs = Program.TrackedFiles[0x43];
             var allSoundGUIDs = Program.TrackedFiles[0x2C];
             var banksTask = context.AddTask("Scanning SoundBanks", true, allBankGUIDs.Count);

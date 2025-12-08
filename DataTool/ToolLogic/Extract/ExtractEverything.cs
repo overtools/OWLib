@@ -42,7 +42,7 @@ public class ExtractEverything : ITool {
 
         var soundSkipped = flags.SkipSound;
         flags.SkipSound = false;
-        new ExtractMusicNew().Parse(flags);
+        new ExtractMusic().Parse(flags);
         new ExtractHeroConversations().Parse(flags);
         new ExtractHeroVoice().Parse(flags);
         new ExtractVoiceSets().Parse(flags);
