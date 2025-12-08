@@ -648,7 +648,7 @@ public static class Combo {
         }
     }
 
-    private static void ProcessIconTexture(teTexture texture, string filePath, string convertType) {
+    private static void ProcessPortraitTexture(teTexture texture, string filePath, string convertType) {
         var converted = new TexDecoder(texture, false);
 
         using Image<Bgra32> alphaImage = converted.GetFrame(0);
@@ -804,6 +804,14 @@ public static class Combo {
                 }
 
                 processIcon = processIcon && texture.Header.Surfaces == 2;
+                if (processIcon) {
+                    try {
+                        ProcessPortraitTexture(texture, filePath, convertType);
+                        return;
+                    } catch {
+                        Logger.Debug("Combo", $"Failed to process {Path.GetFileName(filePath)} as a portrait, saving as regular");
+                    }
+                }
 
                 if (useTextureDecoder) {
                     try {
@@ -855,15 +863,6 @@ public static class Combo {
     }
 
     private static void ConvertDDS(teTexture texture, int maxMips, bool processIcon, string filePath, string convertType, bool splitMultiSurface, WICCodecs imageFormat) {
-        if (processIcon) {
-            try {
-                ProcessIconTexture(texture, filePath, convertType);
-                return;
-            } catch {
-                Logger.Debug("Combo", $"Failed to process {Path.GetFileName(filePath)} as an icon, saving as normal");
-            }
-        }
-
         using Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount);
         using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, processIcon);
         var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
