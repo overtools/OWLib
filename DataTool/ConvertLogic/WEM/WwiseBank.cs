@@ -115,6 +115,8 @@ namespace DataTool.ConvertLogic.WEM {
         }
 
         public IEnumerable<T> ObjectsOfType<T>() {
+            if (Objects == null) yield break;
+
             foreach (KeyValuePair<uint, IBankObject> bankObject in Objects) {
                 if (bankObject.Value != null && bankObject.Value.GetType() == typeof(T)) {
                     yield return (T) bankObject.Value;
