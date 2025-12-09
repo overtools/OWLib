@@ -240,7 +240,7 @@ namespace TankView {
 
                     BuildTree();
                 } catch (Exception e) {
-                    MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    MessageBox.Show(e.ToString(), "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                     if (Debugger.IsAttached) {
                         throw;
                     }
