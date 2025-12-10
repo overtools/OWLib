@@ -29,8 +29,9 @@ public static class IO {
             return null;
         }
 
-        var newFileName = filename.TrimEnd('.');
-        string sanitisedNamePart = InvalidChars.Replace(newFileName, "_");
+        filename = filename.Trim(); // directories can't start or end with a space
+        filename = filename.TrimEnd('.');
+        string sanitisedNamePart = InvalidChars.Replace(filename, "_");
 
         if (!OperatingSystem.IsWindows()) {
             return sanitisedNamePart;
