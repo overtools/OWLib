@@ -206,34 +206,17 @@ namespace TankLib {
                 // Console.Out.WriteLine($"{mips ?? Header.MipCount} {width ?? Header.Width} {height ?? Header.Height} {surfaces ?? Header.Surfaces}");
 
                 var targetMips = mips ?? Header.MipCount;
-                uint saveMipCount = Header.MipCount;
-                int savePayloadCount = 0;
-                if (PayloadRequired) {
-                    /*Console.Out.Write($"-- MIP DEBUG\n {Header.MipCount} ");
-                    foreach (var payload in Payloads)
-                    {
-                        if (payload == null)
-                        {
-                            Console.Out.WriteLine("MISSING!!");
-                            continue;
-                        }
-                        Console.Out.Write($"{payload.Header.Mips} ");
-                    }*/
 
-                    var payloadIdx = Payloads.Length-1;
-                    while (payloadIdx >= 0)
-                    {
-                        var mipLimitIncludedByThisPayload = Header.MipCount - Payloads[payloadIdx--].Header.Mips;
-                        saveMipCount = mipLimitIncludedByThisPayload;
-                        savePayloadCount++;
-
-                        if (mipLimitIncludedByThisPayload >= targetMips) break;
-                    }
-
-                    //Console.Out.WriteLine($"---- {targetMips} {saveMipCount} {payloadIdx} {Payloads.Length} {savePayloadCount} -----");
+                int savePayloadCount;
+                if (targetMips == 1) {
+                    // optimization for general case
+                    // we don't need to serialize mips if we only want highest
+                    savePayloadCount = 1;
+                } else {
+                    savePayloadCount = Header.PayloadCount;
                 }
 
-                TextureTypes.DDSHeader dds = Header.ToDDSHeader((int)saveMipCount, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
+                TextureTypes.DDSHeader dds = Header.ToDDSHeader(targetMips, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 0x30315844) {
                     var dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.UNKNOWN;
