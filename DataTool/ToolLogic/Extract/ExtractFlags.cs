@@ -96,7 +96,7 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "keep-channels", Help = "Keep all audio channels when converting Ogg Opus", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
     public bool KeepSoundChannels;
 
-    [CLIFlag(Default = true, Flag = "use-texture-decoder", Help = "Use TextureDecoder for decoding textures, slower but more accurate (enforced on Linux)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+    [CLIFlag(Default = false, Flag = "use-texture-decoder", Help = "Use TextureDecoder for decoding textures, slower but more accurate (enforced on Linux)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
     public bool UseTextureDecoder;
 
     [CLIFlag(Default = false, Flag = "all-lods", Help = "Extract all model LODs", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
