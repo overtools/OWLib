@@ -167,5 +167,6 @@ public static class WeaponSkin {
         var saveContext = new Combo.SaveContext(diffInfoAfter);
         // (automatically appends "Animations" dir)
         Combo.SaveAllAnimations(flags, directory, saveContext);
+        Combo.Save(flags, directory, saveContext);
     }
 }
