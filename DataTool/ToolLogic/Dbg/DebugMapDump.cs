@@ -33,6 +33,7 @@ namespace DataTool.ToolLogic.Debug {
                         for (int i = 0; i < placable.Header.PlaceableCount; ++i) {
                             var commonStructure = placable.CommonStructures[i];
                             using (var f = File.OpenWrite(Path.Combine(o, commonStructure.UUID.Value.ToString("N")))) {
+                                f.SetLength(0);
                                 f.Write(((teMapPlaceableDummy) placable.Placeables[i]).Data, 0, ((teMapPlaceableDummy) placable.Placeables[i]).Data.Length);
                             }
                         }

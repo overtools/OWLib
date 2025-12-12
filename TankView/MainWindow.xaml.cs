@@ -372,9 +372,10 @@ namespace TankView {
 
                         using (Stream i = IOHelper.OpenFile(entry))
                         using (Stream o = File.OpenWrite(Path.Combine(outPath, fileOutput))) {
+                            o.SetLength(0);
+
                             switch (dataType) {
                                 case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
-                                    o.SetLength(0);
                                     Combo.ConvertSoundFileWw2Ogg(i, o);
                                     break;
                                 // not used, image extraction is handled above

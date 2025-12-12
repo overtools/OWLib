@@ -19,6 +19,7 @@ namespace TankLib {
             using (Stream stream = File.OpenWrite(file))
             using (var lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Compress))
             using (var writer = new BinaryWriter(lz4Stream)) {
+                stream.SetLength(0);
                 stream.Write(new byte[4], 0, 4); // non-compressed
                 writer.Write((int)guids.Count);
                 writer.WriteStructArray(guids.ToArray());
@@ -69,6 +70,7 @@ namespace TankLib {
             using (Stream stream = File.OpenWrite(file))
             using (var lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Compress))
             using (var writer = new BinaryWriter(lz4Stream)) {
+                stream.SetLength(0);
                 stream.Write(new byte[4], 0, 4); // non-compressed
                 writer.Write((int)cKeys.Count);
                 writer.WriteStructArray(cKeys.ToArray());

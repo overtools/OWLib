@@ -113,6 +113,7 @@ public class ExtractMapEnvs : ITool {
 
                             using (Stream f = File.OpenWrite(sunInfoFile))
                             using (TextWriter w = new StreamWriter(f)) {
+                                f.SetLength(0);
                                 w.WriteLine($"Rotation (Blender): X:{euler.X - 90f}, Y:{euler.Y}, Z: {euler.Z}");
                                 w.WriteLine($"Rotation (Quat): X:{rotation.X}, Y:{rotation.Z}, Z: {rotation.Y}, W: {rotation.W}");
                                 w.WriteLine($"Color: R: {color.R}, G: {color.B}, B: {color.B}");
@@ -163,6 +164,7 @@ public class ExtractMapEnvs : ITool {
             string lut = LUT.SPILUT1024x32(lutStream);
             using (Stream spilut = File.OpenWrite(Path.Combine(basePath, part, $"{fname}.spi3d")))
             using (TextWriter spilutWriter = new StreamWriter(spilut)) {
+                spilut.SetLength(0);
                 spilutWriter.WriteLine(lut);
                 using (TextWriter ocioWriter = File.AppendText(Path.Combine(ocioPath))) {
                     ocioWriter.WriteLine(OCIOChunk(map, fname));

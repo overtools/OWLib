@@ -30,6 +30,7 @@ namespace DataTool.ToolLogic.Dbg {
 
                         var filename = Path.Combine(path, chunk.ChunkTags[i]);
                         using (Stream target = File.OpenWrite(filename)) {
+                            target.SetLength(0);
                             dummy.Data.CopyTo(target);
                         }
                     }

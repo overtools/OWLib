@@ -164,6 +164,7 @@ public static class Combo {
 
         CreateDirectoryFromFile(file);
         using (Stream outputStream = File.OpenWrite(file)) {
+            outputStream.SetLength(0);
             reference.Write(outputStream);
         }
     }
@@ -911,6 +912,7 @@ public static class Combo {
             stream.Position = 0;
             try {
                 using (Stream tempStream = File.OpenWrite(tempFile)) {
+                    tempStream.SetLength(0);
                     stream.CopyTo(tempStream);
                 }
 

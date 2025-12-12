@@ -103,6 +103,7 @@ public class ScratchDB : IEnumerable<KeyValuePair<ulong, ScratchDB.ScratchPath>>
 
         using (Stream file = File.OpenWrite(dbPath))
         using (BinaryWriter writer = new BinaryWriter(file, Encoding.Unicode)) {
+            file.SetLength(0);
             writer.Write((short) 2);
             writer.Write(dbPath);
             writer.Write(LongCount);
