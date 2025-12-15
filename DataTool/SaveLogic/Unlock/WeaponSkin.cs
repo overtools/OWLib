@@ -154,19 +154,36 @@ public static class WeaponSkin {
             }
             
             // note: passing replacements will break this (it would walk skinned only)
-            // although, this could also be technically wrong if, if things inside the blend trees/set could be skinned
+            // although, this could also be technically wrong, if things inside the blend trees/set could be skinned
             FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
-            FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
+            FindLogic.Combo.Find(diffInfoAfter, replacement.Key, replacements);
         }
         
-        foreach (var baseAnimation in diffInfoBefore.m_animations) {
-            // remove anything that wasn't replaced by the skin
-            diffInfoAfter.m_animations.Remove(baseAnimation.Key);
+        FindLogic.Combo.ComboInfo onlySkinContent = new FindLogic.Combo.ComboInfo();
+        foreach (var skinAnimation in diffInfoAfter.m_animations.Keys) {
+            if (diffInfoBefore.m_animations.ContainsKey(skinAnimation)) {
+                // skip, this animation is the same in the base skin
+                continue;
+            }
+            
+            FindLogic.Combo.Find(onlySkinContent, skinAnimation, replacements);
         }
         
-        var saveContext = new Combo.SaveContext(diffInfoAfter);
+        // save all models and entities referenced by skin animations
+        // this can include non-skinned animations for child models/entities
+        var saveContext = new Combo.SaveContext(onlySkinContent);
+        Combo.Save(flags, directory, saveContext);
+
+        // todo: i'm not enabling this for clarity. it's not obvious that animations would be filtered like this
+        // clear out any animations that are tied to models (therefore extracted above)
+        // foreach (var savedModel in onlySkinContent.m_models.Values) {
+        //     foreach (var savedAnimation in savedModel.m_animations) {
+        //         onlySkinContent.m_animations.Remove(savedAnimation);
+        //     }
+        // }
+        
+        // save all animations that aren't tied to a model
         // (automatically appends "Animations" dir)
         Combo.SaveAllAnimations(flags, directory, saveContext);
-        Combo.Save(flags, directory, saveContext);
     }
 }
