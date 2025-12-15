@@ -44,7 +44,7 @@ public class ExtractVectorImages : ITool {
         file.SetLength(0);
 
         using var writer = new StreamWriter(file);
-        writer.Write($"<svg x=\"{canvasPos.X}\" y=\"{canvasPos.Y}\" viewBox=\"0 0 {canvasSize.X} {canvasSize.Y}\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+        writer.Write(FormattableString.Invariant($"<svg x=\"{canvasPos.X}\" y=\"{canvasPos.Y}\" viewBox=\"0 0 {canvasSize.X} {canvasSize.Y}\" xmlns=\"http://www.w3.org/2000/svg\">\n"));
 
         for (var index = 0; index < vector.m_41B95C7C.Length; index++) {
             var path = vector.m_41B95C7C[index];
@@ -55,19 +55,19 @@ public class ExtractVectorImages : ITool {
 
             writer.Write("\t<path d=\"");
 
-            foreach (var triangle in path.m_9557A9B0 ?? Array.Empty<STU_D57A0ABB>()) {
+            foreach (var triangle in path.m_9557A9B0 ?? []) {
                 var vertex1 = path.m_88FCECD7[triangle.m_636C5113].m_position;
                 var vertex2 = path.m_88FCECD7[triangle.m_F29D1FBF].m_position;
                 var vertex3 = path.m_88FCECD7[triangle.m_B30017DE].m_position;
 
-                writer.Write($"M {vertex1.X},{vertex1.Y} L {vertex2.X},{vertex2.Y} {vertex3.X},{vertex3.Y} Z ");
+                writer.Write(FormattableString.Invariant($"M {vertex1.X},{vertex1.Y} L {vertex2.X},{vertex2.Y} {vertex3.X},{vertex3.Y} Z "));
             }
 
             writer.Write("\" ");
 
             switch (foreground) {
-                case STU_06BD7A87 foregroundColor:
-                    writer.Write($"style=\"fill:{foregroundColor.m_color.ToHex(false)};fill-opacity:{foregroundColor.m_AB865FDF};\" ");
+                case STU_06BD7A87 fillColor:
+                    writer.Write(FormattableString.Invariant($"style=\"fill:{fillColor.m_color.ToHex(false)};fill-opacity:{fillColor.m_AB865FDF};\" "));
                     break;
                 case STU_7654809A foregroundTexture:
                     // not used
