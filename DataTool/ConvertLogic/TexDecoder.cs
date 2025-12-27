@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using AssetRipper.TextureDecoder.Bc;
 using AssetRipper.TextureDecoder.Rgb;
 using AssetRipper.TextureDecoder.Rgb.Formats;
@@ -12,7 +11,7 @@ using TankLib;
 namespace DataTool.ConvertLogic;
 
 public class TexDecoder {
-    internal struct GrayscaleR<T>(T r) : IColor<ColorR<T>, T> where T : unmanaged, INumberBase<T>, IMinMaxValue<T> {
+    internal struct GrayscaleR32<T>(T r) : IColor<ColorR<T>, T> where T : unmanaged, INumberBase<T>, IMinMaxValue<T> {
         public override string ToString() {
             return $"{{ R: {R} }}";
         }
@@ -20,7 +19,7 @@ public class TexDecoder {
         public static bool HasRedChannel => true;
         public static bool HasGreenChannel => true;
         public static bool HasBlueChannel => true;
-        public static bool HasAlphaChannel => false;
+        public static bool HasAlphaChannel => true;
         public static bool ChannelsAreFullyUtilized => true;
         public static Type ChannelType => typeof(T);
 
@@ -35,28 +34,9 @@ public class TexDecoder {
         }
 
         public T R { get; set; } = r;
-
-        public T G {
-            get => R;
-            set { }
-        }
-
-        public T B {
-            get => R;
-            set { }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        internal static T GetMaximumValueSafe<T>() where T : unmanaged, INumberBase<T>, IMinMaxValue<T>
-        {
-            return !(typeof (T) == typeof (Half)) && !(typeof (T) == typeof (float)) && !(typeof (T) == typeof (NFloat)) && !(typeof (T) == typeof (double)) && !(typeof (T) == typeof (Decimal)) ? T.MaxValue : T.One;
-        }
-
-        public T A {
-            get => GetMaximumValueSafe<T>();
-            set { }
-        }
+        public T B { get; set; } = r;
+        public T G { get; set; } = r;
+        public T A { get; set; } = r;
 
         public static ColorR<T> Black => new(T.MinValue);
 
@@ -106,12 +86,7 @@ public class TexDecoder {
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
-                    if (grayscale) {
-                        RgbConverter.Convert<GrayscaleR<Half>, Half, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
-                    } else {
-                        RgbConverter.Convert<ColorR<Half>, Half, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
-                    }
-
+                    RgbConverter.Convert<ColorR<Half>, Half, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_UNORM:
@@ -138,12 +113,7 @@ public class TexDecoder {
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UINT:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SINT: {
-                    if (grayscale) {
-                        RgbConverter.Convert<GrayscaleR<byte>, byte, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
-                    } else {
-                        RgbConverter.Convert<ColorR<byte>, byte, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
-                    }
-
+                    RgbConverter.Convert<ColorR<byte>, byte, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC1_UNORM:
@@ -181,6 +151,20 @@ public class TexDecoder {
                 }
                 default:
                     throw new NotImplementedException($"Unsupported format {format}");
+            }
+
+            switch (format) {
+                case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT:
+                case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UNORM:
+                case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SNORM:
+                //case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UINT:
+                //case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SINT:
+                case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC4_UNORM: {
+                    if (grayscale) {
+                        RgbConverter.Convert<ColorBGRA<byte>, byte, GrayscaleR32<byte>, byte>(surfaceOutputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    }
+                    break;
+                }
             }
         }
     }

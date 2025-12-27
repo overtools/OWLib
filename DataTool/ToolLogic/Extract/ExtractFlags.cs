@@ -63,7 +63,7 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "combine-multisurface", Help = "Combine all surfaces into one image (only supported on TIF and DDS)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool CombineMultiSurface;
 
-    [CLIFlag(Default = false, Flag = "grayscale", Help = "Convert single channel textures to grayscale RGB", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    [CLIFlag(Default = true, Flag = "grayscale", Help = "Convert single channel textures to grayscale RGB", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool Grayscale;
 
     [CLIFlag(Default = false, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
