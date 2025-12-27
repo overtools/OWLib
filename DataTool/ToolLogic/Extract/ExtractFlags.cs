@@ -9,7 +9,7 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path to save data", Positional = 2, Required = true)]
     public string OutputPath;
 
-    [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png"})]
+    [CLIFlag(Default = "png", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png"})]
     public string ConvertTexturesType;
 
     [CLIFlag(Default = "owanimclip", NeedsValue = true, Flag = "convert-animations-type", Help = "Animation output type", Valid = new[] {"owanimclip", "seanim"})]
@@ -66,9 +66,6 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "grayscale", Help = "Convert single channel textures to grayscale RGB", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool Grayscale;
 
-    [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-    public bool SaveMips;
-
     [CLIFlag(Default = false, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool SubtitlesWithSounds;
 
@@ -96,7 +93,7 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "keep-channels", Help = "Keep all audio channels when converting Ogg Opus", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
     public bool KeepSoundChannels;
 
-    [CLIFlag(Default = false, Flag = "use-texture-decoder", Help = "Use TextureDecoder for decoding textures, slower but more accurate (enforced on Linux)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+    [CLIFlag(Default = true, Flag = "use-texture-decoder", Help = "Use TextureDecoder for decoding textures, slower but more accurate (enforced on Linux)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
     public bool UseTextureDecoder;
 
     [CLIFlag(Default = false, Flag = "all-lods", Help = "Extract all model LODs", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]

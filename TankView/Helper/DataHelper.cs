@@ -128,15 +128,6 @@ namespace TankView.Helper {
             return default;
         }
 
-        public static void SaveImage(GUIDEntry value, Stream fileStream, Stream outStream) {
-            if (GetDataType(value) != DataType.Image) {
-                return;
-            }
-
-            teTexture texture = LoadTexture(value.GUID, fileStream);
-            texture.SaveToDDS(outStream, false, 1);
-        }
-
         internal static teTexture LoadTexture(ulong guid, Stream fileStream = null) {
             teTexture texture = new teTexture(fileStream ?? IOHelper.OpenFile(guid));
             if (texture.PayloadRequired && texture.Payloads.Length > 1) {

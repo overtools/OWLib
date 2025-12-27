@@ -115,13 +115,12 @@ namespace TankLib {
             Read(reader);
         }
 
-        public bool HasMultipleSurfaces => Header.Surfaces > 1 || Payloads.Any(x => x != null && x.Header.Surfaces > 1);
-
         private void Read(BinaryReader reader) {
             Header = reader.Read<TextureHeader>();
-            if (Header.Format >= 0x1A) Header.Format -= 1;
-
-            // if (Header.Format == 99) Header.Format = 98;
+            if (Header.Format >= 0x1A) {
+                // ow2 hack. value added in the middle of the texture format enum, which desyncs it from dxgi
+                Header.Format -= 1;
+            }
 
             if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
@@ -142,7 +141,7 @@ namespace TankLib {
 
         public static teResourceGUID GetPayloadGUID2(ulong textureGUID, uint payloadIdx) {
             if (payloadIdx == 0) {
-                throw new Exception("dont call me for 0");
+                throw new Exception("dont call me for 0 (embedded)");
             }
 
             byte payloadBit;
@@ -196,27 +195,15 @@ namespace TankLib {
         /// <summary>Save DDS to stream</summary>
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
-        /// <param name="mips"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="surfaces"></param>
-        public void SaveToDDS(Stream stream, bool keepOpen, int? mips, uint? width = null, uint? height = null, uint? surfaces = null) {
-            if (PayloadRequired && Payloads[Payloads.Length-1] == null) throw new Exceptions.TexturePayloadMissingException();
-            using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                // Console.Out.WriteLine($"{mips ?? Header.MipCount} {width ?? Header.Width} {height ?? Header.Height} {surfaces ?? Header.Surfaces}");
-
-                var targetMips = mips ?? Header.MipCount;
-
-                int savePayloadCount;
-                if (targetMips == 1) {
-                    // optimization for general case
-                    // we don't need to serialize mips if we only want highest
-                    savePayloadCount = 1;
-                } else {
-                    savePayloadCount = Header.PayloadCount;
+        public void SaveToDDS(Stream stream, bool keepOpen) {
+            if (PayloadRequired) {
+                foreach (var texturePayload in Payloads) {
+                    if (texturePayload == null) throw new Exceptions.TexturePayloadMissingException();
                 }
-
-                TextureTypes.DDSHeader dds = Header.ToDDSHeader(targetMips, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
+            }
+            
+            using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
+                TextureTypes.DDSHeader dds = Header.ToDDSHeader(Header.MipCount, Header.Width, Header.Height, Header.Surfaces);
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 0x30315844) {
                     var dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.UNKNOWN;
@@ -236,14 +223,14 @@ namespace TankLib {
                         Format = Header.Format,
                         Dimension = dimension,
                         Misc = (uint) (Header.IsCubemap ? 0x4 : 0), // 4 = D3D11_RESOURCE_MISC_TEXTURECUBE
-                        Size = surfaces ?? (Header.IsCubemap ? Header.Surfaces/6u : Header.Surfaces),
+                        Size = Header.IsCubemap ? Header.Surfaces/6u : Header.Surfaces,
                     };
                     ddsWriter.Write(d10);
                 }
 
                 if (PayloadRequired) {
                     var payloadIdx = Payloads.Length-1;
-                    while (payloadIdx >= 0 && savePayloadCount-- > 0)
+                    while (payloadIdx >= 0)
                     {
                         var payload = Payloads[payloadIdx--];
                         payload.SaveToDDSData(Header, ddsWriter);
@@ -255,9 +242,9 @@ namespace TankLib {
         }
 
         /// <summary>Save DDS to stream</summary>
-        public Stream SaveToDDS(int? mips = null, uint? width = null, uint? height = null, uint? surfaces = null) {
+        public Stream SaveToDDS() {
             MemoryStream stream = new MemoryStream();
-            SaveToDDS(stream, true, mips, width, height, surfaces);
+            SaveToDDS(stream, true);
             stream.Position = 0;
             return stream;
         }

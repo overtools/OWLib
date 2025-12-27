@@ -20,7 +20,6 @@ using TankLib;
 using TankLib.Chunks;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
-using Image = SixLabors.ImageSharp.Image;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.SaveLogic;
@@ -714,7 +713,7 @@ public static class Combo {
         var createMultiSurfaceSheet = split;
         var splitMultiSurface = false;
         var maxMips = 1;
-        var useTextureDecoder = !OperatingSystem.IsWindows();
+        var useTextureDecoder = true;
         var grayscale = false;
 
         if (flags is ExtractFlags extractFlags) {
@@ -723,15 +722,15 @@ public static class Combo {
             convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
             splitMultiSurface = (split || !extractFlags.CombineMultiSurface) && convertTextures && !createMultiSurfaceSheet;
             convertType = fileType ?? extractFlags.ConvertTexturesType.ToLowerInvariant();
-            useTextureDecoder = extractFlags.UseTextureDecoder || useTextureDecoder;
+            useTextureDecoder = extractFlags.UseTextureDecoder;
             grayscale = extractFlags.Grayscale;
 
             if (extractFlags.ForceDDSMultiSurface) {
                 multiSurfaceConvertType = "dds";
             }
-
-            if (convertType == "dds" && extractFlags.SaveMips) {
-                maxMips = 0xF;
+            if (!useTextureDecoder || convertType == "dds" || multiSurfaceConvertType == "dds") {
+                // we need to load all mips to save as dds (even in memory)
+                maxMips = int.MaxValue;
             }
         }
 
@@ -795,17 +794,14 @@ public static class Combo {
                 }
             }
 
-            WICCodecs? imageFormat = convertType[0] == 't' ? WICCodecs.TIFF : WICCodecs.PNG;
-
             try {
                 if (convertType == "dds") {
-                    using Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount);
+                    using Stream convertedStream = texture.SaveToDDS();
                     WriteFile(convertedStream, $"{filePath}.dds");
                     return;
                 }
 
-                processIcon = processIcon && texture.Header.Surfaces == 2;
-                if (processIcon) {
+                if (processIcon && texture.Header.Surfaces == 2) {
                     try {
                         ProcessPortraitTexture(texture, filePath, convertType);
                         return;
@@ -828,7 +824,7 @@ public static class Combo {
                     return;
                 }
 
-                ConvertDDS(texture, maxMips, processIcon, filePath, convertType, splitMultiSurface, imageFormat.Value);
+                ConvertDDS(texture, filePath, convertType, splitMultiSurface);
             } catch (Exception e) {
                 Logger.Error("Combo", $"Unable to save {textureGUID:X16} {Path.GetFileName(filePath)} {e}");
             }
@@ -853,19 +849,29 @@ public static class Combo {
         }
     }
 
-    private static void SaveTexImageSharp(Image img, string path, string convertType) {
+    private static void SaveTexImageSharp(Image<Bgra32> img, string path, string convertType) {
         var finalPath = $"{path}.{convertType}";
         CreateDirectoryFromFile(finalPath);
-        if (convertType == "tif") {
-            img.SaveAsTiff(finalPath);
-        } else {
-            img.SaveAsPng(finalPath);
+        
+        switch (convertType)
+        {
+            case "tif":
+            case "tiff": {
+                img.SaveAsTiff(finalPath);
+                break;
+            }
+            case "png": {
+                img.SaveAsPng(finalPath);
+                break;
+            }
         }
     }
 
-    private static void ConvertDDS(teTexture texture, int maxMips, bool processIcon, string filePath, string convertType, bool splitMultiSurface, WICCodecs imageFormat) {
-        using Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount);
-        using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, processIcon);
+    private static void ConvertDDS(teTexture texture, string filePath, string convertType, bool splitMultiSurface) {
+        var imageFormat = convertType[0] == 't' ? WICCodecs.TIFF : WICCodecs.PNG;
+        
+        using Stream convertedStream = texture.SaveToDDS();
+        using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, false);
         var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
         for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
             var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";

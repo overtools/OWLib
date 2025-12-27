@@ -378,10 +378,9 @@ namespace TankView {
                                 case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
                                     Combo.ConvertSoundFileWw2Ogg(i, o);
                                     break;
-                                // not used, image extraction is handled above
                                 case DataHelper.DataType.Image when ExtractionSettings.EnableConvertImages:
-                                    DataHelper.SaveImage(entry, i, o);
-                                    break;
+                                    // not used, image extraction is handled above
+                                    throw new InvalidDataException("wrong image conversion code running");
                                 default:
                                     i.CopyTo(o);
                                     break;
