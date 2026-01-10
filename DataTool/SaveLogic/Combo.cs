@@ -651,8 +651,8 @@ public static class Combo {
     private static void ProcessPortraitTexture(teTexture texture, string filePath, string convertType) {
         var converted = new TexDecoder(texture, false);
 
-        using Image<Bgra32> alphaImage = converted.GetFrame(0);
-        using Image<Bgra32> colorImage = converted.GetFrame(1);
+        using var alphaImage = converted.GetFrame(0);
+        using var colorImage = converted.GetFrame(1);
 
         alphaImage.ProcessPixelRows(colorImage, (source, target) => {
             for (var y = 0; y < texture.Header.Height; ++y) {
@@ -849,7 +849,7 @@ public static class Combo {
         }
     }
 
-    private static void SaveTexImageSharp(Image<Bgra32> img, string path, string convertType) {
+    private static void SaveTexImageSharp(Image<Rgba32> img, string path, string convertType) {
         var finalPath = $"{path}.{convertType}";
         CreateDirectoryFromFile(finalPath);
         
