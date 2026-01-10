@@ -114,7 +114,8 @@ namespace TankView.Helper {
                 height = texture.Header.Height;
 
                 var texDecoder = new TexDecoder(texture, false);
-                using var bgra = texDecoder.GetFrame(0);
+                using var rgba = texDecoder.GetFrame(0);
+                using var bgra = rgba.CloneAs<Bgra32>(); // Rgba32 doesn't exist in wpf
 
                 var array = new byte[Unsafe.SizeOf<Bgra32>() * width * height];
                 bgra.CopyPixelDataTo(array);

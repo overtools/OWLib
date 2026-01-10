@@ -166,7 +166,7 @@ public static class MythicSkin {
             var partTexture = partTextures[partIndex][partVariantIndex];
             if (partTexture == null) continue; // okay... weapon skin problems
 
-            using Image<Bgra32> colorImage = Image.LoadPixelData<Bgra32>(partTexture.data, partTexture.width, partTexture.height);
+            using var colorImage = Image.LoadPixelData<Rgba32>(partTexture.data, partTexture.width, partTexture.height);
             // ReSharper disable once AccessToDisposedClosure
             // ReSharper disable once AccessToModifiedClosure
             infoTexture.Mutate(o => o.DrawImage(colorImage, new Point(xPos, 0), 1));

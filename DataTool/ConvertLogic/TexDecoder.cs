@@ -56,7 +56,7 @@ public class TexDecoder {
         var format = (TextureTypes.DXGI_PIXEL_FORMAT) texture.Header.Format;
         var inputData = Texture.GetData();
         var bytesPerInputSurface = (int) (inputData.Length / Surfaces);
-        
+
         // data is:
         // slice0mip0
         // slice0mip1
@@ -66,7 +66,7 @@ public class TexDecoder {
         // so bytesPerInputSurface is sneakily extracting the slice pitch
         // data for lower mips is simply skipped over
 
-        BytesPerOutputSurface = Texture.Header.Width * Texture.Header.Height * Unsafe.SizeOf<Bgra32>();
+        BytesPerOutputSurface = Texture.Header.Width * Texture.Header.Height * Unsafe.SizeOf<Rgba32>();
         PixelData = new byte[BytesPerOutputSurface * Surfaces];
 
         for (var surface = 0; surface < Surfaces; ++surface) {
@@ -74,79 +74,79 @@ public class TexDecoder {
             var surfaceOutputData = PixelData.AsSpan(BytesPerOutputSurface * surface, BytesPerOutputSurface);
             switch (format) {
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R32G32B32A32_FLOAT: {
-                    RgbConverter.Convert<ColorRGBA<float>, float, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorRGBA<float>, float, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT: {
-                    RgbConverter.Convert<ColorRGBA<Half>, Half, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorRGBA<Half>, Half, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16_FLOAT: {
-                    RgbConverter.Convert<ColorRG<Half>, Half, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorRG<Half>, Half, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
-                    RgbConverter.Convert<ColorR<Half>, Half, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorR<Half>, Half, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_SNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_UINT:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_SINT: {
-                    RgbConverter.Convert<ColorRGBA<ushort>, ushort, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorRGBA<ushort>, ushort, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UINT:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_SINT: {
-                    RgbConverter.Convert<ColorRGBA<byte>, byte, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorRGBA<byte>, byte, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8_UINT:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8_SINT: {
-                    RgbConverter.Convert<ColorRG<byte>, byte, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorRG<byte>, byte, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UINT:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SINT: {
-                    RgbConverter.Convert<ColorR<byte>, byte, ColorBGRA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                    RgbConverter.Convert<ColorR<byte>, byte, ColorRGBA<byte>, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC1_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB: {
-                    Bc1.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                    Bc1.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC2_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB: {
-                    Bc2.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                    Bc2.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC3_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB: {
-                    Bc3.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                    Bc3.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC4_UNORM: {
-                    Bc4.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                    Bc4.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC5_UNORM: {
-                    Bc5.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                    Bc5.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_UF16:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_SF16: {
-                    Bc6h.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, format is TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_SF16, surfaceOutputData);
+                    Bc6h.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, format is TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_SF16, surfaceOutputData);
                     break;
                 }
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC7_UNORM:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB: {
-                    Bc7.Decompress<ColorBGRA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                    Bc7.Decompress<ColorRGBA<byte>, byte>(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                     break;
                 }
                 default:
@@ -161,7 +161,7 @@ public class TexDecoder {
                 //case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SINT:
                 case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC4_UNORM: {
                     if (grayscale) {
-                        RgbConverter.Convert<ColorBGRA<byte>, byte, GrayscaleR32<byte>, byte>(surfaceOutputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                        RgbConverter.Convert<ColorRGBA<byte>, byte, GrayscaleR32<byte>, byte>(surfaceOutputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                     }
                     break;
                 }
@@ -169,18 +169,18 @@ public class TexDecoder {
         }
     }
 
-    public Image<Bgra32> GetSheet() {
-        return Image.LoadPixelData<Bgra32>(PixelData, Texture.Header.Width, (int) (Texture.Header.Height * Surfaces));
+    public Image<Rgba32> GetSheet() {
+        return Image.LoadPixelData<Rgba32>(PixelData, Texture.Header.Width, (int) (Texture.Header.Height * Surfaces));
     }
 
-    public Image<Bgra32> GetFrame(int frame) {
+    public Image<Rgba32> GetFrame(int frame) {
         if (frame >= Surfaces) throw new ArgumentOutOfRangeException(nameof(frame));
 
-        return Image.LoadPixelData<Bgra32>(PixelData.AsSpan(BytesPerOutputSurface * frame, BytesPerOutputSurface), Texture.Header.Width, Texture.Header.Height);
+        return Image.LoadPixelData<Rgba32>(PixelData.AsSpan(BytesPerOutputSurface * frame, BytesPerOutputSurface), Texture.Header.Width, Texture.Header.Height);
     }
 
-    public Image<Bgra32> GetFrames() {
-        var image = new Image<Bgra32>(Texture.Header.Width, Texture.Header.Height);
+    public Image<Rgba32> GetFrames() {
+        var image = new Image<Rgba32>(Texture.Header.Width, Texture.Header.Height);
         for (int i = 0; i < Surfaces; i++) {
             var img = GetFrame(i);
             image.Frames.AddFrame(img!.Frames.RootFrame);
