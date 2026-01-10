@@ -734,6 +734,11 @@ public static class Combo {
             }
         }
 
+        if (useTextureDecoder) {
+            convertType = "png";
+            splitMultiSurface = !createMultiSurfaceSheet;
+        }
+
         if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
             path += Path.DirectorySeparatorChar;
 
@@ -852,7 +857,7 @@ public static class Combo {
     private static void SaveTexImageSharp(Image<Bgra32> img, string path, string convertType) {
         var finalPath = $"{path}.{convertType}";
         CreateDirectoryFromFile(finalPath);
-        
+
         switch (convertType)
         {
             case "tif":
@@ -869,7 +874,7 @@ public static class Combo {
 
     private static void ConvertDDS(teTexture texture, string filePath, string convertType, bool splitMultiSurface) {
         var imageFormat = convertType[0] == 't' ? WICCodecs.TIFF : WICCodecs.PNG;
-        
+
         using Stream convertedStream = texture.SaveToDDS();
         using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, false);
         var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
