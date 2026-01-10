@@ -9,7 +9,7 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path to save data", Positional = 2, Required = true)]
     public string OutputPath;
 
-    [CLIFlag(Default = "native", Help = "Output textures as DDS")]
+    [CLIFlag(Flag = "native", Help = "Output textures as DDS")]
     public bool ConvertTextureDDS;
 
     [CLIFlag(Default = "owanimclip", NeedsValue = true, Flag = "convert-animations-type", Help = "Animation output type", Valid = new[] {"owanimclip", "seanim"})]
