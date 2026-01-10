@@ -487,7 +487,7 @@ public static class Combo {
     public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info, ICLIFlags flags) {
         string format = "dds";
         if (flags is ExtractFlags extractFlags && !extractFlags.RawTextures && !extractFlags.Raw) {
-            format = extractFlags.ConvertTexturesType.ToLower();
+            format = "png";
         }
 
         string materialDir = Path.Combine(path, "Materials");
@@ -648,7 +648,7 @@ public static class Combo {
         }
     }
 
-    private static void ProcessPortraitTexture(teTexture texture, string filePath, string convertType) {
+    private static void ProcessPortraitTexture(teTexture texture, string filePath) {
         var converted = new TexDecoder(texture, false);
 
         using Image<Bgra32> alphaImage = converted.GetFrame(0);
@@ -673,7 +673,7 @@ public static class Combo {
             }
         });
 
-        SaveTexImageSharp(colorImage, filePath, convertType.ToLowerInvariant());
+        SaveTexImageSharp(colorImage, filePath);
     }
 
     public class SaveTextureOptions {
@@ -707,8 +707,8 @@ public static class Combo {
         var fileType = options?.FileTypeOverride ?? textureInfo.m_fileType ?? null;
 
         bool convertTextures = true;
-        string convertType = fileType;
-        string multiSurfaceConvertType = "tif";
+        bool writeDDS = false;
+        bool multiSurfaceDDS = false;
 
         var createMultiSurfaceSheet = split;
         var splitMultiSurface = false;
@@ -720,23 +720,16 @@ public static class Combo {
             if (extractFlags.SkipTextures) return;
             createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
             convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
-            splitMultiSurface = (split || !extractFlags.CombineMultiSurface) && convertTextures && !createMultiSurfaceSheet;
-            convertType = fileType ?? extractFlags.ConvertTexturesType.ToLowerInvariant();
+            splitMultiSurface = split && convertTextures && !createMultiSurfaceSheet;
+            writeDDS = extractFlags.ConvertTextureDDS;
             useTextureDecoder = extractFlags.UseTextureDecoder;
             grayscale = extractFlags.Grayscale;
+            multiSurfaceDDS = extractFlags.ForceDDSMultiSurface;
 
-            if (extractFlags.ForceDDSMultiSurface) {
-                multiSurfaceConvertType = "dds";
-            }
-            if (!useTextureDecoder || convertType == "dds" || multiSurfaceConvertType == "dds") {
+            if (!useTextureDecoder || writeDDS || multiSurfaceDDS) {
                 // we need to load all mips to save as dds (even in memory)
                 maxMips = int.MaxValue;
             }
-        }
-
-        if (useTextureDecoder && convertTextures && convertType != "dds") {
-            convertType = "png";
-            splitMultiSurface = split && !createMultiSurfaceSheet;
         }
 
         if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
@@ -749,7 +742,7 @@ public static class Combo {
                 return;
             }
 
-            ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.{convertType}", true);
+            ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.png", true);
         }
 
         CreateDirectoryFromFile(path);
@@ -793,14 +786,14 @@ public static class Combo {
                 if (createMultiSurfaceSheet) {
                     Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet with TextureDecoder because it has more than one surface");
                     useTextureDecoder = true;
-                } else if (!splitMultiSurface && convertType != multiSurfaceConvertType) {
-                    Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
-                    convertType = multiSurfaceConvertType;
+                } else if (!splitMultiSurface && multiSurfaceDDS) {
+                    Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as DDS because it has more than one surface");
+                    writeDDS = true;
                 }
             }
 
             try {
-                if (convertType == "dds") {
+                if (writeDDS) {
                     using Stream convertedStream = texture.SaveToDDS();
                     WriteFile(convertedStream, $"{filePath}.dds");
                     return;
@@ -808,7 +801,7 @@ public static class Combo {
 
                 if (processIcon && texture.Header.Surfaces == 2) {
                     try {
-                        ProcessPortraitTexture(texture, filePath, convertType);
+                        ProcessPortraitTexture(texture, filePath);
                         return;
                     } catch(Exception e) {
                         Logger.Debug("Combo", $"Failed to process {Path.GetFileName(filePath)} as a portrait, saving as regular: {e.Message}");
@@ -817,7 +810,7 @@ public static class Combo {
 
                 if (useTextureDecoder) {
                     try {
-                        ConvertTexture(texture, splitMultiSurface, createMultiSurfaceSheet, grayscale, filePath, convertType);
+                        ConvertTexture(texture, splitMultiSurface, createMultiSurfaceSheet, grayscale, filePath);
                         return;
                     } catch(Exception e) {
                         Logger.Warn("Combo", $"Failed to convert {Path.GetFileName(filePath)} using AssetRipper: {e.Message}");
@@ -829,64 +822,50 @@ public static class Combo {
                     return;
                 }
 
-                ConvertDDS(texture, filePath, convertType, splitMultiSurface);
+                ConvertDDS(texture, filePath, splitMultiSurface);
             } catch (Exception e) {
                 Logger.Error("Combo", $"Unable to save {textureGUID:X16} {Path.GetFileName(filePath)} {e}");
             }
         }
     }
 
-    private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, bool grayscale, string filePath, string convertType) {
+    private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, bool grayscale, string filePath) {
         var tex = new TexDecoder(texture, grayscale);
 
         if (splitMultiSurface) {
             for (var surfaceNr = 0; surfaceNr < tex.Surfaces; ++surfaceNr) {
                 using var surface = tex.GetFrame(surfaceNr);
                 var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
-                SaveTexImageSharp(surface, surfacePath, convertType);
+                SaveTexImageSharp(surface, surfacePath);
             }
         } else if (createMultiSurfaceSheet) {
             using var sheetImg = tex.GetSheet();
-            SaveTexImageSharp(sheetImg, filePath, convertType);
+            SaveTexImageSharp(sheetImg, filePath);
         } else {
             using var img = tex.GetFrames();
-            SaveTexImageSharp(img, filePath, convertType);
+            SaveTexImageSharp(img, filePath);
         }
     }
 
-    private static void SaveTexImageSharp(Image<Bgra32> img, string path, string convertType) {
-        var finalPath = $"{path}.{convertType}";
+    private static void SaveTexImageSharp(Image<Bgra32> img, string path) {
+        var finalPath = $"{path}.png";
         CreateDirectoryFromFile(finalPath);
-
-        switch (convertType)
-        {
-            case "tif":
-            case "tiff": {
-                img.SaveAsTiff(finalPath);
-                break;
-            }
-            case "png": {
-                img.SaveAsPng(finalPath);
-                break;
-            }
-        }
+        img.SaveAsPng(finalPath);
     }
 
-    private static void ConvertDDS(teTexture texture, string filePath, string convertType, bool splitMultiSurface) {
-        var imageFormat = convertType[0] == 't' ? WICCodecs.TIFF : WICCodecs.PNG;
-
+    private static void ConvertDDS(teTexture texture, string filePath, bool splitMultiSurface) {
         using Stream convertedStream = texture.SaveToDDS();
         using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, false);
         var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
         for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
             var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
             try {
-                using var surface = dds.GetFrame(imageFormat, surfaceNr, splitMultiSurface ? 1 : dds.Info.ArraySize);
-                WriteFile(surface, $"{surfacePath}.{convertType}");
+                using var surface = dds.GetFrame(WICCodecs.PNG, surfaceNr, splitMultiSurface ? 1 : dds.Info.ArraySize);
+                WriteFile(surface, $"{surfacePath}.png");
             } catch {
                 convertedStream.Position = 0;
                 WriteFile(convertedStream, $"{surfacePath}.dds");
-                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed. {(DXGI_FORMAT)texture.Header.Format} {texture.Header.Format} {texture.Header.PayloadCount} {texture.Header.MipCount} {texture.Header.Surfaces}");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as png because DirectXTex failed. {(DXGI_FORMAT)texture.Header.Format} {texture.Header.Format} {texture.Header.PayloadCount} {texture.Header.MipCount} {texture.Header.Surfaces}");
                 return;
             }
         }

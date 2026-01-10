@@ -5,10 +5,7 @@ namespace TankView.ViewModel {
     public class ImageExtractionFormats : ObservableHashCollection<ImageFormat> {
         public ImageExtractionFormats() {
             Add(new ImageFormat("png", "PNG"));
-            Add(new ImageFormat("tif", "TIF"));
             Add(new ImageFormat("dds", "DDS"));
-            Add(new ImageFormat("tga", "TGA"));
-            Add(new ImageFormat("jpg", "JPG"));
         }
     }
 

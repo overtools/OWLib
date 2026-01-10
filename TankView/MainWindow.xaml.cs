@@ -338,7 +338,7 @@ namespace TankView {
             }
 
             var imageExtractFlags = new ExtractFlags {
-                ConvertTexturesType = Settings.Default.ImageExtractionFormat
+                ConvertTextureDDS = Settings.Default.ImageExtractionFormat == "dds",
             };
 
             Task.Run(delegate {

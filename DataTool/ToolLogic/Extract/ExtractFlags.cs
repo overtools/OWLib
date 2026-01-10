@@ -9,8 +9,8 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path to save data", Positional = 2, Required = true)]
     public string OutputPath;
 
-    [CLIFlag(Default = "png", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png"})]
-    public string ConvertTexturesType;
+    [CLIFlag(Default = "native", Help = "Output textures as DDS")]
+    public bool ConvertTextureDDS;
 
     [CLIFlag(Default = "owanimclip", NeedsValue = true, Flag = "convert-animations-type", Help = "Animation output type", Valid = new[] {"owanimclip", "seanim"})]
     public string ConvertAnimationsType;
@@ -59,9 +59,6 @@ public class ExtractFlags : IToolFlags {
 
     [CLIFlag(Default = false, Flag = "sheet-multisurface", Help = "Save multisurface textures as one large image, tiled across in the Y (vertical) direction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool SheetMultiSurface;
-
-    [CLIFlag(Default = false, Flag = "combine-multisurface", Help = "Combine all surfaces into one image (only supported on TIF and DDS)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-    public bool CombineMultiSurface;
 
     [CLIFlag(Default = true, Flag = "grayscale", Help = "Convert single channel textures to grayscale RGB", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool Grayscale;
