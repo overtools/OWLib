@@ -734,9 +734,9 @@ public static class Combo {
             }
         }
 
-        if (useTextureDecoder) {
+        if (useTextureDecoder && convertTextures && convertType != "dds") {
             convertType = "png";
-            splitMultiSurface = !createMultiSurfaceSheet;
+            splitMultiSurface = split && !createMultiSurfaceSheet;
         }
 
         if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
