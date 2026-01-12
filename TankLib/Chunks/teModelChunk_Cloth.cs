@@ -22,6 +22,7 @@ namespace TankLib.Chunks {
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct DominoClothData {
             public long PositionsOffset;
+            public long Ow220_1SomethingAddedInThisAreaIdkDoWeCare;
             public long SectionOffset3;
             public long SectionOffset4;
             public long SectionOffset5;
