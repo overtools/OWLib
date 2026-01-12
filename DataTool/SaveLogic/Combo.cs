@@ -732,7 +732,7 @@ public static class Combo {
 
         // todo: we can't serialize tifs with alpha via imagesharp
         // turn off AssetRipper instead
-        if (useTextureDecoder && convertType == "tif") {
+        if (useTextureDecoder && convertType == "tif" && OperatingSystem.IsWindows()) {
             useTextureDecoder = false;
         }
 
@@ -747,6 +747,7 @@ public static class Combo {
             maxMips = int.MaxValue;
         }
 
+        // todo: why?
         if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
             path += Path.DirectorySeparatorChar;
 
