@@ -7,8 +7,6 @@ namespace TankView.ViewModel {
             Add(new ImageFormat("png", "PNG"));
             Add(new ImageFormat("tif", "TIF"));
             Add(new ImageFormat("dds", "DDS"));
-            Add(new ImageFormat("tga", "TGA"));
-            Add(new ImageFormat("jpg", "JPG"));
         }
     }
 
