@@ -15,6 +15,7 @@ using DirectXTexNet;
 using RevorbStd;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.ColorSpaces.Conversion;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using TankLib;
 using TankLib.Chunks;
@@ -26,6 +27,11 @@ namespace DataTool.SaveLogic;
 
 public static class Combo {
     public static ScratchDB ScratchDBInstance = new ScratchDB();
+
+    // reduce compression level a bit to help performance
+    private static readonly PngEncoder PngEncoder = new PngEncoder {
+        CompressionLevel = PngCompressionLevel.Level3
+    };
 
     public class SaveContext {
         public FindLogic.Combo.ComboInfo m_info;
@@ -875,7 +881,7 @@ public static class Combo {
                 break;
             }
             case "png": {
-                img.SaveAsPng(finalPath);
+                img.SaveAsPng(finalPath, PngEncoder);
                 break;
             }
         }
