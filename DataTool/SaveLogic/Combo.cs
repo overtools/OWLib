@@ -728,10 +728,23 @@ public static class Combo {
             if (extractFlags.ForceDDSMultiSurface) {
                 multiSurfaceConvertType = "dds";
             }
-            if (!useTextureDecoder || convertType == "dds" || multiSurfaceConvertType == "dds") {
-                // we need to load all mips to save as dds (even in memory)
-                maxMips = int.MaxValue;
-            }
+        }
+
+        // todo: we can't serialize tifs with alpha via imagesharp
+        // turn off AssetRipper instead
+        if (useTextureDecoder && convertType == "tif") {
+            useTextureDecoder = false;
+        }
+
+        // sanity if splitMultiSurface is somehow unset for texture formats that don't support layers
+        // (it's on by default)
+        if (convertType != "tif" && !splitMultiSurface && !createMultiSurfaceSheet) {
+            splitMultiSurface = true;
+        }
+        
+        if (!useTextureDecoder || convertType == "dds" || multiSurfaceConvertType == "dds") {
+            // we need to load all mips to save as dds (even in memory)
+            maxMips = int.MaxValue;
         }
 
         if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
