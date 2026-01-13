@@ -42,6 +42,9 @@ namespace DataTool {
         }
 
         public bool ShouldDo(string name, Dictionary<string, TagExpectedValue>? expectedVals = null) {
+            name = name.ReplaceLineEndings(""); // Magma\r\nTitan
+            name = name.Replace("<hy>", ""); // deDE
+            
             if (Values.IsDisallowed(name)) {
                 // if disallowed by name, don't attempt to match tags
                 return false;
