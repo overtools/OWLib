@@ -744,7 +744,8 @@ public static class Combo {
 
         // sanity if splitMultiSurface is somehow unset for texture formats that don't support layers
         // (it's on by default)
-        if (convertType != "tif" && !splitMultiSurface && !createMultiSurfaceSheet) {
+        var supportsArray = multiSurfaceConvertType == "tif" || multiSurfaceConvertType == "dds";
+        if (!supportsArray && !splitMultiSurface && !createMultiSurfaceSheet) {
             splitMultiSurface = true;
         }
         
