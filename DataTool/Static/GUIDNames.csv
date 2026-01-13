@@ -871,6 +871,7 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 13E9,09F,Menu/Vendetta 3D,1
 13F0,09F,Menu/S20 Christmas Art,1
 13F1,09F,Menu/S20 Mythics 3D,1
+1407,09F,Menu/Doomfist Mythic 3D,1
 ; Celebrations,,,
 2168,01C,Winter,1
 2498,01C,LunarNewYear,1
@@ -898,6 +899,7 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 32C,0C3,Anniversary 2025 Week 4,1 ; gibraltar.. few maps..
 330,0C3,Haunted Masquerade,1 ; lijiang
 353,0C3,Winter 2025,1 ; any map with winter modes
+3B0,0C3,Showdown Shuffle,1 ; many maps
 ; NPC VoiceSet names,,,
 1C2,05F,Sojourn,1
 22F,05F,Zeus,1
