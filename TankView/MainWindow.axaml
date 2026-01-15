@@ -49,9 +49,23 @@
 		</DataTemplate>
 	</Window.DataTemplates>
 
-	<Grid RowDefinitions="48,*,48">
+	<Grid RowDefinitions="32, *, 32">
 
-		<!-- todo: top nav bar -->
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
+			<Menu>
+				<MenuItem Header="_File">
+					<MenuItem Header="_Open">
+						<MenuItem IsEnabled="False" Header="_Recent"/>
+						<MenuItem Header="_Browse"/>
+						<MenuItem Header="_From Installation"/>
+					</MenuItem>
+					<Separator/>
+					<MenuItem Header="_Exit"/>
+				</MenuItem>
+				<MenuItem IsEnabled="False" Header="_Options"/>
+			</Menu>
+			<TextBox AcceptsReturn="False" AcceptsTab="False" Margin="5, 0, 0, 0" Watermark="Search..." Width="350" />
+		</StackPanel>
 
 		<Grid Grid.Row="1" ColumnDefinitions="220, *" RowDefinitions="*, Auto">
 			<ListBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
@@ -72,7 +86,10 @@
 			                IsVisible="{Binding SelectedType.Collection.Preview, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}" />
 		</Grid>
 
-		<!-- todo: bottom status bar -->
+		<Panel Grid.Row="2">
+			<ProgressBar x:Name="StatusProgress" Height="32" />
+			<TextBlock x:Name="Status" VerticalAlignment="Center" Margin="5, 0, 0, 0" />
+		</Panel>
 
 	</Grid>
 </Window>
