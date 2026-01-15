@@ -1,0 +1,14 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:TankView.Converters"
+             x:Class="TankView.App"
+             RequestedThemeVariant="Default">
+	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+	<Application.Resources>
+		<converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+	</Application.Resources>
+	<Application.Styles>
+		<FluentTheme />
+	</Application.Styles>
+</Application>

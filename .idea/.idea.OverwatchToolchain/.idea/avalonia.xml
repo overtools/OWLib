@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="TankView/App.axaml" value="TankView/TankView.csproj" />
+        <entry key="TankView/MainWindow.axaml" value="TankView/TankView.csproj" />
+        <entry key="TankView/Views/NavView.axaml" value="TankView/TankView.csproj" />
+        <entry key="TankView/Views/Navigation.axaml" value="TankView/TankView.csproj" />
+        <entry key="TankView/Views/TankViewMain.axaml" value="TankView/TankView.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

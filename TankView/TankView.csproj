@@ -1,62 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <OutputType>WinExe</OutputType>
-    <LangVersion>8</LangVersion>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-    <NoWarn>CA1416</NoWarn>
-    <Version>2.20.1.0</Version>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>TankView.ico</ApplicationIcon>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DataTool\DataTool.csproj" />
-    <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
-    <ProjectReference Include="..\TankLib\TankLib.csproj" />
-    <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="TankView.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Properties\TankView.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ResourceDictionary\Style\Main.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AdonisUI" Version="1.17.1" />
-    <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.1" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
-    <PackageReference Include="NVorbis" Version="0.10.5" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="2.3.2" />
-    <PackageReference Include="WindowsAPICodePackCore" Version="8.0.12" />
-    <PackageReference Include="WindowsAPICodePackShell" Version="8.0.12" />
-  </ItemGroup>
-  <Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
-    <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">
-      <Output PropertyName="SourceRevisionIdGit" TaskParameter="ConsoleOutput" />
-    </Exec>
-    <OnError ExecuteTargets="SetSourceRevisionIdFallback" />
-  </Target>
-  <Target Name="SetSourceRevisionIdFallback">
-    <PropertyGroup>
-        <SourceRevisionIdGit>broken</SourceRevisionIdGit>
-    </PropertyGroup>
-  </Target>
-  <Target Name="SetSourceRevisionId" AfterTargets="SetSourceRevisionIdGit">
-    <PropertyGroup>
-      <GITHUB_RUN_NUMBER_DELTA Condition="'$(GITHUB_RUN_NUMBER_DELTA)' == ''">develop</GITHUB_RUN_NUMBER_DELTA>
-      <SourceRevisionId>$(GITHUB_RUN_NUMBER_DELTA)+$(SourceRevisionIdGit)</SourceRevisionId>
-    </PropertyGroup>
-  </Target>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<AvaloniaVersion>11.3.11</AvaloniaVersion>
+		<ApplicationIcon>Resources/TankView.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)"/>
+		<PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)"/>
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)"/>
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)"/>
+
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)">
+			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+		</PackageReference>
+
+		<PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.1.5"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\TankLib\TankLib.csproj"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Resources\"/>
+	</ItemGroup>
+
+	<Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
+		<Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" IgnoreExitCode="False" ContinueOnError="True">
+			<Output PropertyName="SourceRevisionIdGit" TaskParameter="ConsoleOutput"/>
+		</Exec>
+		<OnError ExecuteTargets="SetSourceRevisionIdFallback"/>
+	</Target>
+
+	<Target Name="SetSourceRevisionIdFallback">
+		<PropertyGroup>
+			<SourceRevisionIdGit>source</SourceRevisionIdGit>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="SetSourceRevisionId" AfterTargets="SetSourceRevisionIdGit">
+		<PropertyGroup>
+			<GITHUB_RUN_NUMBER_DELTA Condition="'$(GITHUB_RUN_NUMBER_DELTA)' == ''">develop</GITHUB_RUN_NUMBER_DELTA>
+			<SourceRevisionId>$(GITHUB_RUN_NUMBER_DELTA)+$(SourceRevisionIdGit)</SourceRevisionId>
+		</PropertyGroup>
+	</Target>
 </Project>

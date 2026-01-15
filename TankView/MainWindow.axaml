@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:TankView.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TankView.MainWindow"
+        x:DataType="vm:TankViewModel"
+        Title="TankView">
+	<Design.DataContext>
+		<vm:TankViewModel />
+	</Design.DataContext>
+
+	<Window.DataTemplates>
+		<!-- todo: move me out of here -->
+
+		<DataTemplate DataType="{x:Type vm:GUIDCollectionViewModel}">
+			<ListBox ItemsSource="{Binding Items, Mode=OneWay}"
+			         SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+				<ListBox.ItemsPanel>
+					<ItemsPanelTemplate>
+						<VirtualizingStackPanel />
+					</ItemsPanelTemplate>
+				</ListBox.ItemsPanel>
+
+				<ListBox.ItemTemplate>
+					<DataTemplate x:DataType="vm:GUIDViewModel">
+						<TextBlock Text="{Binding Name, Mode=OneWay}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:ThumbnailListViewModel}">
+			<ItemsRepeater ItemsSource="{Binding Items, Mode=OneWay}">
+				<ItemsRepeater.Layout>
+					<UniformGridLayout MinItemWidth="128"
+					                   MinItemHeight="128" />
+				</ItemsRepeater.Layout>
+
+				<ItemsRepeater.ItemTemplate>
+					<DataTemplate x:DataType="vm:ThumbnailViewModel">
+						<Image Source="{Binding Thumbnail, Mode=OneWay}"
+						       Width="128"
+						       Height="128" />
+					</DataTemplate>
+				</ItemsRepeater.ItemTemplate>
+			</ItemsRepeater>
+		</DataTemplate>
+	</Window.DataTemplates>
+
+	<Grid RowDefinitions="48,*,48">
+
+		<!-- todo: top nav bar -->
+
+		<Grid Grid.Row="1" ColumnDefinitions="220, *" RowDefinitions="*, Auto">
+			<ListBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+			         ItemsSource="{Binding GUIDTypes, Mode=OneWay}" SelectedItem="{Binding SelectedType, Mode=TwoWay}"
+			         SelectionMode="Single">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding DisplayName, Mode=OneWay}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+			<ContentControl Grid.Column="1" Grid.Row="0"
+			                Content="{Binding SelectedType.Collection, Mode=OneWay}" />
+
+			<ContentControl Grid.Column="1" Grid.Row="1"
+			                Content="{Binding SelectedType.Collection, Mode=OneWay}"
+			                IsVisible="{Binding SelectedType.Collection.Preview, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}" />
+		</Grid>
+
+		<!-- todo: bottom status bar -->
+
+	</Grid>
+</Window>
