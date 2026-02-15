@@ -65,7 +65,7 @@ public class DumpStringsLocale : JSONTool, ITool {
         return @return;
     }
 
-    private static void InitStorage(string language) {
+    public static void InitStorage(string language) {
         Logger.Info("CASC", $"Attempting to load language {language}");
         //Client = null; // we will try share cdn indices so don't wipe just yet
         TankHandler = null;

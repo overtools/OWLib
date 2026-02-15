@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
+using DataTool.Helper;
 using DataTool.ToolLogic.List;
 using DataTool.ToolLogic.Util;
 
@@ -36,7 +37,7 @@ public abstract class ExtractUnlockType : QueryParser, ITool, IQueryParser {
             fullArg.Values.Add("*");
         }
 
-        var fullConfig = new Dictionary<string, ParsedArg> {
+        var fullConfig = new IgnoreCaseDict<ParsedArg> {
             { unlockTypeName, fullArg }
         };
 

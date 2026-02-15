@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -152,7 +153,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             var heroNameActual = hero.Name;
             if (heroNameActual == null) continue;
 
-            Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual, "*", teResourceGUID.Index(heroGuid).ToString("X"));
+            var config = GetQuery(parsedTypes, heroNameActual, "*", teResourceGUID.Index(heroGuid).ToString("X"));
             if (config.Count == 0) continue;
             
             string heroFileName = GetValidFilename(heroNameActual);
@@ -185,7 +186,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             }
 
             if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff
-                Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
+                IgnoreCaseDict<TagExpectedValue> tags = new IgnoreCaseDict<TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                 SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet, hero.STU);
             }
 
@@ -201,7 +202,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             }
 
             if (progressionUnlocks.LevelUnlocks != null) { // default unlocks
-                Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
+                IgnoreCaseDict<TagExpectedValue> tags = new IgnoreCaseDict<TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                 foreach (LevelUnlocks levelUnlocks in progressionUnlocks.LevelUnlocks) {
                     SaveUnlocks(flags, levelUnlocks.Unlocks, heroPath, "Default", config, tags, voiceSet, hero.STU);
                 }
@@ -211,7 +212,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
                 foreach (LootBoxUnlocks lootBoxUnlocks in progressionUnlocks.LootBoxesUnlocks) {
                     string lootboxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
 
-                    var tags = new Dictionary<string, TagExpectedValue> {
+                    var tags = new IgnoreCaseDict<TagExpectedValue> {
                         {"event", new TagExpectedValue(LootBox.GetBasicName(lootBoxUnlocks.LootBoxType))}
                     };
 
@@ -226,8 +227,14 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
     }
 
     public static void SaveUnlocks(
-        ICLIFlags flags, Unlock[]? unlocks, string path, string? eventKey,
-        Dictionary<string, ParsedArg>? config, Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
+        ICLIFlags flags,
+        Unlock[]? unlocks,
+        string path,
+        string? eventKey,
+        IgnoreCaseDict<ParsedArg>? config,
+        IgnoreCaseDict<TagExpectedValue>? tags,
+        VoiceSet? voiceSet,
+        STUHero? hero) {
         if (unlocks == null) return;
         foreach (Unlock unlock in unlocks) {
             SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
@@ -236,8 +243,8 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
 
     public static void SaveUnlock(
         ICLIFlags flags, Unlock unlock, string path, string? eventKey,
-        Dictionary<string, ParsedArg>? config,
-        Dictionary<string, TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
+        IgnoreCaseDict<ParsedArg>? config,
+        IgnoreCaseDict<TagExpectedValue>? tags, VoiceSet? voiceSet, STUHero? hero) {
         string rarity;
 
         if (tags != null) {
@@ -344,18 +351,43 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
     }
 
-    private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg>? config, Dictionary<string, TagExpectedValue>? tags, UnlockType unlockType) {
+    private static bool ShouldDo(Unlock unlock, IgnoreCaseDict<ParsedArg>? config, Dictionary<string, TagExpectedValue>? tags, UnlockType unlockType) {
         if (unlock.Type != unlockType) return false;
-
-        bool shouldDo;
+        
         if (config == null) {
-            shouldDo = true;
-        } else {
-            var typeLower = CosmeticType.UnlockTypeToName(unlockType);
-            shouldDo = config.TryGetValue(typeLower, out var configForType) &&
-                       configForType.ShouldDo(unlock.GetName(), tags);
+            return true;
         }
 
-        return shouldDo;
+        var typeLower = CosmeticType.UnlockTypeToName(unlockType);
+        if (!config.TryGetValue(typeLower, out var configForType)) {
+            return false;
+        }
+
+        if (configForType.ShouldDo(unlock.GetName(), tags)) {
+            return true;
+        }
+        
+        // todo: decide if i want to ship this
+        // different extracted name from query is confusing
+        // and polluting the spellcheck with these names is also confusing
+        // maybe it could be precise locale mapping instead
+
+        // todo: add previous zhCN name for ow1 skins: "守望先锋"
+        // but for whatever reason, ow1 and ow2 skins on rcn+zhCN are all called "守望先锋" now
+        // needs to be fixed first
+        /*ReadOnlySpan<string> alternateNames = unlock.GetSTU().m_name.GUID.GUID switch {
+            0x0DE00000000024D4 => 
+                ["Overwatch 1", "オーバーウォッチ 1", "오버워치 1", "《鬥陣特攻》", "Classic"],
+            0x0DE000000000CB5F => 
+                ["Overwatch 2", "オーバーウォッチ 2", "오버워치 2", "《鬥陣特攻2》", "守望先锋归来", "Valorous"],
+            _ => []
+        };
+        foreach (var alternateName in alternateNames) {
+            if (configForType.ShouldDo(alternateName, tags)) {
+                return true;
+            }
+        }*/
+
+        return false;
     }
 }

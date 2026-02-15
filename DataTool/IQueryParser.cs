@@ -460,7 +460,7 @@ namespace DataTool {
             }
         }
 
-        protected Dictionary<string, ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
+        protected IgnoreCaseDict<ParsedArg> GetQuery(Dictionary<string, ParsedHero> parsedHeroes, params string?[] namesToMatch) {
             IgnoreCaseDict<ParsedArg> output = new IgnoreCaseDict<ParsedArg>();
             foreach (string? nameToMatch in namesToMatch) {
                 if (nameToMatch == null) continue;
@@ -504,9 +504,11 @@ namespace DataTool {
                             continue;
                         }
 
-                        if (allowed.IsEqual("overwatch 1") || allowed.IsEqual("overwatch 2") ||
+                        if (allowed.IsEqual("overwatch 1") || allowed.IsEqual("overwatch 2") || 
+                            allowed.IsEqual("overwatch classic") || allowed.IsEqual("overwatch") ||
                             allowed.IsEqual("classic") || allowed.IsEqual("valorous") ||
-                            allowed.IsEqual("守望先锋") || allowed.IsEqual("守望先锋归来")) {
+                            allowed.IsEqual("守望先锋") || allowed.IsEqual("守望先锋归来") ||
+                            allowed.IsEqual("守望先锋经典版")) {
                             // (IsEqual sets matched flag, but doesn't matter at this point)
                             unknownBaseSkin = true;
                         }
@@ -539,14 +541,31 @@ namespace DataTool {
             var isChinaClient = ((ClientCreateArgs_Tank)createArgs.HandlerArgs!).ManifestRegion == ClientCreateArgs_Tank.REGION_CN;
 
             if (unknownBaseSkin) {
+                Logger.Warn("Query", "In 2026: Season 1, \"Overwatch 2\" and \"Overwatch 1\" skins have been renamed to \"Overwatch\" and \"Overwatch Classic\"");
+                
+                // previous:
+                // 0x0DE000000000CB5F rcn en: Valorous
+                // 0x0DE00000000024D4 rcn en: Classic
+                // 0x0DE000000000CB5F rcn cn: 守望先锋归来
+                // 0x0DE00000000024D4 rcn cn: 守望先锋
+                // 0x0DE000000000CB5F rdev cn: 守望先锋归来
+                // 0x0DE00000000024D4 rdev cn 守望先锋
+                
+                // 2026 S1:
+                // 0x0DE000000000CB5F rcn en: Overwatch
+                // 0x0DE00000000024D4 rcn en: Classic
+                // 0x0DE000000000CB5F rcn cn: 守望先锋
+                // 0x0DE00000000024D4 rcn cn: 守望先锋
+                // 0x0DE000000000CB5F rdev cn: 守望先锋
+                // 0x0DE00000000024D4 rdev cn: 守望先锋经典版 
+                
                 if (isChinaClient && isEnglish) {
-                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" skins are renamed to \"Classic\"");
-                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 2\" skins are renamed to \"Valorous\"");
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch Classic\" skins are renamed to \"Classic\"");
                 } else if (isChinese) {
-                    Logger.Warn("Query", "In Chinese, \"Overwatch 1\" skins are renamed to \"守望先锋\"");
-                    Logger.Warn("Query", "In Chinese, \"Overwatch 2\" skins are renamed to \"守望先锋归来\"");
+                    // todo: except for on the chinese client, where both ow1 and ow2 skins are called "守望先锋" now... okay
+                    Logger.Warn("Query", "In Chinese, \"Overwatch Classic\" skins are renamed to \"守望先锋经典版\"");
                 } else if (isChinaClient) {
-                    Logger.Warn("Query", "On the Chinese client, \"Overwatch 1\" and \"Overwatch 2\" skins have different names. Check in-game");
+                    Logger.Warn("Query", "On the Chinese client, \"Overwatch Classic\" skins have different names. Check in-game");
                 }
             }
             
