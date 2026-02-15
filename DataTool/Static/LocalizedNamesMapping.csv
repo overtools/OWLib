@@ -71,6 +71,12 @@ DD,75,mei
 362,75,hazard
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,dominia
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;enUS,,
 2,75,reaper
 3,75,tracer
@@ -116,6 +122,12 @@ DD,75,mei
 362,75,hazard
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;esES,,
 2,75,reaper
 3,75,tracer
@@ -161,6 +173,12 @@ DD,75,mei
 362,75,hazard
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;esMX,,
 2,75,reaper
 3,75,tracer
@@ -206,6 +224,12 @@ DD,75,mei
 362,75,hazard
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;frFR,,
 2,75,faucheur
 3,75,tracer
@@ -251,6 +275,12 @@ DD,75,mei
 362,75,danger
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;itIT,,
 2,75,reaper
 3,75,tracer
@@ -296,6 +326,12 @@ DD,75,mei
 362,75,hazard
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;jaJP,,
 2,75,リーパー
 3,75,トレーサー
@@ -341,6 +377,12 @@ DD,75,メイ
 362,75,ハザード
 365,75,ジュノ
 3C3,75,ウーヤン
+472,75,ヴェンデッタ
+4C4,75,ドミナ
+4D8,75,エムレ
+4DD,75,アンラン
+4E3,75,ミズキ
+516,75,ジェットパック・キャット
 ;koKR,,
 2,75,리퍼
 3,75,트레이서
@@ -386,6 +428,12 @@ DD,75,메이
 362,75,해저드
 365,75,주노
 3C3,75,우양
+472,75,벤데타
+4C4,75,도미나
+4D8,75,엠레
+4DD,75,안란
+4E3,75,미즈키
+516,75,제트팩 캣
 ;plPL,,
 2,75,żniwiarz
 3,75,smuga
@@ -431,6 +479,12 @@ DD,75,mei
 362,75,ryzyk
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,dominia
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,odrzutowa kotka
 ;ptBR,,
 2,75,reaper
 3,75,tracer
@@ -476,6 +530,12 @@ DD,75,mei
 362,75,hazard
 365,75,juno
 3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,jetpack cat
 ;ruRU,,
 2,75,жнец
 3,75,трейсер
@@ -520,7 +580,13 @@ DD,75,мэй
 32B,75,авентюра
 362,75,азарт
 365,75,юнона
-3C3,75,У Ян
+3C3,75,у ян
+472,75,вендетта
+4C4,75,домина
+4D8,75,эмре
+4DD,75,ань жань
+4E3,75,мидзуки
+516,75,реактивная киса
 ;thTH,,
 2,75,รีปเปอร์
 3,75,เทรเซอร์
@@ -566,27 +632,63 @@ DD,75,เหมย
 362,75,ฮาซาร์ด
 365,75,จูโน
 3C3,75,อู๋ย่าง
+472,75,เวนเดตตา
+4C4,75,โดมินา
+4D8,75,เอ็มเร
+4DD,75,อันหราน
+4E3,75,มิซึกิ
+516,75,เจ็ทแพ็คแคท
 ;trTR,,
 2,75,reaper
 3,75,tracer
 4,75,mercy
 5,75,hanzo
 6,75,torbjörn
+7,75,reinhardt
 8,75,pharah
+9,75,winston
+A,75,widowmaker
+15,75,bastion
 16,75,symmetra
 20,75,zenyatta
+29,75,genji
 40,75,roadhog
+42,75,cassidy
 65,75,junkrat
 68,75,zarya
+6E,75,soldier: 76
+79,75,lúcio
 7A,75,d.va
+DD,75,mei
 12E,75,sombra
+12F,75,doomfist
+13B,75,ana
+13E,75,orisa
+195,75,brigitte
+1A2,75,moira
+1CA,75,wrecking ball
 1EC,75,sojourn
 200,75,ashe
 206,75,echo
+221,75,baptiste
+231,75,kiriko
 236,75,junker queen
+23B,75,sigma
 28D,75,ramattra
+291,75,lifeweaver
+30A,75,mauga
+31C,75,illari
 32A,75,freja
+32B,75,venture
 362,75,hazard
+365,75,juno
+3C3,75,wuyang
+472,75,vendetta
+4C4,75,domina
+4D8,75,emre
+4DD,75,anran
+4E3,75,mizuki
+516,75,roket kedi
 ;zhCN,,
 2,75,死神
 3,75,猎空
@@ -632,6 +734,12 @@ DD,75,美
 362,75,骇灾
 365,75,朱诺
 3C3,75,无漾
+472,75,斩仇
+4C4,75,金驭
+4D8,75,埃姆雷
+4DD,75,安燃
+4E3,75,瑞稀
+516,75,飞天猫
 ;zhTW,,
 2,75,死神
 3,75,閃光
@@ -677,3 +785,9 @@ DD,75,小美
 362,75,災害
 365,75,朱諾
 3C3,75,無漾
+472,75,宿怨
+4C4,75,多米娜
+4D8,75,伊默
+4DD,75,安燃
+4E3,75,瑞稀
+516,75,火箭貓
