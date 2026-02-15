@@ -271,6 +271,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             }
         }
 
+        eventKey = GetValidFilename(eventKey); // "2026: Season 1"
         string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", GetValidFilename(unlock.GetName()));
 
         if (ShouldDo(unlock, config, tags, UnlockType.Spray)) {
