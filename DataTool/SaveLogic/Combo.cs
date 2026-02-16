@@ -105,7 +105,7 @@ public static class Combo {
                 var subtitleStr = subtitle.Trim().TrimEnd('.');
                 if (soundSet.Count > 1) {
                     realPath = Path.Combine(realPath, GetValidFilename(subtitleStr));
-                    WriteFile(string.Join("\n", subtitle), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
+                    WriteFile(string.Join("\n", subtitle), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-subtitles.txt"));
                 } else if (soundSet.Count == 1) {
                     try {
                         if (subtitleAsSound) {

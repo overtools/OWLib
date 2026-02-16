@@ -210,7 +210,6 @@ public static class Combo {
         public ulong VoiceStimulus;
         public ulong[] Conversations;
         public ulong Subtitle;
-        public ulong SubtitleRuntime;
         public HashSet<ulong> SoundFiles;
 
         public STUCriteriaContainer? m_criteria;
@@ -1052,11 +1051,14 @@ public static class Combo {
                         voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.m_voiceLineRuntime.m_stimulus;
                         voiceLineInstanceInfo.ExternalSound = voiceLineInstance.m_voiceLineRuntime.m_externalSound;
                         voiceLineInstanceInfo.Conversations = voiceLineInstance.m_voiceLineRuntime.m_BD1B6F64?.Select(x => x.GUID.GUID).ToArray();
-                        voiceLineInstanceInfo.SubtitleRuntime = voiceLineInstance.m_voiceLineRuntime.m_6148094F;
                         voiceLineInstanceInfo.m_criteria = voiceLineInstance.m_voiceLineRuntime.m_criteria;
                         voiceLineInstanceInfo.m_weight = voiceLineInstance.m_voiceLineRuntime.m_weight;
                         Find(info, voiceLineInstanceInfo.ExternalSound, replacements, context);
-                        Find(info, voiceLineInstanceInfo.SubtitleRuntime, replacements, context);
+
+                        if (voiceLineInstanceInfo.Subtitle == 0) {
+                            voiceLineInstanceInfo.Subtitle = voiceLineInstance.m_voiceLineRuntime.m_6148094F;
+                            Find(info, voiceLineInstanceInfo.Subtitle, replacements, context);
+                        }
                     } else {
                         Console.Out.WriteLine("[DataTool.FindLogic.Combo]: ERROR: voice data container was null (please contact the developers)");
                         if (Debugger.IsAttached) {
