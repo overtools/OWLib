@@ -676,6 +676,14 @@ FFB,078,Voicelines,1 ; 1.62
 1961,078,Voicelines,1 ; s18 - persona
 1972,078,Voicelines,1 ; s19
 19B2,078,Voicelines,1 ; s20
+19D0,078,Voicelines,1 ; 2026 - s1
+19D1,078,Voicelines,1 ; 2026 - s1 - hello kitty
+19D2,078,Voicelines,1 ; 2026 - s1 - hello kitty
+19D4,078,Voicelines,1 ; 2026 - s1 - hello kitty
+19D7,078,Voicelines,1 ; 2026 - s1 - hello kitty
+19D8,078,Voicelines,1 ; 2026 - s1
+19E5,078,Voicelines,1 ; 2026 - s1 - hero progression
+19E7,078,Voicelines,1 ; 2026 - s1 - hero progression
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
@@ -752,6 +760,7 @@ EC11,01C,Season17,1
 EC12,01C,Season18,1
 EC13,01C,Season19,1
 EC14,01C,Season20,1
+11932,01C,2026 Season1,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -910,6 +919,10 @@ F4A,09F,Menu/Ilios (Junker Queen),1
 021,17B,Epic Loot Box (S16),1
 026,17B,Loot Box (S16),1
 027,17B,Legendary Loot Box (S16),1
+03A,17B,Esports Loot Box (2026: S1),1
+041,17B,Loot Box (2026: S1),1
+042,17B,Epic Loot Box (2026: S1),1
+043,17B,Legendary Loot Box (2026: S1),1
 ; Rarities,,,
 297,01C,Common,1
 61ED,01C,Epic,1

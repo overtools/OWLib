@@ -28,6 +28,8 @@ namespace DataTool.ToolLogic.Dump {
                 DumpStringsLocale.InitStorage(locale);
                     
                 // (tracer)
+                // todo: not good enough. a lot of ow2 skins share localized name asset, but not all
+                // see DumpHeroOW2SkinNameGUIDs
                 var ow1Skin = STUHelper.GetInstance<STUUnlock>(0x0250000000000409)!;
                 var ow2Skin = STUHelper.GetInstance<STUUnlock>(0x02500000000028D2)!;
 
