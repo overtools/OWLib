@@ -269,14 +269,33 @@ public class Unlock {
     }
 
     public STU_3021DDED GetSTU() => STU;
+
+    public string GetFormattedName() {
+        var rarity = IsTraditionalUnlock ? $"{Rarity} " : "";
+
+        if (Name != null) {
+            return $"{rarity}{Type} - {Name}";
+        }
+
+        string? guessedName = Type switch {
+            UnlockType.VirtualCurrency => Amount.ToString(), // can't easily get the currency type here so just show the amount
+            UnlockType.BattlePassTierSkip => Amount.ToString(),
+            UnlockType.BattlePassXP => Amount.ToString(),
+            _ => null
+        };
+
+        return $"{Rarity} {Type} - {guessedName ?? "UNKNOWN"}";
+    }
 }
 
 public class UnlockLite {
     public teResourceGUID GUID { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public UnlockType Type { get; set; }
     public STUUnlockRarity Rarity { get; set; }
     public int? Amount { get; set; }
+
+    internal Unlock? FullUnlock { get; set; }
 
     public bool ShouldSerializeAmount() => Amount != null;
 
@@ -286,8 +305,13 @@ public class UnlockLite {
             Name = unlock.Name,
             Type = unlock.Type,
             Rarity = unlock.Rarity,
-            Amount = unlock.Amount
+            Amount = unlock.Amount,
+            FullUnlock = unlock
         };
+    }
+
+    public string GetFormattedName() {
+        return FullUnlock?.GetFormattedName() ?? $"{Rarity} {Type} - {Name ?? "UNKNOWN"}";
     }
 }
 
