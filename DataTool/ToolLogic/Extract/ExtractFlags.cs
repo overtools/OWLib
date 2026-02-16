@@ -84,8 +84,8 @@ public class ExtractFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "voice-group-by-locale", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool VoiceGroupByLocale;
 
-    [CLIFlag(Default = false, Flag = "voice-03f-in-type", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-    public bool VoiceGroup03FInType;
+    [CLIFlag(Default = false, Flag = "voice-flat-03F", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    public bool VoiceFlat03F;
 
     [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
     public bool ConvertToXML;

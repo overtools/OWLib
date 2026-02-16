@@ -186,11 +186,14 @@ class ExtractHeroVoiceBetter : QueryParser, ITool, IQueryParser {
                     stack.Add(basePath);
 
                     string hero03FDir;
-                    if (flags.VoiceGroup03FInType) {
-                        hero03FDir = Path.Combine(path, "03F");
-                    } else {
+                    if (flags.VoiceFlat03F) {
                         CalculatePathStack(flags, heroName, unlockName, "03F", stack);
                         hero03FDir = Path.Combine(stack.ToArray());
+                    } else {
+                        var subtitle = GetSubtitleString(voiceLineInstance.Subtitle)?.Trim()?.TrimEnd('.');
+                        
+                        subtitle ??= "03F";
+                        hero03FDir = Path.Combine(path, GetValidFilename(subtitle));
                     }
 
                     string criteriaDesc = null;
