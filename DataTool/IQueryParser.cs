@@ -41,14 +41,20 @@ namespace DataTool {
             };
         }
 
-        public bool ShouldDo(string name, Dictionary<string, TagExpectedValue>? expectedVals = null) {
+        public bool ShouldDo(string name, Dictionary<string, TagExpectedValue>? expectedVals=null, ReadOnlySpan<string> alternateNames=default) {
             name = name.ReplaceLineEndings(""); // Magma\r\nTitan
             name = name.Replace("<hy>", ""); // deDE
             name = name.Replace("<en>", ""); // thTR
             name = name.Replace("<en/>", ""); // thTR
             
+            // IsDisallowed promotes spellcheck for the canon name. so we don't need to worry about it anywhere
+            // else in this function
             if (Values.IsDisallowed(name)) {
                 // if disallowed by name, don't attempt to match tags
+                return false;
+            }
+            // (or if alternate name explicitly disallowed)
+            if (Values.Disallowed.Matches(alternateNames)) {
                 return false;
             }
             
@@ -69,16 +75,16 @@ namespace DataTool {
                     }
                     
                     if (!explicitlyAllowed) {
-                        // if the tag value is not explicitly allowed or disallowed
+                        // if the tag value is not explicitly allowed or disallowed (but is specified)
                         // try to match by exact unlock name instead
                         // this helps with owl skins, as the tag is set to "none" by default
                         // (if we allowed glob, (leagueteam=boston) would match everything due to unspecified Allowed)
-                        return Values.Allowed.MatchesNoGlob(name);
+                        return Values.Allowed.MatchesNoGlob(name) || Values.Allowed.MatchesNoGlob(alternateNames);
                     }
                 }
             }
 
-            return Values.IsAllowed(name);
+            return Values.Allowed.Matches(name) || Values.Allowed.Matches(alternateNames);
         }
     }
 
@@ -127,6 +133,24 @@ namespace DataTool {
                 return true;
             }
 
+            return false;
+        }
+        
+        public bool MatchesNoGlob(ReadOnlySpan<string> names) {
+            foreach (var name in names) {
+                if (MatchesNoGlob(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool Matches(ReadOnlySpan<string> names) {
+            foreach (var name in names) {
+                if (Matches(name)) {
+                    return true;
+                }
+            }
             return false;
         }
 

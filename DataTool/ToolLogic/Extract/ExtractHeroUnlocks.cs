@@ -114,7 +114,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         base.QueryHelp(types);
 
         Log("\r\nExample commands: ");
-        Log($"{indent + 1}\"Lúcio|skin=Overwatch 1\"");
+        Log($"{indent + 1}\"Lúcio|skin=Overwatch Classic\"");
         Log($"{indent + 1}\"Tracer|skin=Track and Field\"");
         Log($"{indent + 1}\"Reinhardt|emote=*\"");
         Log($"{indent + 1}\"Junker Queen|victorypose=*\"");
@@ -351,6 +351,28 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
     }
 
+    // todo: add previous zhCN name for ow1 skins: "守望先锋"
+    // but for whatever reason, ow1 and ow2 skins on rcn+zhCN are all called "守望先锋" now
+    // needs to be fixed first
+    private static string[] OW1SkinAlternateNames = [
+        "Overwatch 1", // old en
+        "オーバーウォッチ 1", // old jp
+        "오버워치 1", // old kr
+        "《鬥陣特攻》",
+        /* todo, */
+        "Classic", // old rcn-en
+        "Overwatch Classic" // new en
+    ];
+    private static string[] OW2SkinAlternateNames = [
+        "Overwatch 2", // old en
+        "オーバーウォッチ 2", // old jp
+        "오버워치 2", // old kr
+        "《鬥陣特攻2》",
+        "守望先锋归来", // old rcn-cn
+        "Valorous", // old rcn-en
+        "Overwatch", // new en
+    ];
+
     private static bool ShouldDo(Unlock unlock, IgnoreCaseDict<ParsedArg>? config, Dictionary<string, TagExpectedValue>? tags, UnlockType unlockType) {
         if (unlock.Type != unlockType) return false;
         
@@ -362,32 +384,25 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         if (!config.TryGetValue(typeLower, out var configForType)) {
             return false;
         }
-
-        if (configForType.ShouldDo(unlock.GetName(), tags)) {
-            return true;
-        }
         
-        // todo: decide if i want to ship this
-        // different extracted name from query is confusing
-        // and polluting the spellcheck with these names is also confusing
-        // maybe it could be precise locale mapping instead
-
-        // todo: add previous zhCN name for ow1 skins: "守望先锋"
-        // but for whatever reason, ow1 and ow2 skins on rcn+zhCN are all called "守望先锋" now
-        // needs to be fixed first
-        /*ReadOnlySpan<string> alternateNames = unlock.GetSTU().m_name.GUID.GUID switch {
-            0x0DE00000000024D4 => 
-                ["Overwatch 1", "オーバーウォッチ 1", "오버워치 1", "《鬥陣特攻》", "Classic"],
-            0x0DE000000000CB5F => 
-                ["Overwatch 2", "オーバーウォッチ 2", "오버워치 2", "《鬥陣特攻2》", "守望先锋归来", "Valorous"],
+        // todo: different extracted name from query is confusing (log?)
+        // todo: if there are issues with dup names (cn, for now), maybe it could be a precise locale mapping using data instead
+        ReadOnlySpan<string> alternateNames = unlock.GetSTU().m_name.GUID.GUID switch {
+            0x0DE00000000024D4 => OW1SkinAlternateNames,
+            0x0DE000000000CB5F => OW2SkinAlternateNames, // shared
+            0x0DE0000000022DAB => OW2SkinAlternateNames, // echo, freja
+            0x0DE00000000179D3 => OW2SkinAlternateNames, // lw
+            0x0DE000000001B41C => OW2SkinAlternateNames, // mauga
+            0x0DE000000001AE12 => OW2SkinAlternateNames, // illari
+            0x0DE000000001CAC5 => OW2SkinAlternateNames, // venture
+            0x0DE00000000204E3 => OW2SkinAlternateNames, // hazard
+            0x0DE0000000020A28 => OW2SkinAlternateNames, // juno
+            0x0DE000000002B1D8 => OW2SkinAlternateNames, // vendetta
+            0x0DE0000000029E6A => OW2SkinAlternateNames, // anran
+            0x0DE000000002A7CC => OW2SkinAlternateNames, // jetpack cat
             _ => []
         };
-        foreach (var alternateName in alternateNames) {
-            if (configForType.ShouldDo(alternateName, tags)) {
-                return true;
-            }
-        }*/
-
-        return false;
+        
+        return configForType.ShouldDo(unlock.GetName(), tags, alternateNames);
     }
 }
