@@ -4,7 +4,7 @@
         <OutputType>Exe</OutputType>
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Version>2.20.1.0</Version>
+        <Version>2.21.0.0</Version>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <ApplicationIcon>Static\DataToolDebug.ico</ApplicationIcon>
