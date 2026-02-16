@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF2646A89, 112)]
+    [STU(0xF2646A89, 136)]
     public class STUHeroWeapon : STUSkinBase
     {
     }

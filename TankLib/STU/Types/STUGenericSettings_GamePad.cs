@@ -3,37 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3FA4FF52, 72)]
+    [STU(0x3FA4FF52, 40)]
     public class STUGenericSettings_GamePad : STUGenericSettings_Base
     {
-        [STUField(0x33522782, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
-        public STUGamePadMoveRegion[] m_regions;
-
-        [STUField(0xEB44B6BE, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xEB44B6BE, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimCurve m_EB44B6BE;
 
-        [STUField(0x5B875268, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x5B875268, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimCurve m_5B875268;
 
-        [STUField(0x4F2CB32E, 40)] // size: 4
-        public float m_4F2CB32E;
+        [STUField(0xB7493C9F, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUAnimCurve m_B7493C9F;
 
-        [STUField(0x43FFCCCA, 44)] // size: 4
-        public float m_43FFCCCA;
-
-        [STUField(0xB5AA16FB, 48)] // size: 4
-        public float m_B5AA16FB = 0.75f;
-
-        [STUField(0x4E89FF0D, 52)] // size: 4
-        public float m_4E89FF0D = 1.25f;
-
-        [STUField(0xB8F4A86C, 56)] // size: 4
-        public float m_B8F4A86C;
-
-        [STUField(0x3489BF62, 60)] // size: 4
-        public float m_3489BF62;
-
-        [STUField(0xBB6F2ECC, 64)] // size: 4
+        [STUField(0xBB6F2ECC, 32)] // size: 4
         public float m_BB6F2ECC;
     }
 }

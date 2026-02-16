@@ -10,6 +10,7 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xF63DFCBD)] GOLDEN = 0x1,
         [STUField(0xD65C735C)] JADE = 0x2,
         [STUField(0x7AC73B41)] GALACTIC = 0x3,
-        [STUField(0xC0FF51EF)] xC0FF51EF = 0x4,
+        [STUField(0x4A122485)] CRIMSON_WOLF = 0x4,
+        [STUField(0xC0FF51EF)] xC0FF51EF = 0x5,
     }
 }

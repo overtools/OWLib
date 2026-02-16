@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8159A26D, 264)]
+    [STU(0x8159A26D, 280)]
     public class STURankedData : STUInstance
     {
         [STUField(0x58066D8F, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
@@ -36,46 +36,49 @@ namespace TankLib.STU.Types
         [STUField(0x56E7DD46, 168)] // size: 16
         public teStructuredDataAssetRef<STUMap>[] m_56E7DD46;
 
-        [STUField(0xD3DE9579, 184)] // size: 16
+        [STUField(0xD5988655, 184)] // size: 16
+        public teStructuredDataAssetRef<STU_F9392C2B> m_D5988655;
+
+        [STUField(0xD3DE9579, 200)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_D3DE9579;
 
-        [STUField(0xF82A8727, 200)] // size: 8
+        [STUField(0xF82A8727, 216)] // size: 8
         public teStructuredDataDateAndTime m_F82A8727;
 
-        [STUField(0x275B6D5C, 208)] // size: 8
+        [STUField(0x275B6D5C, 224)] // size: 8
         public teStructuredDataDateAndTime m_275B6D5C;
 
-        [STUField(0x961B4853, 216)] // size: 8
+        [STUField(0x961B4853, 232)] // size: 8
         public teStructuredDataDateAndTime m_961B4853;
 
-        [STUField(0x9A31D01C, 224)] // size: 8
+        [STUField(0x9A31D01C, 240)] // size: 8
         public teStructuredDataDateAndTime m_9A31D01C;
 
-        [STUField(0x2E7A5FDB, 232)] // size: 4
+        [STUField(0x2E7A5FDB, 248)] // size: 4
         public float m_2E7A5FDB;
 
-        [STUField(0x503BAA0A, 236)] // size: 4
+        [STUField(0x503BAA0A, 252)] // size: 4
         public float m_503BAA0A = 168f;
 
-        [STUField(0x85059B03, 240)] // size: 4
+        [STUField(0x85059B03, 256)] // size: 4
         public uint m_85059B03 = 0x32;
 
-        [STUField(0x82AA08B4, 244)] // size: 4
+        [STUField(0x82AA08B4, 260)] // size: 4
         public int m_82AA08B4 = 0xA;
 
-        [STUField(0x46B0B905, 248)] // size: 4
+        [STUField(0x46B0B905, 264)] // size: 4
         public int m_46B0B905 = 0x7;
 
-        [STUField(0x842AF60F, 252)] // size: 4
+        [STUField(0x842AF60F, 268)] // size: 4
         public int m_842AF60F = 0x19;
 
-        [STUField(0x06122648, 256)] // size: 4
+        [STUField(0x06122648, 272)] // size: 4
         public int m_06122648 = 0x5;
 
-        [STUField(0xB5DD91B7, 260)] // size: 1
+        [STUField(0xB5DD91B7, 276)] // size: 1
         public byte m_B5DD91B7 = 0x1;
 
-        [STUField(0x5A0D87BA, 261)] // size: 1
+        [STUField(0x5A0D87BA, 277)] // size: 1
         public byte m_5A0D87BA;
     }
 }

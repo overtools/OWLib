@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x39049749, 64)]
+    [STU(0x39049749, 72)]
     public class STULobbyMapCatalogInfo : STUInstance
     {
         [STUField(0x2C05CD95, 0)] // size: 16
@@ -25,13 +25,16 @@ namespace TankLib.STU.Types
         [STUField(0x7952DAFC, 56)] // size: 4
         public float m_7952DAFC;
 
-        [STUField(0x2334A7D6, 60)] // size: 1
+        [STUField(0x03AACF5A, 60)] // size: 4
+        public int m_03AACF5A;
+
+        [STUField(0x2334A7D6, 64)] // size: 1
         public byte m_2334A7D6;
 
-        [STUField(0xBD22D857, 61)] // size: 1
+        [STUField(0xBD22D857, 65)] // size: 1
         public byte m_BD22D857;
 
-        [STUField(0x261FA212, 62)] // size: 1
+        [STUField(0x261FA212, 66)] // size: 1
         public byte m_261FA212;
     }
 }
