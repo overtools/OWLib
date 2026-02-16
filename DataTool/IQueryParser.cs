@@ -84,7 +84,8 @@ namespace DataTool {
                 }
             }
 
-            return Values.Allowed.Matches(name) || Values.Allowed.Matches(alternateNames);
+            // use IsAllowed because it specifically checks for 0 count set ( = glob)
+            return Values.IsAllowed(name) || Values.Allowed.Matches(alternateNames);
         }
     }
 
