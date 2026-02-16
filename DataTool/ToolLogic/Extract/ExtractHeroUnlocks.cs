@@ -385,7 +385,6 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             return false;
         }
         
-        // todo: different extracted name from query is confusing (log?)
         // todo: if there are issues with dup names (cn, for now), maybe it could be a precise locale mapping using data instead
         ReadOnlySpan<string> alternateNames = unlock.GetSTU().m_name.GUID.GUID switch {
             0x0DE00000000024D4 => OW1SkinAlternateNames,
@@ -403,6 +402,34 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
             _ => []
         };
         
-        return configForType.ShouldDo(unlock.GetName(), tags, alternateNames);
+        var shouldDo = configForType.ShouldDo(unlock.GetName(), tags, alternateNames);
+        if (shouldDo) {
+            LogAlternateName(unlock, configForType, tags, alternateNames);
+        }
+
+        return shouldDo;
+    }
+
+    private static void LogAlternateName(Unlock unlock, ParsedArg configForType, Dictionary<string, TagExpectedValue>? tags, ReadOnlySpan<string> alternateNames) {
+        if (alternateNames.Length < 0) {
+            return;
+        }
+        
+        var shouldDoWithNoAlternateNames = configForType.ShouldDo(unlock.GetName(), tags);
+        if (shouldDoWithNoAlternateNames) {
+            // didn't match via an alternate name
+            // nothing to log
+            return;
+        }
+
+        // todo: this can be a little weird because the alt names are not precise to the active locale
+        // e,g "Classic" skins have been renamed to "守望先锋经典版"
+        foreach (var alternateName in alternateNames) {
+            var shouldDoForThisAltName = configForType.ShouldDo(unlock.GetName(), tags, [alternateName]);
+            if (!shouldDoForThisAltName) continue;
+            
+            Logger.Warn("Query", $"The tool automatically edited your query - After 2026: Season 1, \"{alternateName}\" skins have been renamed to \"{unlock.GetName()}\". The extracted data will use the new name.");
+            break;
+        }
     }
 }
