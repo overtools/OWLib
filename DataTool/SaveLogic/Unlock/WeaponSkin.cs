@@ -85,7 +85,7 @@ public static class WeaponSkin {
                 FindLogic.Combo.Find(findInfo, derivedSkin.m_8EB89D4C, variantReplacements);
                 FindLogic.Combo.Find(findInfo, derivedSkin.m_56BE636B, variantReplacements, new FindLogic.Combo.ComboContext {
                     // ensure the look is linked to the model
-                    Model = derivedSkin.m_8EB89D4C
+                    Model = FindLogic.Combo.GetReplacement(derivedSkin.m_8EB89D4C, variantReplacements)
                 });
 
                 findInfo.SetModelName(derivedSkin.m_8EB89D4C, "Combined", variantReplacements);
