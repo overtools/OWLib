@@ -57,6 +57,11 @@ public class Unlock {
     public teResourceGUID SkinThemeGUID { get; set; }
 
     /// <summary>
+    /// If the unlock is a skin component (mythic skin customization option), the GUID of the parent skin unlock
+    /// </summary>
+    public teResourceGUID ParentUnlockGUID { get; set; }
+
+    /// <summary>
     /// If the Unlock is a Hero, the GUID of the Hero
     /// </summary>
     public teResourceGUID HeroGUID { get; set; }
@@ -98,6 +103,7 @@ public class Unlock {
     public bool ShouldSerializeEsportsTeam() => IsEsportsUnlock;
     public bool ShouldSerializeAmount() => Amount != null;
     public bool ShouldSerializeHero() => Hero != null;
+    public bool ShouldSerializeParentUnlockGUID() => ParentUnlockGUID != 0;
 
     // These only really apply to "normal" unlocks and can be removed from others
     public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
@@ -181,6 +187,22 @@ public class Unlock {
             if (teamDefinition != null) {
                 IsEsportsUnlock = true;
                 EsportsTeam = teamDefinition.FullName;
+            }
+        }
+
+        // skin components (mythic customization options)
+        if (Type == UnlockType.SkinComponent && unlock is STU_3F17D547 skinComponent) {
+            var skinUnlock = GetInstance<STUUnlock_SkinTheme>(skinComponent.m_E2A492C7);
+            ParentUnlockGUID = skinComponent.m_E2A492C7;
+
+            var parentName = GetString(skinUnlock?.m_name);
+            var skinTheme = GetInstance<STU_EF85B312>(skinUnlock?.m_skinTheme);
+            var slot = skinTheme?.m_942A6CCA?.FirstOrDefault(x => x.m_id.GUID == skinComponent.m_slot.GUID);
+            var itemIndex = slot?.m_57CE9041?.ToList().FindIndex(x => x.m_id.GUID == skinComponent.m_4EC40A19.GUID);
+
+            // overrides the name of the unlock, only override if the name is null or the same as the parent
+            if (itemIndex != null && (Name == null || Name == parentName)) {
+                Name = $"{GetString(slot?.m_displayText) ?? "Unknown"} {itemIndex + 1}";
             }
         }
     }
