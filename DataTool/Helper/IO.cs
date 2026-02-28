@@ -385,4 +385,21 @@ public static class IO {
         using var reader = new BinaryReader(stream);
         return new teSubtitleThing(reader);
     }
+
+    /// <summary>
+    /// Returns the amount of threads to use for parallel processing, taking into account if parallel processing is disabled in the flags, and the amount of processors on the machine.
+    /// Will always return at least 1.
+    /// </summary>
+    public static int GetParallelismAmount(int desiredAmount) {
+        if (Flags.NoParallelProcessing) {
+            return 1;
+        }
+
+        int processorCount = Environment.ProcessorCount;
+        if (desiredAmount <= 0) {
+            return 1;
+        }
+
+        return Math.Min(desiredAmount, processorCount);
+    }
 }

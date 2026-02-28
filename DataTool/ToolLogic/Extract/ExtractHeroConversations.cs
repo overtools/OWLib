@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Util;
+using Spectre.Console;
 using TankLib;
 using TankLib.Helpers;
 using TankLib.STU.Types;
@@ -36,12 +39,13 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
         Logger.Log("Generating voiceline mappings, this will take a moment...");
         GenerateVoicelineMapping();
         ProcessConversations(flags, path, parsedTypes);
-        
+
         LogUnknownQueries(parsedTypes);
     }
 
     private const string Container = "HeroConvo";
-    private static readonly Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)>();
+    private readonly ConcurrentDictionary<ulong, bool> SeenVoiceSets = new();
+    private static readonly ConcurrentDictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new();
 
     private void ProcessConversations(ExtractFlags flags, string basePath, Dictionary<string, ParsedHero> parsedTypes) {
         foreach (var conversationGuid in Program.TrackedFiles[0xD0]) {
@@ -93,8 +97,17 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
                 i++;
                 var (heroName, instance) = VoicelineHeroMapping[voicelineGuid.m_E295B99C];
 
-                // todo: hammond could partake in a conversation where he just squeaks in response...
-                // meaning no voice sound files
+                if (instance.SoundFiles.Count == 0) {
+                    Logger.Debug($"No sound files found for this voiceline instance {teResourceGUID.AsString(instance.GUIDx06F)}, trying to find them in the STUSound {teResourceGUID.AsString(instance.ExternalSound)}");
+                    var stuSound = GetInstance<STUSound>(instance.ExternalSound);
+                    foreach (var mSoundWemFile in stuSound?.m_C32C2195?.m_soundWEMFiles ?? []) {
+                        if (ExtractHeroVoiceBetter.BadSoundFiles.Contains(mSoundWemFile)) {
+                            continue;
+                        }
+
+                        instance.SoundFiles.Add(mSoundWemFile);
+                    }
+                }
 
                 foreach (var soundFile in instance.SoundFiles) {
                     var soundFileGuid = teResourceGUID.AsString(soundFile);
@@ -107,27 +120,71 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
     }
 
     public void GenerateVoicelineMapping() {
-        var seenVoiceSets = new HashSet<ulong>();
-
         var heroesDict = Helpers.GetHeroes();
-        var heroes = heroesDict.Values
+        var sortedHeroes = heroesDict.Values
             .OrderBy(x => !x.IsHero) // sort by hero first
             .ThenBy(x => x.GUID.GUID) // then by GUID
             .ToArray();
 
-        foreach (var hero in heroes) {
+        var heroes = sortedHeroes.Where(x => x.IsHero).ToArray();
+        var npcs = sortedHeroes.Where(x => !x.IsHero).ToArray();
+
+        AnsiConsole.Progress()
+            .AutoRefresh(true)
+            .AutoClear(true)
+            .HideCompleted(true)
+            .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new RemainingTimeColumn())
+            .Start(ctx => {
+                var task = ctx.AddTask("Generating voiceline mapping", new ProgressTaskSettings {
+                    AutoStart = true,
+                    MaxValue = sortedHeroes.Length
+                });
+
+                GenerateVoiceLineMapping(heroes, task, ctx);
+                GenerateVoiceLineMapping(npcs, task, ctx);
+            });
+
+
+        foreach (var guid in Program.TrackedFiles[0x5F]) {
+            if (SeenVoiceSets.ContainsKey(guid)) {
+                continue;
+            }
+
+            var voiceSet = GetInstance<STUVoiceSet>(guid);
+            if (voiceSet == null) continue;
+
+            var npcName = $"{IO.GetCleanString(voiceSet.m_269FC4E9)} {IO.GetCleanString(voiceSet.m_C0835C08)}".Trim();
+            if (string.IsNullOrEmpty(npcName)) {
+                npcName = IO.GetNullableGUIDName(guid) ?? $"Unknown{teResourceGUID.Index(guid):X}";
+            }
+
+            var info = new Combo.ComboInfo();
+            FindVoicelinesInVoiceSet(guid, npcName, ref info);
+        }
+    }
+
+    private void GenerateVoiceLineMapping(HeroVM[] heroes, ProgressTask task, ProgressContext ctx) {
+        Parallel.ForEach(heroes, new ParallelOptions {
+            MaxDegreeOfParallelism = IO.GetParallelismAmount(8)
+        }, hero => {
+            string heroName = IO.GetValidFilename(hero.Name ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
             var heroStu = hero.STU;
 
-            string heroName = IO.GetValidFilename(hero.Name ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
-            Logger.Info($"Generating mapping for {heroName}");
+            var heroTask = ctx.AddTask($"Processing {heroName}", new ProgressTaskSettings {
+                AutoStart = true,
+                MaxValue = 1
+            });
 
             Combo.ComboInfo baseInfo = default;
             var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
-            seenVoiceSets.Add(heroVoiceSetGuid);
+            SeenVoiceSets.TryAdd(heroVoiceSetGuid ?? 0, true);
 
             if (FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref baseInfo)) {
                 var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
+                heroTask.MaxValue = skins.Count();
+
                 foreach (var unlock in skins) {
+                    heroTask.Increment(1);
                     if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
                     if (unlockSkinTheme.m_0B1BA7C1 != 0)
                         continue;
@@ -140,31 +197,17 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
 
                     var replacements = SkinTheme.GetReplacements(skinThemeGUID);
                     foreach (var (_, newVoiceSetGuid) in replacements) {
-                        seenVoiceSets.Add(newVoiceSetGuid);
+                        SeenVoiceSets.TryAdd(newVoiceSetGuid, true);
                     }
 
                     FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref info, baseInfo, replacements);
                 }
             }
-        }
 
-        foreach (var guid in Program.TrackedFiles[0x5F]) {
-            if (seenVoiceSets.Contains(guid)) {
-                continue;
-            }
-
-            var voiceSet = GetInstance<STUVoiceSet>(guid);
-            if (voiceSet == null) continue;
-
-            var npcName = $"{IO.GetCleanString(voiceSet.m_269FC4E9)} {IO.GetCleanString(voiceSet.m_C0835C08)}".Trim();
-            if (string.IsNullOrEmpty(npcName)) {
-                npcName = IO.GetNullableGUIDName(guid) ?? $"Unknown{teResourceGUID.Index(guid):X}";
-            }
-
-            Logger.Log($"Generating mapping for {npcName}");
-            var info = new Combo.ComboInfo();
-            FindVoicelinesInVoiceSet(guid, npcName, ref info);
-        }
+            heroTask.StopTask();
+            task.Increment(1);
+            ctx.Refresh();
+        });
     }
 
     private bool FindVoicelinesInVoiceSet(ulong? voiceSetGuid, string heroName, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {

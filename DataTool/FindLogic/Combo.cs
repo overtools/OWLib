@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,7 +17,7 @@ using static DataTool.Helper.IO;
 namespace DataTool.FindLogic;
 
 public static class Combo {
-    private static readonly HashSet<ushort> s_unhandledTypes = new HashSet<ushort>();
+    private static readonly ConcurrentBag<ushort> s_unhandledTypes = new ConcurrentBag<ushort>();
 
     public class ComboInfo {
         // keep everything at top level, stops us from doing the same things again.
@@ -1209,7 +1210,8 @@ public static class Combo {
                 break;
             }
             default: {
-                if (s_unhandledTypes.Add(guidType)) {
+                if (!s_unhandledTypes.Contains(guidType)) {
+                    s_unhandledTypes.Add(guidType);
                     Debugger.Log(0, "DataTool", $"[DataTool.FindLogic.Combo]: Unhandled type: {guidType:X3}\r\n");
                 }
 

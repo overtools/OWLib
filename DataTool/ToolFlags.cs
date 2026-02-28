@@ -63,5 +63,8 @@ public class ToolFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "debug", Help = "Enable debug logging", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool Debug;
 
+    [CLIFlag(Default = false, Flag = "no-parallel", Help = "No parallel processing", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    public bool NoParallelProcessing;
+
     public override bool Validate() => true;
 }
