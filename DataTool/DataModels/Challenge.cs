@@ -10,6 +10,7 @@ public class Challenge {
     public teResourceGUID GUID { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
+    public string? LoreText { get; set; }
 
     public GenericGUIDValue? Hero { get; set; }
     public teResourceGUID? IconGUID { get; set; }
@@ -30,6 +31,7 @@ public class Challenge {
         GUID = (teResourceGUID) key;
         Name = IO.GetString(stu.m_name);
         Description = IO.GetString(stu.m_description);
+        LoreText = IO.GetString(stu.m_CEC13AC8);
         IconGUID = stu.m_544A6A4F;
         CelebrationGUID = stu.m_B44A42A0;
         SeasonGUID = stu.m_29E273F8;
