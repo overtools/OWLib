@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
 using Spectre.Console;
+using TankLib.Helpers;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Dump;
@@ -32,7 +34,12 @@ public class DumpTextures : JSONTool, ITool {
             foreach (var textureInfo in info.m_textures.Values) {
                 task.Increment(1);
                 if (!textureInfo.m_loose) continue;
-                SaveLogic.Combo.SaveTexture(flags, outputPath, saveContext, textureInfo.m_GUID);
+
+                try {
+                    SaveLogic.Combo.SaveTexture(flags, outputPath, saveContext, textureInfo.m_GUID);
+                } catch (Exception ex) {
+                    Logger.Warn($"Failed to save texture {textureInfo.m_GUID:X16}: {ex.Message}");
+                }
             }
 
             task.StopTask();
