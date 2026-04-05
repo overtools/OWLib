@@ -132,7 +132,10 @@ namespace TankLib {
             }
 
             Data = new byte[Header.DataSize];
-            reader.ReadExactly(Data);
+            //reader.ReadExactly(Data);
+
+            // todo: one Naraka texture has invalid size and causes exception when using read exactly, needs investigation
+            reader.Read(Data, 0, (int)Header.DataSize);
         }
 
         public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
