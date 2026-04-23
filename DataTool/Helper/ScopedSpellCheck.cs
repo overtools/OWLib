@@ -27,12 +27,12 @@ public class ScopedSpellCheck {
     }
 
     public string? TryGetSuggestion(string? text) {
-        CommitSpellCheck();
-
         if (text == null || text == "*") {
             // nothing to check
             return null;
         }
+        
+        CommitSpellCheck();
 
         var correctedStr = m_symSpell!.Lookup(text, SymSpell.Verbosity.Closest);
         if (correctedStr.Count == 0 || correctedStr[0].term == text) {
@@ -47,6 +47,6 @@ public class ScopedSpellCheck {
         var suggestion = TryGetSuggestion(text);
         if (suggestion == null) return;
 
-        Warn("SpellCheck", $"Did you mean \"{suggestion}\"?");
+        Warn("SpellCheck", $"Did you mean \"{suggestion}\" ?");
     }
 }

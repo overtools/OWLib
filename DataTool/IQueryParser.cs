@@ -90,17 +90,13 @@ namespace DataTool {
     }
 
     public record ParsedHero {
-        public required Dictionary<string, ParsedArg> Types;
+        public readonly IgnoreCaseDict<ParsedArg> Types = [];
         public bool Matched = false;
     }
 
     public class ParsedNameSet {
-        private readonly IgnoreCaseDict<ParsedName> Map;
+        private readonly IgnoreCaseDict<ParsedName> Map = [];
         public int Count => Map.Count;
-
-        public ParsedNameSet() {
-            Map = new IgnoreCaseDict<ParsedName>();
-        }
         
         public void Add(ReadOnlySpan<char> value) {
             Add(value.ToString());
@@ -309,7 +305,7 @@ namespace DataTool {
             }
         }
 
-        protected Dictionary<string, ParsedHero>? ParseQuery(
+        protected IgnoreCaseDict<ParsedHero>? ParseQuery(
             ICLIFlags flags,
             List<QueryType> queryTypes,
             IgnoreCaseDict<string>? queryNameOverrides = null,
@@ -335,7 +331,7 @@ namespace DataTool {
             var inputArguments = flags.Positionals.AsSpan(3);
             if (inputArguments.Length == 0) return null;
 
-            Dictionary<string, ParsedHero> output = new IgnoreCaseDict<ParsedHero>();
+            var output = new IgnoreCaseDict<ParsedHero>();
 
             foreach (string opt in inputArguments) {
                 if (opt.StartsWith("--")) continue; // ok so this is a flag
@@ -351,10 +347,10 @@ namespace DataTool {
                     hero = nameForThisLocale;
                 }
 
-                var heroOutput = new IgnoreCaseDict<ParsedArg>();
-                output[hero] = new ParsedHero {
-                    Types = heroOutput
-                };
+                if (!output.TryGetValue(hero, out var parsedHero)) {
+                    parsedHero = new ParsedHero();
+                    output.Add(hero, parsedHero);
+                }
 
                 var afterHero = split.AsSpan(1);
                 if (afterHero.Length == 0) {
@@ -365,7 +361,7 @@ namespace DataTool {
                         var parsedArg = new ParsedArg(type);
                         PopulateDefaultTags(type, parsedArg);
 
-                        heroOutput.Add(type.Name, parsedArg);
+                        parsedHero.Types.Add(type.Name, parsedArg);
                     }
                     continue;
                 }
@@ -388,7 +384,7 @@ namespace DataTool {
                     
                     foreach (QueryType queryType in typesMatchingName) {
                         var parsedArg = new ParsedArg(queryType);
-                        heroOutput.Add(queryType.Name, parsedArg);
+                        parsedHero.Types.Add(queryType.Name, parsedArg);
                         // todo: using .Add here can of course fail but we would previously only use the 2nd occurrence.. its better to explode
 
                         // todo: rewrite this parse loop...
