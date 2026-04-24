@@ -386,7 +386,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
         
         // todo: if there are issues with dup names (cn, for now), maybe it could be a precise locale mapping using data instead
-        ReadOnlySpan<string> alternateNames = unlock.GetSTU().m_name.GUID.GUID switch {
+        ReadOnlySpan<string> alternateNames = unlock.GetSTU().m_name?.GUID.GUID switch {
             0x0DE00000000024D4 => OW1SkinAlternateNames,
             0x0DE000000000CB5F => OW2SkinAlternateNames, // shared
             0x0DE0000000022DAB => OW2SkinAlternateNames, // echo, freja
