@@ -124,7 +124,7 @@ namespace ReplayMp4Tool {
                     Title = filename,
                     Hero = hero.Name,
                     Map = mapData.Name,
-                    Skin = skinTheme?.Name ?? "Unknown",
+                    Skin = skinTheme?.GetName(),
                     RecordedAt = $"{DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp).ToLocalTime()}",
                     HighlightType = $"{replayInfo.Header.Type:G}",
                     Quality = $"{replayInfo.Header.QualityPct}% ({(ReplayQuality)replayInfo.Header.QualityPct})",

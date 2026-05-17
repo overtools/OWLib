@@ -279,35 +279,36 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
 
         eventKey = GetValidFilename(eventKey); // "2026: Season 1"
-        string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", GetValidFilename(unlock.GetName()));
+        var unlockName = unlock.GetName(); // falls back to GUID if name is unspecified
+        string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", GetValidFilename(unlockName));
 
         if (ShouldDo(unlock, config, tags, UnlockType.Spray)) {
-            Log($"\tExtracting spray {unlock.Name}");
+            Log($"\tExtracting spray {unlockName}");
             SprayAndIcon.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.Icon)) {
-            Log($"\tExtracting icon {unlock.Name}");
+            Log($"\tExtracting icon {unlockName}");
             SprayAndIcon.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.HighlightIntro)) {
-            Log($"\tExtracting highlight intro {unlock.Name}");
+            Log($"\tExtracting highlight intro {unlockName}");
             HighlightIntro.Save(flags, thisPath, unlock, hero);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.Emote)) {
-            Log($"\tExtracting emote {unlock.Name}");
+            Log($"\tExtracting emote {unlockName}");
             AnimationItem.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.VictoryPose)) {
-            Log($"\tExtracting pose {unlock.Name}");
+            Log($"\tExtracting pose {unlockName}");
             AnimationItem.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.VoiceLine)) {
-            Log($"\tExtracting voice line {unlock.Name}");
+            Log($"\tExtracting voice line {unlockName}");
             VoiceLine.Save(flags, thisPath, unlock, voiceSet);
         }
 
@@ -322,28 +323,28 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.NameCard)) {
-            Log($"\tExtracting name card {unlock.Name}");
+            Log($"\tExtracting name card {unlockName}");
             NameCard.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.WeaponCharm)) {
-            Log($"\tExtracting charm {unlock.Name}");
+            Log($"\tExtracting charm {unlockName}");
             AnimationItem.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.Souvenir)) {
-            Log($"\tExtracting souvenir {unlock.Name}");
+            Log($"\tExtracting souvenir {unlockName}");
             AnimationItem.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.CompetitiveSignature)) {
-            Log($"\tExtracting signature {unlock.Name}");
+            Log($"\tExtracting signature {unlockName}");
             CompSignature.Save(flags, thisPath, unlock);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.WeaponSkin)) {
             if (unlock.STU.m_rarity == STUUnlockRarity.Common) {
-                Logger.Debug("ExtractHeroUnlock", $"skipping common rarity weapon {unlock.Name}");
+                Logger.Debug("ExtractHeroUnlock", $"skipping common rarity weapon {unlockName}");
                 return;
             }
 

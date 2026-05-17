@@ -125,7 +125,7 @@ public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         if (unlockSkinTheme.m_0B1BA7C1 != 0)
             return;
 
-        SaveSkin(flags, unlockSkinTheme.m_skinTheme, basePath, hero, heroFileName, unlock.Name, baseComponent, baseInfo);
+        SaveSkin(flags, unlockSkinTheme.m_skinTheme, basePath, hero, heroFileName, unlock.GetName(), baseComponent, baseInfo);
     }
 
     private static void SaveSkin(ICLIFlags flags, teResourceGUID skinGUID, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {

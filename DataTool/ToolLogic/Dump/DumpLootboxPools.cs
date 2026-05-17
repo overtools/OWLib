@@ -83,7 +83,7 @@ public class DumpLootboxPools : JSONTool, ITool {
                     HeroName = owningHero?.Name,
                     HeroGUID = owningHero?.GUID ?? default,
 
-                    UnlockName = unlock.Name,
+                    UnlockName = unlock.Name, // null allowed
                     UnlockGUID = unlock.GUID,
 
                     Rarity = unlock.Rarity.ToString(),

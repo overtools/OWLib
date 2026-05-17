@@ -21,7 +21,7 @@ public static class SprayAndIcon {
 
         bool saveAllTextures = false;
         try {
-            info.m_textures.First(x => x.Value.m_loose).Value.m_name = unlock.Name;
+            info.m_textures.First(x => x.Value.m_loose).Value.m_name = unlock.GetName();
             directory = Path.GetFullPath(Path.Combine(directory, ".."));
         } catch {
             // animated spray - no main image

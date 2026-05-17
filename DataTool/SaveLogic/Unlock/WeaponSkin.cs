@@ -17,7 +17,7 @@ public static class WeaponSkin {
         var weaponSkinSTU = STUHelper.GetInstance<STUSkinBase>(weaponSkinGUID);
 
         if (weaponSkinSTU is STU_4BC3E632) {
-            Logger.Log($"\tExtracting mythic weapon skin {unlock.Name}");
+            Logger.Log($"\tExtracting mythic weapon skin {unlock.GetName()}");
 
             var wasDeduping = Program.Flags.Deduplicate;
             if (!wasDeduping) {
@@ -30,7 +30,7 @@ public static class WeaponSkin {
 
             Program.Flags.Deduplicate = wasDeduping;
         } else {
-            Logger.Log($"\tExtracting weapon skin {unlock.Name}");
+            Logger.Log($"\tExtracting weapon skin {unlock.GetName()}");
             SaveNormalWeaponSkin(flags, directory, hero, weaponSkinGUID);
         }
     }

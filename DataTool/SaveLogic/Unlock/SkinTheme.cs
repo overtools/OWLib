@@ -22,16 +22,16 @@ public static class SkinTheme {
         if (skinBase == null) return;
 
         if (hero == null) {
-            Logger.Log($"\tSkipping skin {unlock.Name}");
+            Logger.Log($"\tSkipping skin {unlock.GetName()}");
             Logger.Log("\t\tCan not extract skin without a hero (thanks blizz)");
             return;
         }
 
         if (skinBase is STUSkinTheme) {
-            Logger.Log($"\tExtracting skin {unlock.Name}");
+            Logger.Log($"\tExtracting skin {unlock.GetName()}");
             Save(flags, directory, skinThemeGUID, hero);
         } else if (skinBase is STU_EF85B312 mythicSkin) {
-            Logger.Log($"\tExtracting mythic skin {unlock.Name}");
+            Logger.Log($"\tExtracting mythic skin {unlock.GetName()}");
             MythicSkin.SaveMythicSkin(flags, directory, unlockSkinTheme.m_skinTheme, mythicSkin, hero);
         } else {
             throw new Exception($"wtf is a {skinBase.GetType()} when its at home");
