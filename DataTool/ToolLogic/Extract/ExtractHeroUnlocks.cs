@@ -293,7 +293,7 @@ public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
 
         if (ShouldDo(unlock, config, tags, UnlockType.HighlightIntro)) {
             Log($"\tExtracting highlight intro {unlock.Name}");
-            AnimationItem.Save(flags, thisPath, unlock);
+            HighlightIntro.Save(flags, thisPath, unlock, hero);
         }
 
         if (ShouldDo(unlock, config, tags, UnlockType.Emote)) {
