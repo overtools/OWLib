@@ -9,7 +9,7 @@ public static class NameCard {
     public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
         STU_DB1B05B5 nameCard = (STU_DB1B05B5) unlock.STU;
 
-        string name = IO.GetCleanString(nameCard.m_name);
+        string name = unlock.GetName();
 
         directory = Path.GetFullPath(Path.Combine(directory, ".."));
 
