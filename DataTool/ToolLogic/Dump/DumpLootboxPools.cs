@@ -40,6 +40,7 @@ public class DumpLootboxPools : JSONTool, ITool {
 
             // sourced from GUIDNames.csv
             var lootBoxName = GetGUIDName(lootBoxGUID);
+            // todo: we could use the displaytext name for some loot boxes, but most use duplicated names
 
             // todo: which field is correct to use
             // current assets have (x, _, y, _, y, _, y, _)
