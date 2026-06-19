@@ -72,6 +72,7 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
         ["moon"] = "horizon Lunar Colony",
         ["hlc"] = "Horizon Lunar Colony",
         ["anubis"] = "Temple of Anubis",
+        ["anoobis"] = "Temple of Anubis",
         ["gibraltar"] = "Watchpoint: Gibraltar",
         ["watchpoint"] = "Watchpoint: Gibraltar",
         ["watchpoint gibraltar"] = "Watchpoint: Gibraltar",
@@ -80,10 +81,11 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
         ["chateau guillard"] = "Château Guillard",
         ["chateau"] = "Château Guillard",
         ["ecopoint"] = "Ecopoint: Antarctica",
-        ["antarctica"] = "Ecopoint: Antarctica",
+        ["antarctica"] = "Ecopoint: Antarctica", // todo: maybe remove now :-/
         ["ecopoint antarctica"] = "Ecopoint: Antarctica",
         ["volskaya"] = "Volskaya Industries",
         ["kings row"] = "King's Row",
+        ["boosan"] = "Busan",
         ["paraiso"] = "Paraíso",
         ["rio"] = "Paraíso",
         ["esperanca"] = "Esperança",
@@ -94,5 +96,7 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
         ["Monte Carworld"] = "Circuit Royal",
         ["Wuxing University"] = "Wuxing University - Water College",
         ["Wuxing"] = "Wuxing University - Water College",
+        ["Water College"] = "Wuxing University - Water College",
+        ["Tokyo"] = "NEON JUNCTION",
     };
 }
