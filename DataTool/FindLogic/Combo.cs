@@ -1263,6 +1263,8 @@ public static class Combo {
             }
         } else if (configVar is STUConfigVarTexture configVarTexture) {
             Find(info, configVarTexture.m_texture, replacements, context);
+        } else if (configVar is STU_DF403EBA differentTexture) {
+            Find(info, differentTexture.m_texture, replacements, context);
         } else if (configVar is STU_9DB46B98 configVarGraphWithOverrides) {
             Find(info, configVarGraphWithOverrides.m_6525E98B, replacements, context);
         } else if (configVar is STU_18908331 configVarSequence) {
