@@ -13,7 +13,7 @@ using Combo = DataTool.FindLogic.Combo;
 
 namespace DataTool.ToolLogic.Extract;
 
-[Tool("extract-intel-database", Aliases = ["extract-intel-db", "extract-lore-codex"], Description = "Extracts assets from the Intel Database", CustomFlags = typeof(ExtractFlags))]
+[Tool("extract-intel-database", Aliases = ["extract-intel-db", "extract-lore-codex", "extract-lore"], Description = "Extracts assets from the Intel Database", CustomFlags = typeof(ExtractFlags))]
 public class ExtractIntelDatabase : ITool {
     private const string Container = "IntelDatabase";
 
@@ -91,6 +91,16 @@ public class ExtractIntelDatabase : ITool {
                     sb.AppendLine($"{heroName}: {message}");
                     sb.AppendLine();
                 }
+            }
+            
+            if (loreEntry is STU_75F30091 newLoreChapter) {
+                Combo.Find(texturesCombo, newLoreChapter.m_7E748F9C);
+                Combo.Find(texturesCombo, newLoreChapter.m_8133A6E5?.m_B4156AF5);
+                // todo: also contains audio
+            }
+            
+            if (loreEntry is STU_7D650D2F newLoreEntry) {
+                Combo.Find(texturesCombo, newLoreEntry.m_7E748F9C);
             }
 
             if (loreEntryFileName != null && sb.Length > 0) {
