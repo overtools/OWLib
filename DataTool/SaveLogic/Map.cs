@@ -67,17 +67,13 @@ public static class Map {
                 }
 
                 writer.Write(ModelGroups.Header.PlaceableCount); // nr objects
-
-                int entitiesWithModelCount = 0;
+                
                 for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
 
                     teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
                     FindLogic.Combo.Find(Info, entity.Header.EntityDefinition);
 
                     var entityInfo = Info.m_entities[entity.Header.EntityDefinition];
-                    if (entityInfo.m_modelGUID != 0) {
-                        entitiesWithModelCount += 1;
-                    }
 
                     foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
                         if (instanceData is STUStatescriptComponentInstanceData statescriptComponentInstanceData) {
@@ -98,10 +94,13 @@ public static class Map {
                     }
                 }
 
-                writer.Write((uint) (SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
-                                     entitiesWithModelCount)); // nr details
+                // num "details"
+                writer.Write(SingleModels.Header.PlaceableCount + 
+                             Models.Header.PlaceableCount +
+                             Entities.Header.PlaceableCount);
 
-                writer.Write(Lights.Header.PlaceableCount); // nr Lights
+                 // num Lights
+                writer.Write(Lights.Header.PlaceableCount);
 
                 foreach (IMapPlaceable mapPlaceable in ModelGroups.Placeables ?? Array.Empty<IMapPlaceable>()) {
                     teMapPlaceableModelGroup modelGroup = (teMapPlaceableModelGroup) mapPlaceable;
@@ -170,10 +169,6 @@ public static class Map {
                     var model = entityInfo.m_modelGUID;
                     var look = entityInfo.m_modelLookGUID;
 
-                    if (model == 0) {
-                        continue;
-                    }
-
                     foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
                         if (instanceData is not STUModelComponentInstanceData modelComponentInstanceData) continue;
                         if (modelComponentInstanceData.m_EE77FFF9 != 0) {
@@ -187,20 +182,14 @@ public static class Map {
                         var lookContext = new FindLogic.Combo.ComboContext { Model = model };
                         FindLogic.Combo.Find(Info, look, null, lookContext);
                     }
-
-
-                    FindLogic.Combo.ModelAsset modelInfo = Info.m_models[model];
-                    string modelFn = GetModelPath(modelInfo);
-                    if (Info.m_entities.ContainsKey(entity.Header.EntityDefinition)) {
-                        modelFn = Path.Combine("Entities", Info.m_entities[entity.Header.EntityDefinition].GetName(), Info.m_entities[entity.Header.EntityDefinition].GetName() + ".owentity");
-                    }
-
-                    // todo: stop throw pls. anyway
+                    
+                    string modelFn = Path.Combine("Entities", Info.m_entities[entity.Header.EntityDefinition].GetName(), Info.m_entities[entity.Header.EntityDefinition].GetName() + ".owentity");
+                    
                     string matFn = "null";
-                    try {
-                        FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[look];
+                    if (Info.m_models.TryGetValue(model, out var modelInfo) &&
+                        Info.m_modelLooks.TryGetValue(look, out var modelLookInfo)) {
                         matFn = GetModelLookMatPath(modelInfo, modelLookInfo);
-                    } catch { }
+                    }
 
                     writer.Write(modelFn);
                     writer.Write(matFn);
