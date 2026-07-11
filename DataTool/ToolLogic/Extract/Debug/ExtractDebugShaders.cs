@@ -9,6 +9,7 @@ using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
+using TankLib.Helpers;
 
 namespace DataTool.ToolLogic.Extract.Debug;
 
@@ -286,9 +287,10 @@ public class ExtractDebugShaders : ITool {
         int i = 0;
         foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
             string name = null;
-            if (shaderGroup.Hashes != null && shaderGroup.Hashes[i] != 0) {
-                name = shaderGroup.Hashes[i].ToString("X8");
-            }
+            Logger.Error("SaveShaderGroup", $"teShaderGroup no longer associates a hash with teShaderInstance, see documentation on GetShaderByHash."); 
+            //if (shaderGroup.Hashes != null && shaderGroup.Hashes[i] != 0) {
+            //    name = shaderGroup.Hashes[i].ToString("X8");
+            //}
 
             SaveShaderInstance(path, shaderGroupInstance, name);
             i++;
