@@ -254,9 +254,9 @@ namespace TankLibHelper {
 
             switch (field.m_typeName) {
                 case "f32":
-                    return $"{field.m_defaultValue.m_value}f";
+                    return $"{(float)field.m_defaultValue.m_value}f";
                 case "f64":
-                    return $"{field.m_defaultValue.m_value}";
+                    return $"{(double)field.m_defaultValue.m_value}";
                 
                 case "teVec2":
                     return $"new teVec2({field.m_defaultValue.m_x}f, {field.m_defaultValue.m_y}f)";
