@@ -695,6 +695,9 @@ FFB,078,Voicelines,1 ; 1.62
 1A20,078,Voicelines,1 ; 2026 - s3
 1A36,078,Voicelines,1 ; 2026 - s3
 1A37,078,Voicelines,1 ; 2026 - s3
+1A5D,078,Voicelines,1 ; 2026 - s3 - yoasobi
+1A5F,078,Voicelines,1 ; 2026 - s3 - yoasobi
+1A64,078,Voicelines,1 ; 2026 - s3 - yoasobi
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
