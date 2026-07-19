@@ -74,7 +74,9 @@ public class DumpStringsLocale : JSONTool, ITool {
         var args = new ClientCreateArgs {
             SpeechLanguage = "enUS", // doesn't matter, we aren't dumping subtitles/voice
             TextLanguage = language,
-            HandlerArgs = new ClientCreateArgs_Tank(),
+            HandlerArgs = new ClientCreateArgs_Tank {
+                ManifestRegion = Flags.GetManifestRegion()
+            },
             Online = true, // could help on bnet if missing stuff :D
             RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring", // just in case ig
             TryShareCDNIndexWithHandler = Client

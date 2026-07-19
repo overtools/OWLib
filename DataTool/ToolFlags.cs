@@ -1,5 +1,6 @@
 ﻿using System;
 using DataTool.Flag;
+using TACTLib.Client.HandlerArgs;
 
 namespace DataTool;
 
@@ -27,8 +28,11 @@ public class ToolFlags : IToolFlags {
     [CLIFlag(Default = false, Flag = "string-guid", Help = "Returns all strings as their GUID instead of their value", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"}, Hidden = true)]
     public bool StringsAsGuids;
 
-    [CLIFlag(Default = false, Flag = "rcn", Help = "use (R)CN? CMF", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    [CLIFlag(Default = false, Flag = "rcn", Help = "Load Chinese exclusive content", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
     public bool RCN;
+    
+    [CLIFlag(Default = false, Flag = "rkr", Help = "Load Korean exclusive content", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    public bool RKR;
 
     [CLIFlag(Default = null, Flag = "scratchdb", Hidden = true, NeedsValue = true, Help = "Directory for persistent database storage for deduplication info")]
     public string ScratchDBPath;
@@ -67,4 +71,10 @@ public class ToolFlags : IToolFlags {
     public bool NoParallelProcessing;
 
     public override bool Validate() => true;
+    
+    public string GetManifestRegion() {
+        if (RCN) return ClientCreateArgs_Tank.REGION_CN;
+        if (RKR) return ClientCreateArgs_Tank.REGION_KR;
+        return ClientCreateArgs_Tank.REGION_DEV;
+    }
 }

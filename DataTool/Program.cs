@@ -271,7 +271,9 @@ public static class Program {
         var args = new ClientCreateArgs {
             SpeechLanguage = Flags.SpeechLanguage,
             TextLanguage = Flags.Language,
-            HandlerArgs = new ClientCreateArgs_Tank { ManifestRegion = Flags.RCN ? ClientCreateArgs_Tank.REGION_CN : ClientCreateArgs_Tank.REGION_DEV },
+            HandlerArgs = new ClientCreateArgs_Tank {
+                ManifestRegion = Flags.GetManifestRegion()
+            },
             Online = online,
             RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring"
         };

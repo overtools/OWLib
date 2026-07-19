@@ -33,7 +33,7 @@ class DebugInstallIssues : ITool {
             SpeechLanguage = Program.Flags.SpeechLanguage,
             TextLanguage = Program.Flags.Language,
             HandlerArgs = new ClientCreateArgs_Tank {
-                ManifestRegion = Program.Flags.RCN ? ClientCreateArgs_Tank.REGION_CN : ClientCreateArgs_Tank.REGION_DEV,
+                ManifestRegion = Program.Flags.GetManifestRegion(),
                 LoadManifest = true,
                 LoadBundlesForLookup = false
             },
