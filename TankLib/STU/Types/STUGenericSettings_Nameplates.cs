@@ -41,7 +41,7 @@ namespace TankLib.STU.Types
         public float m_8FF7841C = 35f;
 
         [STUField(0x85587E17, 80)] // size: 4
-        public float m_85587E17 = 1E-05f;
+        public float m_85587E17 = 1.4E-05f;
 
         [STUField(0x1DE67E91, 84)] // size: 4
         public float m_1DE67E91 = 0.00021f;

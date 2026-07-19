@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x74F95AE2, 16)]
+    [STU(0x74F95AE2, 24)]
     public class STUStatescriptDeflectProjectileBox : STUInstance
     {
         [STUField(0xCBA118B2, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
@@ -11,5 +11,8 @@ namespace TankLib.STU.Types
 
         [STUField(0xAEF67365, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_AEF67365;
+
+        [STUField(0xF87A1262, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_F87A1262;
     }
 }

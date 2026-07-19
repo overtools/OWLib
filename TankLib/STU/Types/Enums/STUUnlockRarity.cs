@@ -10,9 +10,10 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xC25BCFAD)] Rare = 0x1,
         [STUField(0xAF948D7A)] Epic = 0x2,
         [STUField(0x4585FFFF)] Legendary = 0x3,
-        [STUField(0xF360C292)] Exclusive = 0x4,
+        [STUField(0x1FFF8866)] Evolution = 0x4,
         [STUField(0xBD3BA67B)] Mythic = 0x5,
-        [STUField(0xEF68A54A)] xEF68A54A = 0x6,
+        [STUField(0x61A83201)] Ultra = 0x6,
+        [STUField(0xEF68A54A)] xEF68A54A = 0x7,
         [STUField(0x3A3ADA03)] None = -1,
     }
 }

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7236F6E3, 440)]
+    [STU(0x7236F6E3, 456)]
     public class STUStatescriptGraph : STUInstance
     {
         [STUField(0xC71EA6BC, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 72
@@ -63,46 +63,49 @@ namespace TankLib.STU.Types
         [STUField(0x4E87690F, 352)] // size: 16
         public teStructuredDataAssetRef<STUMap> m_map;
 
-        [STUField(0x85EE1391, 368, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xFE277D69, 368)] // size: 16
+        public teStructuredDataAssetRef<STU_94259322>[] m_FE277D69;
+
+        [STUField(0x85EE1391, 384, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_85EE1391;
 
-        [STUField(0xFF44FD8B, 376, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xFF44FD8B, 392, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptSchema m_FF44FD8B;
 
-        [STUField(0x151AD444, 384, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x151AD444, 400, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptSchema m_publicSchema;
 
-        [STUField(0x36F7B64C, 392, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x36F7B64C, 408, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_21E27D68 m_36F7B64C;
 
-        [STUField(0x0F3E5BB1, 400, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x0F3E5BB1, 416, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_00A87312 m_0F3E5BB1;
 
-        [STUField(0xBE8E52CD, 408)] // size: 4
+        [STUField(0xBE8E52CD, 424)] // size: 4
         public uint m_BE8E52CD;
 
-        [STUField(0xEBCF63C6, 412)] // size: 4
+        [STUField(0xEBCF63C6, 428)] // size: 4
         public int m_nodesBitCount;
 
-        [STUField(0x1754C98D, 416)] // size: 4
+        [STUField(0x1754C98D, 432)] // size: 4
         public int m_statesBitCount;
 
-        [STUField(0x02FABAC2, 420)] // size: 4
+        [STUField(0x02FABAC2, 436)] // size: 4
         public int m_remoteSyncNodesBitCount;
 
-        [STUField(0x475EA078, 424)] // size: 4
+        [STUField(0x475EA078, 440)] // size: 4
         public int m_syncVarsBitCount;
 
-        [STUField(0xEC5B637A, 428)] // size: 4
+        [STUField(0xEC5B637A, 444)] // size: 4
         public int m_EC5B637A;
 
-        [STUField(0x50AAA58E, 432)] // size: 4
+        [STUField(0x50AAA58E, 448)] // size: 4
         public int m_50AAA58E;
 
-        [STUField(0x75408640, 436)] // size: 1
+        [STUField(0x75408640, 452)] // size: 1
         public byte m_75408640;
 
-        [STUField(0xCAA6714F, 437)] // size: 1
+        [STUField(0xCAA6714F, 453)] // size: 1
         public byte m_CAA6714F;
     }
 }

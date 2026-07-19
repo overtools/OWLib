@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x43F40C0F, 288)]
+    [STU(0x43F40C0F, 304)]
     public class STUGameRuleset : STUInstance
     {
-        [STUField(0xEB4F2408, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 232
+        [STUField(0xEB4F2408, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 248
         public STUGameRulesetGameMode m_gameMode;
 
-        [STUField(0x2690B60B, 240)] // size: 16
+        [STUField(0x2690B60B, 256)] // size: 16
         public teString m_2690B60B;
 
-        [STUField(0x26E97DBB, 256)] // size: 16
+        [STUField(0x26E97DBB, 272)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_26E97DBB;
 
-        [STUField(0x877CE898, 272)] // size: 16
+        [STUField(0x877CE898, 288)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier>[] m_877CE898;
     }
 }

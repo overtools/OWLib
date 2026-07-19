@@ -12,10 +12,10 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_2A25A783;
 
         [STUField(0x8B7F6B0C, 24)] // size: 12
-        public teColorRGB m_8B7F6B0C = new teColorRGB(1f, 0.0648f, 0.01938f);
+        public teColorRGB m_8B7F6B0C = new teColorRGB(1f, 0.064803265f, 0.019382361f);
 
         [STUField(0xA699CE1C, 36)] // size: 12
-        public teColorRGB m_A699CE1C = new teColorRGB(0.0648f, 0.01938f, 1f);
+        public teColorRGB m_A699CE1C = new teColorRGB(0.064803265f, 0.019382361f, 1f);
 
         [STUField(0x33207F6F, 48)] // size: 12
         public teColorRGB m_33207F6F = new teColorRGB(1f, 1f, 1f);

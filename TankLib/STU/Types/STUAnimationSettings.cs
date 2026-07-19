@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x419E5D60, 152)]
+    [STU(0x419E5D60, 160)]
     public class STUAnimationSettings : STUInstance
     {
         [STUField(0x41A3777D, 8)] // size: 16
@@ -57,43 +57,46 @@ namespace TankLib.STU.Types
         [STUField(0x4DDA41EB, 138)] // size: 1
         public byte m_4DDA41EB;
 
-        [STUField(0x59903079, 139)] // size: 1
+        [STUField(0xFB20AFFA, 139)] // size: 1
+        public byte m_FB20AFFA;
+
+        [STUField(0x59903079, 140)] // size: 1
         public byte m_59903079;
 
-        [STUField(0xA794731B, 140)] // size: 1
+        [STUField(0xA794731B, 141)] // size: 1
         public byte m_A794731B;
 
-        [STUField(0x5BD8C39E, 141)] // size: 1
+        [STUField(0x5BD8C39E, 142)] // size: 1
         public byte m_5BD8C39E;
 
-        [STUField(0x85020063, 142)] // size: 1
+        [STUField(0x85020063, 143)] // size: 1
         public byte m_85020063;
 
-        [STUField(0x358B392F, 143)] // size: 1
+        [STUField(0x358B392F, 144)] // size: 1
         public byte m_358B392F;
 
-        [STUField(0x59DB9B44, 144)] // size: 1
+        [STUField(0x59DB9B44, 145)] // size: 1
         public byte m_59DB9B44;
 
-        [STUField(0xB81EAB00, 145)] // size: 1
+        [STUField(0xB81EAB00, 146)] // size: 1
         public byte m_B81EAB00;
 
-        [STUField(0x7E0DCF00, 146)] // size: 1
+        [STUField(0x7E0DCF00, 147)] // size: 1
         public byte m_7E0DCF00;
 
-        [STUField(0xF5150933, 147)] // size: 1
+        [STUField(0xF5150933, 148)] // size: 1
         public byte m_F5150933;
 
-        [STUField(0xFF8E0FC4, 148)] // size: 1
+        [STUField(0xFF8E0FC4, 149)] // size: 1
         public byte m_FF8E0FC4;
 
-        [STUField(0x37EE887D, 149)] // size: 1
+        [STUField(0x37EE887D, 150)] // size: 1
         public byte m_37EE887D;
 
-        [STUField(0x0A40CFA0, 150)] // size: 1
+        [STUField(0x0A40CFA0, 151)] // size: 1
         public byte m_0A40CFA0;
 
-        [STUField(0xEF3CD3D1, 151)] // size: 1
+        [STUField(0xEF3CD3D1, 152)] // size: 1
         public byte m_EF3CD3D1;
     }
 }
