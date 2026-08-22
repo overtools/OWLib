@@ -40,6 +40,8 @@ A,75,widow
 4D2,75,jane overwatch
 52C,75,hashimoto
 52C,75,shein
+542,75,dmon
+542,75,demon
 ; Normal Hero Localization Mapping,,
 ;deDE,,
 2,75,reaper
@@ -94,6 +96,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;enUS,,
 2,75,reaper
 3,75,tracer
@@ -147,6 +150,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;esES,,
 2,75,reaper
 3,75,tracer
@@ -200,6 +204,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;esMX,,
 2,75,reaper
 3,75,tracer
@@ -253,6 +258,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;frFR,,
 2,75,faucheur
 3,75,tracer
@@ -306,6 +312,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;itIT,,
 2,75,reaper
 3,75,tracer
@@ -359,6 +366,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;jaJP,,
 2,75,リーパー
 3,75,トレーサー
@@ -412,6 +420,7 @@ DD,75,メイ
 4E3,75,ミズキ
 516,75,ジェットパック・キャット
 52C,75,シオン
+542,75,d.mon
 ;koKR,,
 2,75,리퍼
 3,75,트레이서
@@ -465,6 +474,7 @@ DD,75,메이
 4E3,75,미즈키
 516,75,제트팩 캣
 52C,75,시온
+542,75,d.mon
 ;plPL,,
 2,75,żniwiarz
 3,75,smuga
@@ -518,6 +528,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,odrzutowa kotka
 52C,75,shion
+542,75,d.mon
 ;ptBR,,
 2,75,reaper
 3,75,tracer
@@ -571,6 +582,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,jetpack cat
 52C,75,shion
+542,75,d.mon
 ;ruRU,,
 2,75,жнец
 3,75,трейсер
@@ -624,6 +636,7 @@ DD,75,мэй
 4E3,75,мидзуки
 516,75,реактивная киса
 52C,75,сион
+542,75,d.mon
 ;thTH,,
 2,75,รีปเปอร์
 3,75,เทรเซอร์
@@ -677,6 +690,7 @@ DD,75,เหมย
 4E3,75,มิซึกิ
 516,75,เจ็ทแพ็คแคท
 52C,75,ชิออน
+542,75,ดีม่อน
 ;trTR,,
 2,75,reaper
 3,75,tracer
@@ -730,6 +744,7 @@ DD,75,mei
 4E3,75,mizuki
 516,75,roket kedi
 52C,75,shion
+542,75,d.mon
 ;zhCN,,
 2,75,死神
 3,75,猎空
@@ -783,6 +798,7 @@ DD,75,美
 4E3,75,瑞稀
 516,75,飞天猫
 52C,75,死怨
+542,75,d.mon
 ;zhTW,,
 2,75,死神
 3,75,閃光
@@ -836,3 +852,4 @@ DD,75,小美
 4E3,75,瑞稀
 516,75,火箭貓
 52C,75,死怨
+542,75,d.mon
