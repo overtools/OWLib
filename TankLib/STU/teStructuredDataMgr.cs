@@ -120,8 +120,10 @@ namespace TankLib.STU {
                 return (STUInstance)Activator.CreateInstance(instanceType);
             }
 
-            if (_missingInstances.Add(hash)) {
-                Debugger.Log(0, "teStructuredDataMgr", $"Unhandled instance: {hash:X8}\r\n");
+            lock (_missingInstances) {
+                if (_missingInstances.Add(hash)) {
+                    Debugger.Log(0, "teStructuredDataMgr", $"Unhandled instance: {hash:X8}\r\n");
+                }
             }
             return null;
         }
