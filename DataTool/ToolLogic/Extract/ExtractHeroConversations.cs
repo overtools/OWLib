@@ -181,17 +181,14 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
             }
 
             if (FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref baseInfo)) {
-                // todo: this is double-enumerating
-                var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
-                heroTask.MaxValue = skins.Count();
+                var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin).ToArray();
+                heroTask.MaxValue = skins.Length;
 
                 foreach (var unlock in skins) {
                     heroTask.Increment(1);
                     if (unlock.STU is not STUUnlock_SkinTheme unlockSkinTheme) {
-                        // todo: uuhhh.. this obviously looks like a race
-                        // leaving and commenting so i'm 100% sure
-                        Logger.Warn("Convo", "Return race??");
-                        return;
+                        Logger.Debug("Convo", $"Not a skin theme (how). Found {unlock.STU}");
+                        continue;
                     }
                     if (unlockSkinTheme.m_0B1BA7C1 != 0) {
                         // skipping team uniform skins as a minor performance optimization
