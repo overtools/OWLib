@@ -154,6 +154,9 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
 
             var npcName = $"{IO.GetCleanString(voiceSet.m_269FC4E9)} {IO.GetCleanString(voiceSet.m_C0835C08)}".Trim();
             if (string.IsNullOrEmpty(npcName)) {
+                npcName = IO.GetCleanString(voiceSet.m_8A1F9462);
+            }
+            if (string.IsNullOrEmpty(npcName)) {
                 npcName = IO.GetNullableGUIDName(guid) ?? $"Unknown{teResourceGUID.Index(guid):X}";
             }
 
