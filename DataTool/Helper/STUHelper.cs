@@ -28,15 +28,20 @@ public static class STUHelper {
 
     public static teStructuredData? OpenSTUSafe(ulong key) {
         if (key == 0) return null;
-    #if RELEASE
-            try {
-    #endif
+        
+        // todo: this is a bug magnet
+        // can cause weird failures in prod
+        // running locally in debug will show the real exception
+#if RELEASE
+        try {
+#endif
         using Stream? stream = OpenFile(key);
         return stream == null ? null : new teStructuredData(stream);
-    #if RELEASE
-            } catch (System.Exception) {
-                return null;
-            }
-    #endif
+#if RELEASE
+        } catch (System.Exception e) {
+            TankLib.Helpers.Logger.Debug("STU", $"{e}");
+            return null;
+        }
+#endif
     }
 }
