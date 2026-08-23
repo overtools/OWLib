@@ -175,9 +175,11 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
                 MaxValue = 1
             });
 
-            Combo.ComboInfo baseInfo = default;
+            Combo.ComboInfo baseInfo = null;
             var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
-            SeenVoiceSets.TryAdd(heroVoiceSetGuid ?? 0, true);
+            if (heroVoiceSetGuid != null) {
+                SeenVoiceSets.TryAdd(heroVoiceSetGuid, true);
+            }
 
             if (FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref baseInfo)) {
                 var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
@@ -185,13 +187,14 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
 
                 foreach (var unlock in skins) {
                     heroTask.Increment(1);
-                    if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
-                    if (unlockSkinTheme.m_0B1BA7C1 != 0)
+                    if (unlock.STU is not STUUnlock_SkinTheme unlockSkinTheme) return;
+                    if (unlockSkinTheme.m_0B1BA7C1 != 0) {
+                        // skipping team uniform skins as a minor performance optimization
                         continue;
+                    }
 
-                    Combo.ComboInfo info = default;
                     var skinThemeGUID = unlockSkinTheme.m_skinTheme;
-                    var skinTheme = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
+                    var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
                     if (skinTheme == null)
                         continue;
 
@@ -205,7 +208,8 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
                     // we are running this code even if the voice set is not replaced
                     // if i remember correctly, individual voice sounds can be replaced?
                     // but don't quote me (2026 zingy)
-                    FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref info, baseInfo, replacements);
+                    Combo.ComboInfo skinInfo = null;
+                    FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref skinInfo, baseInfo, replacements);
                 }
             }
 
