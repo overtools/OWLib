@@ -122,8 +122,7 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
     public void GenerateVoicelineMapping() {
         var heroesDict = Helpers.GetHeroes();
         var sortedHeroes = heroesDict.Values
-            .OrderBy(x => !x.IsHero) // sort by hero first
-            .ThenBy(x => x.GUID.GUID) // then by GUID
+            .OrderBy(x => x.GUID.GUID) // order by guid
             .ToArray();
 
         var heroes = sortedHeroes.Where(x => x.IsHero).ToArray();
@@ -182,12 +181,18 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
             }
 
             if (FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref baseInfo)) {
+                // todo: this is double-enumerating
                 var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
                 heroTask.MaxValue = skins.Count();
 
                 foreach (var unlock in skins) {
                     heroTask.Increment(1);
-                    if (unlock.STU is not STUUnlock_SkinTheme unlockSkinTheme) return;
+                    if (unlock.STU is not STUUnlock_SkinTheme unlockSkinTheme) {
+                        // todo: uuhhh.. this obviously looks like a race
+                        // leaving and commenting so i'm 100% sure
+                        Logger.Warn("Convo", "Return race??");
+                        return;
+                    }
                     if (unlockSkinTheme.m_0B1BA7C1 != 0) {
                         // skipping team uniform skins as a minor performance optimization
                         continue;
@@ -195,8 +200,10 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
 
                     var skinThemeGUID = unlockSkinTheme.m_skinTheme;
                     var skinTheme = GetInstance<STUSkinBase>(skinThemeGUID);
-                    if (skinTheme == null)
+                    if (skinTheme == null) {
+                        Logger.Debug("Convo", $"Unable to load skin {skinThemeGUID}");
                         continue;
+                    }
 
                     var replacements = SkinTheme.GetReplacements(skinThemeGUID);
                     foreach (var (_, newVoiceSetGuid) in replacements) {
@@ -211,6 +218,8 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
                     Combo.ComboInfo skinInfo = null;
                     FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref skinInfo, baseInfo, replacements);
                 }
+            } else {
+                Logger.Debug("Convo", $"Hero {heroName} has no voice set");
             }
 
             heroTask.StopTask();
