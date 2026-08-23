@@ -197,9 +197,14 @@ public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
 
                     var replacements = SkinTheme.GetReplacements(skinThemeGUID);
                     foreach (var (_, newVoiceSetGuid) in replacements) {
+                        if (teResourceGUID.Type(newVoiceSetGuid) != 0x5F) continue;
+                        
                         SeenVoiceSets.TryAdd(newVoiceSetGuid, true);
                     }
 
+                    // we are running this code even if the voice set is not replaced
+                    // if i remember correctly, individual voice sounds can be replaced?
+                    // but don't quote me (2026 zingy)
                     FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref info, baseInfo, replacements);
                 }
             }
