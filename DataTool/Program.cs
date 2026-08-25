@@ -267,6 +267,11 @@ public static class Program {
             File.Exists(Path.Combine(Flags.OverwatchDirectory, "_retail_", "NeacLoader.exe"))) {
             Flags.RCN = true;
         }
+        // same story for nexon, RKR only
+        if (File.Exists(Path.Combine(Flags.OverwatchDirectory, "NexonAnalytics64.dll")) ||
+            File.Exists(Path.Combine(Flags.OverwatchDirectory, "_retail_", "NexonAnalytics64.dll"))) {
+            Flags.RKR = true;
+        }
 
         var args = new ClientCreateArgs {
             SpeechLanguage = Flags.SpeechLanguage,
