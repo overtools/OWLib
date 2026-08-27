@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>8</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
@@ -34,13 +34,12 @@
   <ItemGroup>
     <PackageReference Include="AdonisUI" Version="1.17.1" />
     <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.1" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
     <PackageReference Include="NVorbis" Version="0.10.5" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="2.3.2" />
-    <PackageReference Include="WindowsAPICodePackCore" Version="8.0.12" />
-    <PackageReference Include="WindowsAPICodePackShell" Version="8.0.12" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="2.5.4" />
+    <PackageReference Include="WindowsAPICodePackCore" Version="8.0.15.2" />
+    <PackageReference Include="WindowsAPICodePackShell" Version="8.0.15.2" />
   </ItemGroup>
   <Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
     <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">

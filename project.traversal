@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.Build.Traversal/4.1.82">
+
+	<ItemGroup>
+		<ProjectReference Include="DataTool/DataTool.csproj" />
+		<ProjectReference Include="TankView/TankView.csproj" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+		<ProjectReference Include="ReplayMp4Tool/ReplayMp4Tool.csproj" />
+	</ItemGroup>
+
+</Project>
