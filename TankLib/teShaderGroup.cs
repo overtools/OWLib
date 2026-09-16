@@ -1,36 +1,18 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
+using TankLib.Helpers;
 
 namespace TankLib {
     /// <summary>Tank ShaderGroup, file type 085</summary>
     public class teShaderGroup {
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Explicit)]
         public struct GroupHeader {
+            /// <summary>Number of entries for both ShadersOffset and InstancesOffset</summary>
+            [FieldOffset(100)] public int NumShaders; // 64 -> 76 -> 100
+            /// <summary>ShaderCode array offset</summary>
+            [FieldOffset(104)] public long ShadersOffset; // na -> 104
             /// <summary>ShaderInstance array offset</summary>
-            public long InstanceOffset; // 0
-            
-            public long HashOffset; // 8
-            public long FlagsOffset; // 16
-            
-            public long NewIdk; // n/a -> 24
-            
-            public long OffsetD; // 24 -> 32
-            public long OffsetE; // 32 -> 40
-            
-            /// <summary>teShaderSource that this group was generated from</summary>
-            /// <remarks>088 GUID</remarks>
-            public teResourceGUID SourceGUID; // 40 -> 48
-            
-            /// <summary>A virtual reference. Usage unknown</summary>
-            /// <remarks>00F GUID</remarks>
-            public teResourceGUID CacheGUID; // 48 -> 56
-
-            public ulong Flags; // 56 -> 64
-            
-            public int NumIdk; // n/a -> 72
-            public int NumShaders;  // 64 -> 76
-            
-            // ...
+            [FieldOffset(120)] public long InstancesOffset; // 0 -> 100
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -54,16 +36,14 @@ namespace TankLib {
         /// <summary>Header Data</summary>
         public GroupHeader Header;
         
-        /// <summary>ShaderInstances</summary>
+        /// <summary>teShaderCode GUIDs (087)</summary>
+        public teResourceGUID[] Shaders;
+
+        /// <summary>teShaderInstance info GUIDs (040)</summary>
         public teResourceGUID[] Instances;
 
         /// <summary>Flags that are used to select the correct ShaderInstance pair based on parameters</summary>
         public ulong[] InstanceFlags;
-
-        /// <summary>
-        /// ShaderInstance "hashes". Used to identify instances in 088 groups.
-        /// </summary>
-        public uint[] Hashes;
 
         public ShaderQuality[] ShaderQualities;
         public ShaderUnk[] ShaderUnks;
@@ -89,43 +69,27 @@ namespace TankLib {
         private void Read(BinaryReader reader) {
             Header = reader.Read<GroupHeader>();
             
-            if (Header.InstanceOffset > 0) {
-                reader.BaseStream.Position = Header.InstanceOffset;
+            if (Header.ShadersOffset > 0) {
+                reader.BaseStream.Position = Header.ShadersOffset;
+                Shaders = reader.ReadArray<teResourceGUID>(Header.NumShaders);
+            }
+
+            if (Header.InstancesOffset > 0) {
+                reader.BaseStream.Position = Header.InstancesOffset;
                 Instances = reader.ReadArray<teResourceGUID>(Header.NumShaders);
-            }
-
-            if (Header.HashOffset > 0) {
-                reader.BaseStream.Position = Header.HashOffset;
-                Hashes = reader.ReadArray<uint>(Header.NumShaders);
-            }
-
-            if (Header.FlagsOffset > 0) {
-                reader.BaseStream.Position = Header.FlagsOffset;
-                InstanceFlags = reader.ReadArray<ulong>(Header.NumShaders);
-            }
-
-            {
-                reader.BaseStream.Position = 72;
-                ShaderQualities = reader.ReadArray<ShaderQuality>(5);
-
-                reader.BaseStream.Position = 104;
-                ShaderUnks = reader.ReadArray<ShaderUnk>(5);
             }
         }
 
         /// <summary>
+        /// DEPRECATED: teShaderGroup used to store a hash to match with a specific teShaderInstance. This mapping has since been broken as
+        /// teShaderGroup now holds guids to both teShaderInstance and teShaderCode mapping them with a simple positional index instead.
         /// Get a ShaderInstance GUID from a "hash"
         /// </summary>
         /// <note>Mostly used on 088 groups</note>
         /// <param name="hash">"Hash" associated with a specific ShaderInstance</param>
         /// <returns></returns>
         public teResourceGUID GetShaderByHash(uint hash) {
-            if (Hashes == null) return (teResourceGUID) 0;
-            for (int i = 0; i < Header.NumShaders; i++) {
-                if (Hashes[i] == hash) {
-                    return Instances[i];
-                }
-            }
+            Logger.Error("teShaderGroup", $"GetShaderByHash doesn't work any longer for {hash:X16}, see documentation on GetShaderByHash."); 
             return (teResourceGUID) 0;
         }
     }
