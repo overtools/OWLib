@@ -107,16 +107,20 @@ namespace TankLib.Chunks {
             public short[] BoneToDriverMap;
         }
 
+        private const int DESCRIPTOR_SIZE = 344;
+        private const int DESCRIPTOR_SIZE_225 = 360; // 2.25+, 16 bytes added at the end
+        private const int DESCRIPTOR_NAME_OFFSET = 216;
+
         public void Parse(Stream input) {
             using BinaryReader reader = new BinaryReader(input);
             Header = reader.Read<ClothHeader>();
-            reader.BaseStream.Position = Header.Offset;
 
             Pieces = new ClothPiece[Header.Count];
-            
+            var descriptorSize = GetDescriptorSize(reader);
+
             for (ulong i = 0; i < Header.Count; i++) {
+                reader.BaseStream.Position = Header.Offset + (long)i * descriptorSize;
                 var descriptor = reader.Read<ClothDesc>();
-                long nextDescriptorPos = reader.BaseStream.Position;
 
                 reader.BaseStream.Position = descriptor.m_dominoData.m_vertexFollowerBoneIndices;
                 var followerBoneIndices = reader.ReadArray<short>(descriptor.m_dominoData.m_vertexCount);
@@ -152,8 +156,27 @@ namespace TankLib.Chunks {
                     Vertices = nodes,
                     BoneToDriverMap = boneToDriverMap
                 };
-                reader.BaseStream.Position = nextDescriptorPos;
             }
+        }
+
+        // both sizes exist in 2.25 data. pick the one where the second descriptor has a valid name
+        private int GetDescriptorSize(BinaryReader reader) {
+            if (Header.Count < 2) return DESCRIPTOR_SIZE;
+            if (HasName(reader, Header.Offset + DESCRIPTOR_SIZE + DESCRIPTOR_NAME_OFFSET)) return DESCRIPTOR_SIZE;
+            if (HasName(reader, Header.Offset + DESCRIPTOR_SIZE_225 + DESCRIPTOR_NAME_OFFSET)) return DESCRIPTOR_SIZE_225;
+            return DESCRIPTOR_SIZE;
+        }
+
+        private static bool HasName(BinaryReader reader, long position) {
+            if (position + 32 > reader.BaseStream.Length) return false;
+            reader.BaseStream.Position = position;
+            var name = reader.ReadBytes(32);
+            var end = Array.IndexOf(name, (byte)0);
+            if (end < 3) return false;
+            for (var i = 0; i < end; i++) {
+                if (name[i] < 0x20 || name[i] >= 0x7F) return false;
+            }
+            return true;
         }
 
         private static short GetEffectiveBoneIndex(in HierarchyBuildContext ctx, short vertexIndex) {

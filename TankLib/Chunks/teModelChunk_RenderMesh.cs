@@ -95,6 +95,36 @@ namespace TankLib.Chunks {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public unsafe struct VertexBufferDescriptor96 { // 2.25+, 56 bytes inserted after the element pointer
+            public const int SIZE = 96;
+
+            public uint VertexCount; // 0
+            public uint Unknown1; // 4
+            public byte StrideStream1; // 8
+            public byte StrideStream2; // 9
+            public byte VertexElementDescriptorCount; // 10
+            public byte Unknown2; // 11
+            public uint Unknown3; // 12
+            public long VertexElementDescriptorPointer; // 16
+            public fixed byte m_24[56]; // 24 - new, zero so far
+            public long DataStream1Pointer; // 24 -> 80
+            public long DataStream2Pointer; // 32 -> 88
+
+            public VertexBufferDescriptor Downgrade() => new VertexBufferDescriptor {
+                VertexCount = VertexCount,
+                Unknown1 = Unknown1,
+                StrideStream1 = StrideStream1,
+                StrideStream2 = StrideStream2,
+                VertexElementDescriptorCount = VertexElementDescriptorCount,
+                Unknown2 = Unknown2,
+                Unknown3 = Unknown3,
+                VertexElementDescriptorPointer = VertexElementDescriptorPointer,
+                DataStream1Pointer = DataStream1Pointer,
+                DataStream2Pointer = DataStream2Pointer
+            };
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct IndexBufferDescriptor {
             public uint IndexCount;
             public uint Format;
@@ -263,7 +293,14 @@ namespace TankLib.Chunks {
         #region Parser Subfunctions
         private void ParseVBO(BinaryReader reader) {
             reader.BaseStream.Position = Header.VertexBufferDesciptorPointer;
-            VertexBuffers = reader.ReadArray<VertexBufferDescriptor>(Header.VertexBufferDescriptorCount);
+            // both layouts exist in 2.25 data. the index buffer descriptors follow directly, so the gap gives the size
+            var descriptorSize = Header.VertexBufferDescriptorCount == 0 ? 0 :
+                (Header.IndexBufferDescriptorPointer - Header.VertexBufferDesciptorPointer) / Header.VertexBufferDescriptorCount;
+            if (descriptorSize == VertexBufferDescriptor96.SIZE) {
+                VertexBuffers = reader.ReadArray<VertexBufferDescriptor96>(Header.VertexBufferDescriptorCount).Select(x => x.Downgrade()).ToArray();
+            } else {
+                VertexBuffers = reader.ReadArray<VertexBufferDescriptor>(Header.VertexBufferDescriptorCount);
+            }
             for (int i = 0; i < Header.VertexBufferDescriptorCount; ++i)
                 VertexElements[i] = ParseVBE(reader, VertexBuffers[i]);
         }
