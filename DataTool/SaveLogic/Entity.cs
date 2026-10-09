@@ -50,8 +50,10 @@ public static class Entity {
                 if (Entity.Children == null) {
                     writer.Write(0);
                 } else {
-                    writer.Write(Entity.Children.Count(x => x.m_defGUID != 0));
-                    foreach (FindLogic.Combo.ChildEntityReference childEntityReference in Entity.Children.Where(x => x.m_defGUID != 0)) {
+                    // children that could not be loaded (e.g. encrypted) were never added to Info
+                    var children = Entity.Children.Where(x => x.m_defGUID != 0 && Info.m_entities.ContainsKey(x.m_defGUID)).ToArray();
+                    writer.Write(children.Length);
+                    foreach (FindLogic.Combo.ChildEntityReference childEntityReference in children) {
                         FindLogic.Combo.EntityAsset childEntityInfo = Info.m_entities[childEntityReference.m_defGUID];
 
                         writer.Write(childEntityInfo.GetName());
@@ -68,8 +70,7 @@ public static class Entity {
                 }
 
                 // 2.1
-                if (Entity.m_modelLookGUID != 0) {
-                    FindLogic.Combo.ModelLookAsset lookInfo = Info.m_modelLooks[Entity.m_modelLookGUID];
+                if (Entity.m_modelLookGUID != 0 && Info.m_modelLooks.TryGetValue(Entity.m_modelLookGUID, out var lookInfo)) {
                     writer.Write(lookInfo.GetName());
                 } else {
                     writer.Write("null");
