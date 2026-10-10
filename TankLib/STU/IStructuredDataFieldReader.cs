@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using TankLib.STU.Primitives;
@@ -77,8 +78,7 @@ namespace TankLib.STU {
             bool isStruct = target.FieldType.IsValueType && !target.FieldType.IsPrimitive;
 
             if (isStruct) {
-                MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read))?.MakeGenericMethod(target.FieldType);
-                return method?.Invoke(data.Data, new object[] { data.Data });
+                return StructReaders.GetOrAdd(target.FieldType, CreateStructReader)(data.Data);
             }
             
             throw new NotImplementedException();
@@ -106,11 +106,26 @@ namespace TankLib.STU {
             bool isStruct = elementType.IsValueType && !elementType.IsPrimitive;
 
             if (isStruct) {
-                MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read))?.MakeGenericMethod(elementType);
-                return method?.Invoke(data.DynData, new object[] { data.DynData });
+                return StructReaders.GetOrAdd(elementType, CreateStructReader)(data.DynData);
             }
             
             throw new NotImplementedException();
+        }
+
+        private static readonly ConcurrentDictionary<Type, Func<BinaryReader, object>> StructReaders = new ConcurrentDictionary<Type, Func<BinaryReader, object>>();
+
+        private static Func<BinaryReader, object> CreateStructReader(Type type) {
+            MethodInfo method = typeof(DefaultStructuredDataFieldReader).GetMethod(nameof(ReadStruct), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(type);
+            return (Func<BinaryReader, object>)method.CreateDelegate(typeof(Func<BinaryReader, object>));
+        }
+
+        private static object ReadStruct<T>(BinaryReader reader) where T : unmanaged {
+            try {
+                return reader.Read<T>();
+            } catch (Exception exception) {
+                // Keep the exception contract of the previous MethodInfo.Invoke call.
+                throw new TargetInvocationException(exception);
+            }
         }
 
         public virtual void Deserialize_Array(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, Array target, int index) {
