@@ -67,9 +67,7 @@ namespace TankLib.STU {
                         if (size == 0) return;
                         array = Array.CreateInstance(elementType, size);
 
-                        for (int i = 0; i != size; ++i) {
-                            reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
-                        }
+                        DeserializeArray(assetFile, fieldInfo, reader, array);
                     } else {
                         int offset = data.ReadInt32();
                         if (offset == -1) return;
@@ -80,9 +78,7 @@ namespace TankLib.STU {
                         uint unknown = dynData.ReadUInt32();
                         dynData.Seek(dynData.ReadInt64()); // Seek to dataoffset
       
-                        for (int i = 0; i != size; ++i) {
-                            reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
-                        }
+                        DeserializeArray(assetFile, fieldInfo, reader, array);
                     }
                 } else {
                     long offset = data.ReadInt32();
@@ -102,9 +98,7 @@ namespace TankLib.STU {
 
                             data.BaseStream.Position = dataOffset + assetFile.StartPos;
                                 
-                            for (int i = 0; i != count; ++i) {
-                                reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
-                            }
+                            DeserializeArray(assetFile, fieldInfo, reader, array);
                         } else {
                             array = null;
                         }
@@ -115,6 +109,15 @@ namespace TankLib.STU {
 
             } else {
                 reader.Deserialize(teStructuredData.Manager, assetFile, fieldInfo, this, field.Key);
+            }
+        }
+
+        private static void DeserializeArray(teStructuredData assetFile, STUField_Info fieldInfo, IStructuredDataFieldReader reader, Array array) {
+            if (reader.GetType() == typeof(DefaultStructuredDataFieldReader) &&
+                DefaultStructuredDataFieldReader.TryDeserializePrimitiveArray(teStructuredData.Manager, assetFile, array)) return;
+
+            for (int i = 0; i != array.Length; ++i) {
+                reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
             }
         }
 

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using TankLib.STU.Primitives;
 
 namespace TankLib.STU {
     /// <summary>STU field reader interface</summary>
@@ -13,6 +15,44 @@ namespace TankLib.STU {
 
     /// <summary>Standard STU field reader</summary>
     public class DefaultStructuredDataFieldReader : IStructuredDataFieldReader {
+        internal static bool TryDeserializePrimitiveArray(teStructuredDataMgr manager, teStructuredData data, Array target) {
+            if (!BitConverter.IsLittleEndian) return false;
+            Type elementType = target.GetType().GetElementType();
+            if (!manager.Factories.TryGetValue(elementType, out var factory)) return false;
+
+            // Exact factory types preserve registrations that customize primitive decoding.
+            Type factoryType = factory.GetType();
+            BinaryReader reader = elementType == typeof(uint) && data.Format != teStructuredDataFormat.V2 ? data.Data : data.DynData;
+            // Custom BinaryReader subclasses may override the scalar primitive methods.
+            if (reader?.GetType() != typeof(BinaryReader)) return false;
+            if (elementType == typeof(byte) && target is byte[] bytes && factoryType == typeof(STUu8Primitive)) ReadPrimitiveArray(reader, bytes);
+            else if (elementType == typeof(sbyte) && target is sbyte[] signedBytes && factoryType == typeof(STUs8Primitive)) ReadPrimitiveArray(reader, signedBytes);
+            else if (elementType == typeof(ushort) && target is ushort[] unsignedShorts && factoryType == typeof(STUu16Primitive)) ReadPrimitiveArray(reader, unsignedShorts);
+            else if (elementType == typeof(short) && target is short[] shorts && factoryType == typeof(STUs16Primitive)) ReadPrimitiveArray(reader, shorts);
+            else if (elementType == typeof(uint) && target is uint[] unsignedInts && factoryType == typeof(STUu32Primitive)) ReadPrimitiveArray(reader, unsignedInts);
+            else if (elementType == typeof(int) && target is int[] ints && factoryType == typeof(STUs32Primitive)) ReadPrimitiveArray(reader, ints);
+            else if (elementType == typeof(ulong) && target is ulong[] unsignedLongs && factoryType == typeof(STUu64Primitive)) ReadPrimitiveArray(reader, unsignedLongs);
+            else if (elementType == typeof(long) && target is long[] longs && factoryType == typeof(STUs64Primitive)) ReadPrimitiveArray(reader, longs);
+            else if (elementType == typeof(float) && target is float[] singles && factoryType == typeof(STUf32Primitive)) ReadPrimitiveArray(reader, singles);
+            else if (elementType == typeof(double) && target is double[] doubles && factoryType == typeof(STUf64Primitive)) ReadPrimitiveArray(reader, doubles);
+            else return false;
+            return true;
+        }
+
+        private static void ReadPrimitiveArray<T>(BinaryReader reader, T[] target) where T : unmanaged {
+            // Bound each span so even arrays larger than Int32.MaxValue bytes can be read.
+            for (int offset = 0; offset < target.Length;) {
+                int count = System.Math.Min(target.Length - offset, 1024 * 1024);
+                Span<byte> remaining = MemoryMarshal.AsBytes(target.AsSpan(offset, count));
+                while (!remaining.IsEmpty) {
+                    int read = reader.Read(remaining);
+                    if (read == 0) throw new EndOfStreamException("Unable to read beyond the end of the stream.");
+                    remaining = remaining.Slice(read);
+                }
+                offset += count;
+            }
+        }
+
         public virtual void Deserialize(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, object instance, FieldInfo target) {
             target.SetValue(instance, DeserializeInternal(manager, data, field, target));
         }
