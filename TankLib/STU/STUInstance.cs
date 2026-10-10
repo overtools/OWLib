@@ -10,23 +10,23 @@ namespace TankLib.STU {
     public enum TypeUsage {
         /// <summary>Root type</summary>
         Root,
-        
+
         /// <summary>Embedded in another instance</summary>
         Embed,
-        
+
         /// <summary>Embedded instance array element</summary>
         EmbedArray,
-        
+
         /// <summary>Inline instance</summary>
         Inline,
-        
+
         /// <summary>Inline instance array element</summary>
         InlineArray,
-        
+
         /// <summary>HashMap element</summary>
         HashMap
     }
-    
+
     /// <summary>Base STU instance class</summary>
     public class STUInstance : ISerializable_STU {
         /// <summary>Instance usage</summary>
@@ -38,12 +38,12 @@ namespace TankLib.STU {
         protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
             Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields, STUAttribute stuAttribute) {
             if (!fields.TryGetValue(fieldInfo.Hash, out var field)) {
-                
+
             #if DEBUG
                 string name = GetType().Name;
                 Debugger.Log(0, "STUInstance", $"Unhandled field: {name}:{fieldInfo.Hash:X8} (size: {fieldInfo.Size})\r\n");
             #endif
-                
+
                 return;
             }
 
@@ -57,10 +57,10 @@ namespace TankLib.STU {
                 Type elementType = field.Key.FieldType.GetElementType();
                 if (elementType == null) return;
                 Array array;
-                
+
                 BinaryReader data = assetFile.Data;
                 BinaryReader dynData = assetFile.DynData;
-                
+
                 if (assetFile.Format == teStructuredDataFormat.V2) {
                     if (fieldInfo.Size == 0 || reader is InlineInstanceFieldReader) {  // inline
                         int size = data.ReadInt32();
@@ -77,7 +77,7 @@ namespace TankLib.STU {
                         array = Array.CreateInstance(elementType, size);
                         uint unknown = dynData.ReadUInt32();
                         dynData.Seek(dynData.ReadInt64()); // Seek to dataoffset
-      
+
                         DeserializeArray(assetFile, fieldInfo, reader, array);
                     }
                 } else {
@@ -97,7 +97,7 @@ namespace TankLib.STU {
                             array = Array.CreateInstance(elementType, count);
 
                             data.BaseStream.Position = dataOffset + assetFile.StartPos;
-                                
+
                             DeserializeArray(assetFile, fieldInfo, reader, array);
                         } else {
                             array = null;
@@ -112,9 +112,13 @@ namespace TankLib.STU {
             }
         }
 
+        /// <summary>Uses bulk decoding for built-in primitives and scalar decoding for all other arrays.</summary>
         private static void DeserializeArray(teStructuredData assetFile, STUField_Info fieldInfo, IStructuredDataFieldReader reader, Array array) {
+            // Subclasses can customize array decoding, so only the exact default reader can bypass it.
             if (reader.GetType() == typeof(DefaultStructuredDataFieldReader) &&
-                DefaultStructuredDataFieldReader.TryDeserializePrimitiveArray(teStructuredData.Manager, assetFile, array)) return;
+                DefaultStructuredDataFieldReader.TryDeserializePrimitiveArray(teStructuredData.Manager, assetFile, array)) {
+                return;
+            }
 
             for (int i = 0; i != array.Length; ++i) {
                 reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
@@ -140,7 +144,7 @@ namespace TankLib.STU {
                         fieldSize = data.ReadInt32();
                     }
                     long startPosition = data.BaseStream.Position;
-                
+
                     DeserializeField(assetFile, stuField, fields, stuAttribute);
 
                     data.BaseStream.Position = startPosition + fieldSize;
@@ -151,7 +155,7 @@ namespace TankLib.STU {
                 }
             } else if (assetFile.Format == teStructuredDataFormat.V1) {
                 //if (instanceHash == 0xEA30C5E9 || instanceHash == 0x298FC27F || instanceHash == 0x75526BC2 ||
-                //    instanceHash == 0x5C7059E || instanceHash == 0x646FF8C3 || instanceHash == 0xAD5967B3 || 
+                //    instanceHash == 0x5C7059E || instanceHash == 0x646FF8C3 || instanceHash == 0xAD5967B3 ||
                 //    instanceHash == 0x74F13350) {
                 //    Debugger.Log(0, "STUInstnace", "HACK: SKIPPING DESERIALIZE\r\n");
                 //    return;
@@ -159,7 +163,7 @@ namespace TankLib.STU {
                 //}
 
                 long instanceStartPos = assetFile.Data.BaseStream.Position - m_posInDataAtDeserializeCall;
-                
+
                 uint[] fieldOrder = teStructuredData.Manager.InstanceFields[instanceHash];
                 foreach (uint fieldHash in fieldOrder) {
                     var fieldDefinition = fields[fieldHash];
@@ -172,10 +176,10 @@ namespace TankLib.STU {
 
                     // go to correct field pos. e.g vecs are aligned to 16 byte so not always exactly sequential
                     assetFile.Data.BaseStream.Position = instanceStartPos + fieldDefinition.Value.m_offset;
-                    
+
                     // todo: how does alignment work on arrays
                     // e.g will an array of vec3a be aligned by the compiler or do we need to process that
-                    
+
                     STUField_Info stuField = new STUField_Info {Hash = fieldHash, Size = -1};
                     DeserializeField(assetFile, stuField, fields, stuAttribute);
                 }
