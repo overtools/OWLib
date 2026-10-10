@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using static TankLib.Util;
 
@@ -20,6 +19,8 @@ namespace TankLib.STU {
         public Dictionary<uint, uint[]> InstanceFields;  // in the correct order
 
         private readonly HashSet<uint> _missingInstances;
+        private readonly Dictionary<Type, Dictionary<int, STUFieldAttribute>> _declaredFieldAttributes = new Dictionary<Type, Dictionary<int, STUFieldAttribute>>();
+        private readonly Dictionary<Type, uint[]> _fieldOrders = new Dictionary<Type, uint[]>();
 
         public teStructuredDataMgr() {
             Factories = new Dictionary<Type, IStructuredDataPrimitiveFactory>();
@@ -34,9 +35,16 @@ namespace TankLib.STU {
             InstanceFields = new Dictionary<uint, uint[]>();
             
             Assembly assembly = typeof(teStructuredDataMgr).Assembly;
-            AddAssemblyInstances(assembly);
-            AddAssemblyFieldReaders(assembly);
-            AddAssemblyFactories(assembly);
+            Type[] types = assembly.GetTypes();
+            foreach (Type type in types) {
+                if (type != typeof(STUInstance) && typeof(STUInstance).IsAssignableFrom(type)) AddInstance(type);
+            }
+            foreach (Type type in types) {
+                if (!type.IsInterface && typeof(IStructuredDataFieldReader).IsAssignableFrom(type)) AddFieldReader(type);
+            }
+            foreach (Type type in types) {
+                if (!type.IsInterface && typeof(IStructuredDataPrimitiveFactory).IsAssignableFrom(type)) AddFactory(type);
+            }
             
             _missingInstances = new HashSet<uint>();
         }
@@ -83,36 +91,57 @@ namespace TankLib.STU {
             //List<uint> fieldOrderTemp = new List<uint>();
 
             foreach (FieldInfo field in type.GetFields()) {
-                STUFieldAttribute fieldAttribute = field.GetCustomAttribute<STUFieldAttribute>();
-                if (fieldAttribute == null) continue;
+                STUFieldAttribute template = GetDeclaredFieldAttributes(field.DeclaringType).GetValueOrDefault(field.MetadataToken);
+                if (template == null) continue;
+                // Public dictionaries must own their attributes: callers can mutate them, and
+                // inherited fields appear in multiple instances. Preserve custom attribute subclasses.
+                STUFieldAttribute fieldAttribute = template.GetType() == typeof(STUFieldAttribute)
+                    ? new STUFieldAttribute(template.Hash, template.m_offset) { Name = template.Name, ReaderType = template.ReaderType }
+                    : field.GetCustomAttribute<STUFieldAttribute>();
                 if (fieldAttribute.Hash == 0) continue;
-                //fieldOrderTemp.Add(fieldAttribute.Hash);
 
                 FieldAttributes[attribute.Hash][fieldAttribute.Hash] = new KeyValuePair<FieldInfo, STUFieldAttribute>(field, fieldAttribute);
             }
             
             //InstanceFields[attribute.Hash] = fieldOrderTemp.ToArray();
-            InstanceFields[attribute.Hash] = GetFieldOrder(type).ToArray();  // shrug
+            InstanceFields[attribute.Hash] = (uint[]) GetCachedFieldOrder(type).Clone();
+        }
+
+        private Dictionary<int, STUFieldAttribute> GetDeclaredFieldAttributes(Type type) {
+            if (_declaredFieldAttributes.TryGetValue(type, out var attributes)) return attributes;
+            attributes = new Dictionary<int, STUFieldAttribute>();
+            foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)) {
+                STUFieldAttribute attribute = field.GetCustomAttribute<STUFieldAttribute>();
+                if (attribute != null) attributes[field.MetadataToken] = attribute;
+            }
+            _declaredFieldAttributes[type] = attributes;
+            return attributes;
+        }
+
+        private uint[] GetCachedFieldOrder(Type type) {
+            if (_fieldOrders.TryGetValue(type, out uint[] order)) return order;
+            List<uint> fields = new List<uint>();
+            bool cacheable = true;
+            if (type.BaseType != typeof(STUInstance)) {
+                fields.AddRange(GetCachedFieldOrder(type.BaseType));
+                cacheable = _fieldOrders.ContainsKey(type.BaseType);
+            }
+            Dictionary<int, STUFieldAttribute> attributes = GetDeclaredFieldAttributes(type);
+            foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)) {
+                if (!attributes.TryGetValue(field.MetadataToken, out STUFieldAttribute attribute)) continue;
+                if (attribute.GetType() != typeof(STUFieldAttribute)) {
+                    attribute = field.GetCustomAttribute<STUFieldAttribute>();
+                    cacheable = false;
+                }
+                if (attribute.Hash != 0) fields.Add(attribute.Hash);
+            }
+            order = fields.ToArray();
+            if (cacheable) _fieldOrders[type] = order;
+            return order;
         }
 
         public List<uint> GetFieldOrder(Type type) {
-            List<uint> parentFields = new List<uint>();
-            if (type.BaseType != typeof(STUInstance)) {
-                parentFields = GetFieldOrder(type.BaseType);
-            }
-            List<uint> fields = new List<uint>();
-
-            foreach (FieldInfo field in type.GetFields(BindingFlags.Public
-                                                       | BindingFlags.Instance
-                                                       | BindingFlags.DeclaredOnly)) {
-                STUFieldAttribute fieldAttribute = field.GetCustomAttribute<STUFieldAttribute>();
-                if (fieldAttribute == null) continue;
-                if (fieldAttribute.Hash == 0) continue;
-                fields.Add(fieldAttribute.Hash);
-            }
-            var temp = parentFields.Concat(fields).ToList();
-            //var temp = fields.Concat(parentFields).ToList();
-            return temp;
+            return new List<uint>(GetCachedFieldOrder(type));
         }
 
         public STUInstance CreateInstance(uint hash) {
