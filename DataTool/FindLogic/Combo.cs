@@ -867,14 +867,12 @@ public static class Combo {
             case 0x1B: {
                 if (!info.m_doneScripts.Add(guid)) break;
 
-                var statescriptGraph = GetInstance<STUStatescriptGraph>(guid);
+                using var structuredData = OpenSTUSafe(guid);
+                var statescriptGraph = structuredData?.GetInstance<STUStatescriptGraph>();
                 if (statescriptGraph == null) break;
                 Find(info, statescriptGraph.m_publicSchema, replacements, context);
 
-                STUConfigVar[] configVars = GetInstances<STUConfigVar>(guid);
-                if (configVars == null) break;
-
-                foreach (STUConfigVar configVar in configVars) {
+                foreach (STUConfigVar configVar in structuredData.GetInstances<STUConfigVar>()) {
                     Find(info, configVar, replacements, context);
                 }
                 break;
