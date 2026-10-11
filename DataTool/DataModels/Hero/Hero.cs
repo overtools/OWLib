@@ -56,22 +56,34 @@ public class Hero {
             foreach (var loadoutGuid in hero.m_heroLoadout) {
                 var loadout = Loadout.Load(loadoutGuid);
                 if (loadout == null) continue;
-                Loadouts.Add(loadout.ToLite());
+                Loadouts!.Add(loadout.ToLite());
             }
         }
 
-        if (hero.m_B25192D9 != null) {
+        if (hero.m_ECBDC792 != null) {
+            // perk list as a shared asset. used for all things going forwards.
+            
+            var perkSet = GetInstance<STU_B6011D9E>(hero.m_ECBDC792);
+            foreach (var perkGuid in perkSet?.m_D75CF0AF ?? []) {
+                var perk = Perk.Load(perkGuid);
+                if (perk?.Loadout == null) continue;
+                Perks!.Add(perk.Loadout.ToLite());
+            }
+        } else if (hero.m_B25192D9 != null) {
+            // legacy perk list.
+            // not used if the set is present, and not present on new heroes at all.
+            
             foreach (var perkGuid in hero.m_B25192D9) {
                 var perk = Perk.Load(perkGuid);
                 if (perk?.Loadout == null) continue;
-                Perks.Add(perk.Loadout.ToLite());
+                Perks!.Add(perk.Loadout.ToLite());
             }
         }
 
         // Contains array of various hero images, hero gallery portraits, small hero select icons, etc.
         if (hero.m_8203BFE1 != null) {
             foreach (var imageSet in hero.m_8203BFE1) {
-                Images.Add(new HeroImage {
+                Images!.Add(new HeroImage {
                     Id = imageSet.m_id,
                     TextureGUID = imageSet.m_texture
                 });
