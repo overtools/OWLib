@@ -76,9 +76,11 @@ namespace TankLib.Chunks {
             public teResourceGUID UnknownGuidx81;
             public long unknown2;
             public teResourceGUID Unknown3;
+            public long Ow225_New1;
             public long Unknown4;
             public long Unknown5;
             public long Unknown6;
+            public long Ow225_New2;
         }
 
         private struct VertexDriverWeight {

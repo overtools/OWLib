@@ -20,7 +20,7 @@ namespace TankLib.Chunks {
         /// <summary>MRNM header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct RenderMeshHeader {
-            public long VertexBufferDesciptorPointer; // 112 -> 0
+            public long VertexBufferDescriptorPointer; // 112 -> 0
             public long IndexBufferDescriptorPointer; // 120 -> 8
             public long SubmeshDescriptorPointer; // 128 -> 16
 
@@ -76,6 +76,13 @@ namespace TankLib.Chunks {
             public byte Unknown2; // 11
             public uint Unknown3; // 12
             public long VertexElementDescriptorPointer; // 16
+            public long Ow225_New1;
+            public long Ow225_New2;
+            public long Ow225_New3;
+            public long Ow225_New4;
+            public long Ow225_New5;
+            public long Ow225_New6;
+            public long Ow225_New7;
             public long DataStream1Pointer; // 24
             public long DataStream2Pointer; // 32
 
@@ -262,7 +269,7 @@ namespace TankLib.Chunks {
 
         #region Parser Subfunctions
         private void ParseVBO(BinaryReader reader) {
-            reader.BaseStream.Position = Header.VertexBufferDesciptorPointer;
+            reader.BaseStream.Position = Header.VertexBufferDescriptorPointer;
             VertexBuffers = reader.ReadArray<VertexBufferDescriptor>(Header.VertexBufferDescriptorCount);
             for (int i = 0; i < Header.VertexBufferDescriptorCount; ++i)
                 VertexElements[i] = ParseVBE(reader, VertexBuffers[i]);
