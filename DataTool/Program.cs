@@ -315,10 +315,8 @@ public static class Program {
             Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
         else if (BuildVersion < ProductHandler_Tank.VERSION_152_PTR)
             Logger.Error("Core", "This version of DataTool doesn't support versions of Overwatch below 1.52. Please use older version of tool.");
-        else if (BuildVersion < 139475)
-            Logger.Error("Core", "This version of DataTool doesn't properly support versions of Overwatch below 2.17. Older version of tool is recommended.");
-        else if (BuildVersion < 146669)
-            Logger.Error("Core", "This version of DataTool doesn't properly support versions of Overwatch below 2.21. Older version of tool is recommended.");
+        else if (BuildVersion < 154088)
+            Logger.Error("Core", "This version of DataTool doesn't properly support versions of Overwatch below 2.25. Older version of tool is recommended.");
 
         InitTrackedFiles();
     }

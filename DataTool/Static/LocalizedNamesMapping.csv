@@ -42,6 +42,8 @@ A,75,widow
 52C,75,shein
 542,75,dmon
 542,75,demon
+570,75,doctrin
+570,75,doctorine
 ; Normal Hero Localization Mapping,,
 ;deDE,,
 2,75,reaper
@@ -97,6 +99,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;enUS,,
 2,75,reaper
 3,75,tracer
@@ -151,6 +154,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;esES,,
 2,75,reaper
 3,75,tracer
@@ -205,6 +209,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;esMX,,
 2,75,reaper
 3,75,tracer
@@ -259,6 +264,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;frFR,,
 2,75,faucheur
 3,75,tracer
@@ -313,6 +319,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;itIT,,
 2,75,reaper
 3,75,tracer
@@ -367,6 +374,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;jaJP,,
 2,75,リーパー
 3,75,トレーサー
@@ -421,6 +429,7 @@ DD,75,メイ
 516,75,ジェットパック・キャット
 52C,75,シオン
 542,75,d.mon
+570,75,ドクトリン
 ;koKR,,
 2,75,리퍼
 3,75,트레이서
@@ -475,6 +484,7 @@ DD,75,메이
 516,75,제트팩 캣
 52C,75,시온
 542,75,d.mon
+570,75,독트린
 ;plPL,,
 2,75,żniwiarz
 3,75,smuga
@@ -529,6 +539,7 @@ DD,75,mei
 516,75,odrzutowa kotka
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;ptBR,,
 2,75,reaper
 3,75,tracer
@@ -583,6 +594,7 @@ DD,75,mei
 516,75,jetpack cat
 52C,75,shion
 542,75,d.mon
+570,75,doctrine
 ;ruRU,,
 2,75,жнец
 3,75,трейсер
@@ -637,6 +649,7 @@ DD,75,мэй
 516,75,реактивная киса
 52C,75,сион
 542,75,d.mon
+570,75,догмат
 ;thTH,,
 2,75,รีปเปอร์
 3,75,เทรเซอร์
@@ -691,6 +704,7 @@ DD,75,เหมย
 516,75,เจ็ทแพ็คแคท
 52C,75,ชิออน
 542,75,ดีม่อน
+570,75,ด็อกทริน
 ;trTR,,
 2,75,reaper
 3,75,tracer
@@ -745,6 +759,7 @@ DD,75,mei
 516,75,roket kedi
 52C,75,shion
 542,75,d.mon
+570,75,doktrin
 ;zhCN,,
 2,75,死神
 3,75,猎空
@@ -799,6 +814,7 @@ DD,75,美
 516,75,飞天猫
 52C,75,死怨
 542,75,d.mon
+570,75,血律
 ;zhTW,,
 2,75,死神
 3,75,閃光
@@ -853,3 +869,4 @@ DD,75,小美
 516,75,火箭貓
 52C,75,死怨
 542,75,d.mon
+570,75,血律

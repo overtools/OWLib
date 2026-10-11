@@ -98,5 +98,7 @@ public class ExtractMaps : QueryParser, ITool, IQueryParser {
         ["Wuxing"] = "Wuxing University - Water College",
         ["Water College"] = "Wuxing University - Water College",
         ["Tokyo"] = "NEON JUNCTION",
+        ["Grimsvotn"] = "Grímsvötn",
+        ["Iceland"] = "Grímsvötn",
     };
 }
