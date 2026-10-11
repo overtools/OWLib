@@ -29,9 +29,11 @@ public class ToolFlags : IToolFlags {
     public bool StringsAsGuids;
 
     [CLIFlag(Default = false, Flag = "rcn", Help = "Load Chinese exclusive content", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    [Alias("RCN")]
     public bool RCN;
     
     [CLIFlag(Default = false, Flag = "rkr", Help = "Load Korean exclusive content", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+    [Alias("RKR")]
     public bool RKR;
 
     [CLIFlag(Default = null, Flag = "scratchdb", Hidden = true, NeedsValue = true, Help = "Directory for persistent database storage for deduplication info")]
