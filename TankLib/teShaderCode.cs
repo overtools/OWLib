@@ -7,31 +7,16 @@ namespace TankLib {
     /// <summary>Tank ShaderCode, file type 087</summary>
     public class teShaderCode {
         /// <summary>ShaderCode Header </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Explicit)]
         public struct ShaderCodeHeader {
+            /// <summary>Shader type flags</summary>
+            [FieldOffset(8)] public Enums.teSHADER_TYPE ShaderType; // 36 -> 8
             /// <summary>Offset to data</summary>
-            public long DataOffset; // 0
-            
-            /// <summary>Offset to unknown data</summary>
-            public long OffsetB; // 8
-            
-            public uint UnknownFF; // 16
-            
-            /// <summary>Unknown data count</summary>
-            public uint StreamOutDescCount; // 20
-            
+            [FieldOffset(112)] public long DataOffset; // 0 -> 112
             /// <summary>Size of compressed DXBC data</summary>
-            public int CompressedSize;  // 24
-
+            [FieldOffset(132)] public int CompressedSize; // 24 -> 132
             /// <summary>Size of decompressed DXBC data</summary>
-            public int UncompressedSize;  // 28
-
-            public uint Unknown; // 32
-            
-            /// <summary>Shader type</summary>
-            public Enums.teSHADER_TYPE ShaderType;  // 36
-            
-            // etc
+            [FieldOffset(136)] public int UncompressedSize; // 28 -> 136
         }
 
         /// <summary>Header Data</summary>

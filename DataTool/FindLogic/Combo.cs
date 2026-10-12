@@ -671,19 +671,35 @@ public static class Combo {
                 materialInfo.m_materialIDs.Add(context.MaterialID);
                 materialInfo.m_shaderSourceGUID = GetReplacement(material.Header.ShaderSource, replacements);
                 materialInfo.m_shaderGroupGUID = GetReplacement(material.Header.ShaderGroup, replacements);
-                try {
-                    if (Program.Flags.ExtractShaders) {
-                        teShaderGroup shaderGroup = new teShaderGroup(OpenFile(materialInfo.m_shaderGroupGUID));
-                        foreach (teResourceGUID shaderGuid in shaderGroup.Instances) {
-                            ulong shaderInstanceGuid = GetReplacement(shaderGuid, replacements);
-                            teShaderInstance shaderInstance = new teShaderInstance(OpenFile(shaderInstanceGuid));
-                            ulong shaderCodeGuid = GetReplacement(shaderInstance.Header.ShaderCode, replacements);
-                            teShaderCode shaderCode = new teShaderCode(OpenFile(shaderCodeGuid));
-                            materialInfo.m_shaders.Add((shaderInstanceGuid, shaderCodeGuid, shaderCode.ByteCode));
+
+                if (Program.Flags.ExtractShaders) {
+                    // Local function to prevent nesting on error handling, could be hoisted into a static function
+                    void ExtractShaders() {
+                        using Stream shaderGroupStream = OpenFile(materialInfo.m_shaderGroupGUID);
+                        if (shaderGroupStream == null) {
+                            Logger.Error("Combo", $"ExtractShaders: can't open shader group {materialInfo.m_shaderGroupGUID:X16}");
+                            return;
+                        }
+
+                        teShaderGroup shaderGroup = new teShaderGroup(shaderGroupStream);
+                        if (shaderGroup.Shaders == null || shaderGroup.Instances == null) {
+                            Logger.Error("Combo", $"ExtractShaders: group {materialInfo.m_shaderGroupGUID:X16} has no shader/instance arrays");
+                            return;
+                        }
+
+                        for (int i = 0; i < shaderGroup.Shaders.Length; i++) {
+                            ulong shaderCodeGuid = GetReplacement(shaderGroup.Shaders[i], replacements);
+                            using Stream shaderCodeStream = OpenFile(shaderCodeGuid);
+                            if (shaderCodeStream == null) { 
+                                Logger.Error("Combo", $"ExtractShaders: can't open shader code {shaderCodeGuid:X16}"); 
+                                continue; 
+                            }
+
+                            teShaderCode shaderCode = new teShaderCode(shaderCodeStream);
+                            materialInfo.m_shaders.Add((GetReplacement(shaderGroup.Instances[i], replacements), shaderCodeGuid, shaderCode.ByteCode));
                         }
                     }
-                } catch {
-                    // lol xd
+                    ExtractShaders();
                 }
 
                 if (context.ModelLook == 0 && context.Model != 0) {
