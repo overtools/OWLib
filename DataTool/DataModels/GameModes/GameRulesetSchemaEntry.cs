@@ -36,7 +36,7 @@ public class GameRulesetSchemaEntry {
                 break;
             case STU_776E5ADD val2:
                 Value = new RulesetSchemaValueEnum {
-                    DefaultValue = val2.m_default.ToString(),
+                    DefaultValue = val2.m_default?.ToString(),
                     Choices = val2.m_3FE1EA9E.Select(x => new RulesetSchemaValueEnumChoice {
                         DisplayText = GetString(x.m_displayText),
                         Identifier = x.m_identifier
