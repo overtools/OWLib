@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
-using TankLib.STU.Types.Enums;
 using TankLib.Helpers;
 using static DataTool.Helper.STUHelper;
 
@@ -80,6 +78,8 @@ public static class SkinTheme {
         }
         FindLogic.Combo.Find(info, hero.m_419D3CA5, replacements, animContext); // souvenir anims
         FindLogic.Combo.Find(info, hero.m_CFC554DC, replacements, animContext); // pve knocked down / interact
+
+        FindLoadoutEntities(info, replacements, hero);
 
         return replacements;
     }
@@ -162,70 +162,41 @@ public static class SkinTheme {
         }
     }
 
-    private static void FindSkinStuff(teResourceGUID skinGUID, STUHero hero, FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> skinReplacements) {
-        Dictionary<ulong, ulong> replacements = GetReplacements(skinGUID);
-
+    private static void FindSkinStuff(teResourceGUID skinGUID, STUHero hero, FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> replacements) {
         var skin = GetInstance<STUSkinBase>(skinGUID);
         if (skin is STUSkinTheme skinTheme) {
-            info.m_processExistingEntities = true;
-            List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
-
-            var heroWeapons = skin.m_5FC3164C ?? Array.Empty<STU_BE423F96>();
-            for (var index = 0; index < heroWeapons.Length; index++) {
-                var heroWeaponThing = heroWeapons[index];
-                var heroWeapon = GetInstance<STU_649567C7>(heroWeaponThing.m_BECFBDBA);
-                if (heroWeapon == null) continue;
-
-                Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeaponThing.m_BECFBDBA);
-
-                foreach (var (key, value) in skinReplacements) {
-                    weaponReplacements.TryAdd(key, value);
-                }
-
-                SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities, index);
-                SetPreviewWeaponNames(info, weaponReplacements, hero.m_C2FE396F, index);
-
-                weaponReplacementStack.Add(weaponReplacements == null ? new Dictionary<ulong, ulong>() : weaponReplacements.Where(x => teResourceGUID.Type(x.Key) == 0x1A).ToDictionary(x => x.Key, x => x.Value));
-            }
-
-            for (var index = 0; index < weaponReplacementStack.Count; index++) {
-                foreach (var pair in weaponReplacementStack[index].Where(pair => pair.Key != pair.Value && info.m_modelLooks.ContainsKey(pair.Value) && info.m_modelLooks[pair.Value].m_name == null)) {
-                    info.SetModelLookName(pair.Value, $"{(STUWeaponType)index:G}-{teResourceGUID.Index(pair.Value):X}");
-                }
-            }
-
-            info.m_processExistingEntities = false;
-
             FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D, replacements);
-            info.SetTextureName(skinTheme.m_ECCC4A5D, "Portrait");
+            info.SetTextureName(skinTheme.m_ECCC4A5D, "Portrait", replacements);
             info.SetTextureProcessIcon(skinTheme.m_ECCC4A5D);
             info.SetTextureFileType(skinTheme.m_ECCC4A5D, "png");
         }
 
         foreach (STU_1A496D3C tex in hero.m_8203BFE1 ?? []) { // find GUI
             FindLogic.Combo.Find(info, tex.m_texture, replacements);
-            info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
+            info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id), replacements);
             info.SetTextureProcessIcon(tex.m_texture);
             info.SetTextureFileType(tex.m_texture, "png");
         }
     }
 
-    private static void SetPreviewWeaponNames(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities, int index) {
+    private static void FindLoadoutEntities(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> replacements, STUHero hero) {
+        FindLoadoutEntities(info, replacements, hero.m_previewWeaponEntities);
+        FindLoadoutEntities(info, replacements, hero.m_C2FE396F);
+        FindLoadoutEntities(info, replacements, hero.m_9DC376A4);
+    }
+    
+    private static void FindLoadoutEntities(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> replacements, STU_A0872511[] entities) {
         if (entities == null) return;
+        
         foreach (STU_A0872511 weaponEntity in entities) {
             var weaponEntityGUID = weaponEntity.m_entityDefinition;
-            FindLogic.Combo.Find(info, weaponEntityGUID, weaponReplacements);
+            FindLogic.Combo.Find(info, weaponEntityGUID, replacements);
 
             var loadout = Loadout.Load(weaponEntity.m_loadout);
             if (loadout == null) continue;
-            
-            info.SetEntityName(weaponEntityGUID, $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}", weaponReplacements);
 
-            if ((weaponReplacements == null || index == 0) && info.m_entities.TryGetValue(weaponEntityGUID, out var entity) && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {
-                foreach (var modellook in model.m_modelLooks) {
-                    info.SetModelLookName(modellook, $"{(STUWeaponType) index:G}-{teResourceGUID.Index(modellook):X}");
-                }
-            }
+            var name = $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}";
+            info.SetEntityName(weaponEntityGUID, name, replacements);
         }
     }
 

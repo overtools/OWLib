@@ -39,6 +39,7 @@ public static class WeaponSkin {
         var replacements = SkinTheme.GetReplacements(weaponSkinGUID);
 
         FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+        // todo: use FindLoadoutEntities from SkinTheme. but... 2 arrays vs 3. 3rd (new) might not have useful things for weapons. didn't check
         FindWeapons(info, replacements, hero);
         FindEffects(info, replacements);
         SkinTheme.SaveSoundFiles(flags, directory, replacements); // save any sounds to main skin dir
@@ -110,13 +111,14 @@ public static class WeaponSkin {
 
     private static void FindWeapons(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {
         if (entities == null) return;
+        
         foreach (STU_A0872511 weaponEntity in entities) {
-            FindLogic.Combo.Find(info, weaponEntity.m_entityDefinition, weaponReplacements);
+            var weaponEntityGUID = weaponEntity.m_entityDefinition;
+            FindLogic.Combo.Find(info, weaponEntityGUID, weaponReplacements);
 
             var loadout = Loadout.Load(weaponEntity.m_loadout);
             if (loadout == null) continue;
 
-            var weaponEntityGUID = weaponEntity.m_entityDefinition;
             info.SetEntityName(weaponEntityGUID, $"{loadout.Name}-{teResourceGUID.Index(weaponEntityGUID)}", weaponReplacements);
         }
     }
